@@ -1,91 +1,58 @@
+# This file OVERRIDES docker-compose.base.yml
 services:
   api:
-    init: true
-    image: mskcc/beagle:${BEAGLE_VERSION:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Overriding the command to use runserver
+    command: python3 manage.py runserver 0:5007 --noreload
+    working_dir: /app/src
+    volumes:
+      - ./src:/app/src:z
+    environment:
+      - PYTHONPATH=/app/src
+      - BEAGLE_RABBITMQ_URL=${BEAGLE_RABBITMQ_URL}:${BEAGLE_RABBITMQ_PORT}
+    ports:
+      - "5007:5007"
+
+  worker:
     build:
       context: .
     working_dir: /app/src
-    networks:
-      - beagle_net
-    command: python3 manage.py runserver 0:5007 --noreload
     volumes:
       - ./src:/app/src:z
-    env_file: .env.dev
     environment:
+      - PYTHONPATH=/app/src
       - BEAGLE_RABBITMQ_URL=${BEAGLE_RABBITMQ_URL}:${BEAGLE_RABBITMQ_PORT}
-      - PYTHONPATH=/app/src
-      - BEAGLE_ECHO_LOG_PATH=/app/src/echo_client.log
-    ports:
-      - "5007:5007"
-    depends_on:
-      - db
-      - rabbitmq
-      - memcached
-
-  worker:
-    build: .
-    working_dir: /app/src
-    networks:
-      - beagle_net
-    command: celery -A beagle_etl worker -l info
-    volumes:
-      - ./src:/app/src:z
-    env_file: .env.dev
-    environment:
-      - PYTHONPATH=/app/src
-      - BEAGLE_ECHO_LOG_PATH=/app/src/echo_client.log
-    depends_on:
-      - rabbitmq
-      - db
 
   beat:
     build:
       context: .
-    working_dir: /app
-    networks:
-      - beagle_net
-    command: celery -A beagle_etl beat -l info
+    working_dir: /app/src
     volumes:
       - ./src:/app/src:z
-    env_file: .env.dev
     environment:
       - PYTHONPATH=/app/src
-      - BEAGLE_ECHO_LOG_PATH=/app/src/echo_client.log
-    depends_on:
-      - rabbitmq
-      - db
+      - BEAGLE_RABBITMQ_URL=${BEAGLE_RABBITMQ_URL}:${BEAGLE_RABBITMQ_PORT}
 
   db:
-    image: postgres:16
-    networks:
-      - beagle_net
-    env_file: .env.dev
+    # Adding development ports so you can connect via DBeaver/Datagrip
     ports:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data:z
 
   rabbitmq:
-    image: rabbitmq:3-management
-    networks:
-      - beagle_net
-    env_file: .env.dev
     environment:
       - RABBITMQ_DEFAULT_USER=${BEAGLE_RABBITMQ_USERNAME}
       - RABBITMQ_DEFAULT_PASS=${BEAGLE_RABBITMQ_PASSWORD}
     ports:
       - "5672:5672"
-      - "15672:15672"  # management UI
+      - "15672:15672"
 
   memcached:
-    image: memcached:1.6
-    networks:
-      - beagle_net
     ports:
       - "11211:11211"
 
 volumes:
   pgdata:
-
-networks:
-  beagle_net:

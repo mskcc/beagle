@@ -1,0 +1,52 @@
+services:
+  api:
+    image: mskcc/beagle:${BEAGLE_VERSION}
+    env_file: .env.${ENV}
+    networks:
+      - beagle_net
+    depends_on:
+      - db
+      - rabbitmq
+      - memcached
+
+  worker:
+    image: mskcc/beagle:${BEAGLE_VERSION}
+    env_file: .env.${ENV}
+    networks:
+      - beagle_net
+    depends_on:
+      - rabbitmq
+      - db
+
+  # Add beat if you use it
+  beat:
+    image: mskcc/beagle:${BEAGLE_VERSION}
+    env_file: .env.${ENV}
+    networks:
+      - beagle_net
+    depends_on:
+      - rabbitmq
+      - db
+
+  db:
+    image: postgres:16
+    env_file: .env.${ENV}
+    networks:
+      - beagle_net
+
+  rabbitmq:
+    env_file: .env.${ENV}
+    image: rabbitmq:3-management
+    networks:
+      - beagle_net
+
+  # Add the image here so Compose knows what it is globally
+  memcached:
+    env_file: .env.${ENV}
+    image: memcached:1.6
+    networks:
+      - beagle_net
+
+networks:
+  beagle_net:
+    driver: bridge
