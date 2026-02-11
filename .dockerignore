@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# Secrets and Local Config
+.env
+*.env
+.python-version
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+venv/
+.venv/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Documentation and Infrastructure (not needed inside the image)
+docs/
+infra/
+infra/
+Makefile
