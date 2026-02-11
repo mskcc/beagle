@@ -31,7 +31,7 @@ jobs:
         python -m pip install python-ldap
         pip install -r requirements-dev.txt
     - name: Run migrations
-      run: python manage.py migrate
+      run: python src/manage.py migrate
       env:
           BEAGLE_DB_NAME: github_actions
           BEAGLE_DB_PASSWORD: postgres
