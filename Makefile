@@ -22,10 +22,10 @@ logs:
 
 # Use 'src/manage.py' because that is the new location
 shell:
-	$(COMPOSE_DEV) exec api python src/manage.py shell
+	$(COMPOSE_DEV) exec api python manage.py shell
 
 migrate:
-	$(COMPOSE_DEV) exec api python src/manage.py migrate
+	$(COMPOSE_DEV) exec api python manage.py migrate
 
 # Clean up volumes (useful for resetting the DB)
 clean:
