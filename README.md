@@ -1,5 +1,10 @@
 # Beagle
 
+## Repository Structure
+- `src/` – Django projects & apps
+- `infra/ci/` – Jenkinsfile and CI configuration files
+- `infra/compose/` – Podman/Docker‑Compose YAMLs
+
 Beagle is a backend service for managing files, pipelines and runs.
 
 ![alt text](docs/pics/voyager.png "Diagram of Voyager project")
@@ -48,8 +53,8 @@ Beagle is a backend service for managing files, pipelines and runs.
   - pip install -r requirements.txt
   - setup your environment using the [environment page](docs/ENVIRONMENT_VARIABLES.md)
 
-  - python manage.py migrate
-  - python manage.py runserver
+- cd src && python manage.py migrate
+- cd src && python manage.py runserver
 
 - Async
   - Celery is used for scheduling tasks related to ETL from LIMS and submission to CWL Executor
@@ -60,7 +65,22 @@ Beagle is a backend service for managing files, pipelines and runs.
 
 Read more detailed specification on [wiki page](https://github.com/mskcc/beagle/wiki/Beagle).
 
-# Development Instance
+## CI/CD
+- All continuous‑integration pipelines are now located in `infra/ci`. The Jenkinsfile resides at `infra/ci/Jenkinsfile` and is the single source of truth for CI configuration.
+
+## Development Instance
+
+### Starting the Dev Stack
+- Use `make up` to start services defined in `infra/compose/docker-compose.dev.yml`.
+- Use `make down` to stop them.
+- Use `make logs` to follow logs.
+
+### Working with Django
+- All Django commands run inside the `api` service. Example:
+  ```bash
+  make shell      # Django shell inside container
+  make migrate    # Apply migrations inside container
+  ```
 
 A development instance can be easily set up using `conda` with the following commands:
 

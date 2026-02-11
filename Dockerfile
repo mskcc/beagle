@@ -14,23 +14,27 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PIP_ROOT_USER_ACTION=ignore
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
-WORKDIR /app
-COPY . /app
+# Ensure python output isn't buffered (better logs in Podman)
+ENV PYTHONUNBUFFERED=1 
 
-RUN apt-get update \
-     # Install dependencies
-        && apt-get -y --no-install-recommends install \
-            wget curl libldap2-dev libsasl2-dev procps libssl-dev libxml2-dev libxslt-dev \
-            libpq-dev gawk nodejs git nginx build-essential \
-     # Install python packages
-        && pip3 install --upgrade pip \
-        && pip3 install --use-pep517 python-ldap \
-        && pip3 install --use-pep517 -r /app/requirements.txt \
-    # Clean up image
-        && apt-get -y purge --auto-remove build-essential \
-        && apt-get -y --no-install-recommends install openssh-client \
-        && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+
+RUN mkdir -p /app/src
+
+COPY requirements.txt /app/
+
+RUN apt-get update && apt-get -y --no-install-recommends install \
+    wget curl libldap2-dev libsasl2-dev procps libssl-dev libxml2-dev libxslt-dev \
+    libpq-dev gawk nodejs git nginx build-essential \
+    && pip3 install --upgrade pip \
+    && pip3 install --use-pep517 python-ldap \
+    && pip3 install --use-pep517 -r /app/requirements.txt \
+    && apt-get -y purge --auto-remove build-essential \
+    && apt-get -y --no-install-recommends install openssh-client \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY src/ /app/src/
 
 EXPOSE 8000
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "beagle.wsgi:application"]
 
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--chdir", "/app/src", "beagle.wsgi:application"]
