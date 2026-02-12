@@ -1,7 +1,4 @@
 services:
-  # ----------------------------------------------------------------------------
-  # Permissions Helper (Ensures volume folders exist with correct ownership)
-  # ----------------------------------------------------------------------------
   beagle_create_volumes:
     image: alpine:3.8
     restart: "no"
@@ -11,16 +8,18 @@ services:
       - static_path:/static
       - celery_path:/celery
       - rabbitmq_path:/rabbitmq
+    # Inheriting the chown logic from your original setup
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        chown -R ${DOCKER_UID}:${DOCKER_GID} /postgres /logs /static /celery /rabbitmq
 
-  # ----------------------------------------------------------------------------
-  # Core Infrastructure (Databases & Brokers)
-  # ----------------------------------------------------------------------------
   beagle_postgres:
     image: postgres:17-trixie
     networks:
       - voyager_net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U $${BEAGLE_DB_USERNAME} -d $${BEAGLE_DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -39,75 +38,40 @@ services:
     volumes:
       - rabbitmq_path:/var/lib/rabbitmq/
 
-  # ----------------------------------------------------------------------------
-  # Beagle API (Django)
-  # ----------------------------------------------------------------------------
   beagle:
     image: mskcc/beagle:${BEAGLE_VERSION}
     build:
-      context: .
+      context: ./
       dockerfile: Dockerfile
     networks:
       - voyager_net
     env_file:
-      - .env.${ENV}
+      - ./.env.${ENV}
     depends_on:
       beagle_postgres:
         condition: service_healthy
       beagle_rabbitmq:
         condition: service_healthy
 
-  # ----------------------------------------------------------------------------
-  # Celery Stack
-  # ----------------------------------------------------------------------------
-  beagle_celery_beat:
+  # All Celery workers inherit the same base image and env
+  beagle_celery_beat: &worker
     image: mskcc/beagle:${BEAGLE_VERSION}
     networks:
       - voyager_net
     env_file:
-      - .env.${ENV}
+      - ./.env.${ENV}
     depends_on:
       - beagle_rabbitmq
 
   beagle_celery_default_queue:
-    image: mskcc/beagle:${BEAGLE_VERSION}
-    networks:
-      - voyager_net
-    env_file:
-      - .env.${ENV}
-    depends_on:
-      - beagle_rabbitmq
-
+    <<: *worker
   beagle_celery_runner_queue:
-    image: mskcc/beagle:${BEAGLE_VERSION}
-    networks:
-      - voyager_net
-    env_file:
-      - .env.${ENV}
-    depends_on:
-      - beagle_rabbitmq
-
+    <<: *worker
   beagle_celery_job_scheduler_queue:
-    image: mskcc/beagle:${BEAGLE_VERSION}
-    networks:
-      - voyager_net
-    env_file:
-      - .env.${ENV}
-    depends_on:
-      - beagle_rabbitmq
-
+    <<: *worker
   beagle_echo_consumer:
-    image: mskcc/beagle:${BEAGLE_VERSION}
-    networks:
-      - voyager_net
-    env_file:
-      - .env.${ENV}
-    depends_on:
-      - beagle_rabbitmq
+    <<: *worker
 
-# ----------------------------------------------------------------------------
-# Shared Network & Volume Definitions
-# ----------------------------------------------------------------------------
 networks:
   voyager_net:
     name: voyager_network_${BEAGLE_DEPLOYMENT}

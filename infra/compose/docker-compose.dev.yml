@@ -3,7 +3,7 @@ services:
   # API / Django Server
   # ----------------------------------------------------------------------------
   beagle:
-    command: python3 manage.py runserver 0:${BEAGLE_PORT}
+    command: python3 manage.py runserver 0.0.0.0:${BEAGLE_PORT}
     working_dir: /app/src
     ports:
       - "${BEAGLE_PORT}:${BEAGLE_PORT}"
@@ -17,11 +17,11 @@ services:
   # ----------------------------------------------------------------------------
   beagle_postgres:
     ports:
-      - "${POSTGRES_HOST_PORT:-5432}:5432" # Host mapping
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${BEAGLE_DB_NAME}      # Note: Mapping to your .env keys
+      - POSTGRES_USER=${BEAGLE_DB_USERNAME}
+      - POSTGRES_PASSWORD=${BEAGLE_DB_PASSWORD}
 
   beagle_rabbitmq:
     ports:
@@ -29,40 +29,35 @@ services:
       - "${BEAGLE_RABBITMQ_PORT}:5672"
 
   # ----------------------------------------------------------------------------
-  # Celery Workers
+  # Celery Workers (Inheriting volumes for hot-reloading code)
   # ----------------------------------------------------------------------------
   beagle_celery_beat:
     working_dir: /app/src
-    volumes:
-      - ./src:/app/src:z
+    volumes: ["./src:/app/src:z"]
     command: celery -A beagle_etl beat -l info
 
   beagle_celery_default_queue:
     working_dir: /app/src
-    volumes:
-      - ./src:/app/src:z
+    volumes: ["./src:/app/src:z"]
     command: celery -A beagle_etl worker -l info -Q ${BEAGLE_DEFAULT_QUEUE} -n beagle.dev.default
 
   beagle_celery_runner_queue:
     working_dir: /app/src
-    volumes:
-      - ./src:/app/src:z
+    volumes: ["./src:/app/src:z"]
     command: celery -A beagle_etl worker -l debug -Q ${BEAGLE_RUNNER_QUEUE} -n beagle.dev.runner
 
   beagle_celery_job_scheduler_queue:
     working_dir: /app/src
-    volumes:
-      - ./src:/app/src:z
+    volumes: ["./src:/app/src:z"]
     command: celery -A beagle_etl worker -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -n beagle.dev.scheduler
 
   beagle_echo_consumer:
     working_dir: /app/src
-    volumes:
-      - ./src:/app/src:z
+    volumes: ["./src:/app/src:z"]
     command: python3 manage.py run_echo_consumer
 
 # ----------------------------------------------------------------------------
-# Volume Implementation
+# Volume Implementation (Local Project Folder)
 # ----------------------------------------------------------------------------
 volumes:
   postgres_path:

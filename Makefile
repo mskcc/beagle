@@ -10,9 +10,9 @@ ENV ?= dev
 
 # Get the current branch name, replace slashes with underscores (Docker tags don't like slashes)
 VERSION := $(shell git rev-parse --abbrev-ref HEAD | sed 's/\//_/g')
-# List the directories needed from your .env.dev
 
-PREP_DIRS := infra/data/postgres infra/data/logs infra/data/beagle_dev_pgbouncer infra/data/beagle_dev_logrotate infra/data/beagle_dev_backup
+# List the directories needed from .env.dev
+PREP_DIRS := infra/data/postgres infra/data/logs infra/data/beagle_dev_pgbouncer infra/data/logrotate infra/data/backup infra/data/rabbitmq infra/data/static infra/data/celery
 
 # 3. Pathing & Files
 # We stack the Base file and the Environment-specific override file
@@ -31,7 +31,7 @@ COMPOSE_CMD := BEAGLE_VERSION=$(VERSION) $(DOCKER_BIN) compose \
 
 # Generic exec command: make ENV=dev exec CMD="env | grep BEAGLE"
 exec:
-	$(COMPOSE_CMD) exec api $(CMD)
+	$(COMPOSE_CMD) exec beagle $(CMD)
 
 # Build images (useful for dev after changing requirements.txt)
 build:
@@ -63,16 +63,7 @@ migrate:
 clean:
 	$(COMPOSE_CMD) down -v
 
-
-# Start only the core infra
-up-infra: prep
-	$(COMPOSE_CMD) up -d --no-deps beagle_postgres beagle_rabbitmq beagle_pgbouncer
-
-# Start only the Django API
-up-beagle:
-	$(COMPOSE_CMD) up -d --no-deps beagle
-
-# Start only a specific worker (e.g., make worker name=beagle_celery_default_queue)
+# Start only a specific worker (e.g., make up-worker name=beagle_celery_default_queue)
 up-worker:
 	$(COMPOSE_CMD) up -d --no-deps $(name)
 
