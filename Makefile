@@ -10,6 +10,9 @@ ENV ?= dev
 
 # Get the current branch name, replace slashes with underscores (Docker tags don't like slashes)
 VERSION := $(shell git rev-parse --abbrev-ref HEAD | sed 's/\//_/g')
+# List the directories needed from your .env.dev
+
+PREP_DIRS := infra/data/postgres infra/data/logs infra/data/beagle_dev_pgbouncer infra/data/beagle_dev_logrotate infra/data/beagle_dev_backup
 
 # 3. Pathing & Files
 # We stack the Base file and the Environment-specific override file
@@ -30,6 +33,9 @@ exec:
 build:
 	$(COMPOSE_CMD) build
 
+prep:
+	@mkdir -p $(PREP_DIRS)
+
 up:
 	$(COMPOSE_CMD) up -d
 
@@ -44,11 +50,24 @@ logs:
 
 # Note: working_dir is /app/src, so we call 'python3 manage.py'
 shell:
-	$(COMPOSE_CMD) exec api python3 manage.py shell
+	$(COMPOSE_CMD) exec beagle python3 manage.py shell
 
 migrate:
-	$(COMPOSE_CMD) exec api python3 manage.py migrate
+	$(COMPOSE_CMD) exec beagle python3 manage.py migrate
 
 # Clean up volumes (useful for resetting the DB)
 clean:
 	$(COMPOSE_CMD) down -v
+
+
+# Start only the core infra
+up-infra: prep
+	$(COMPOSE_CMD) up -d --no-deps beagle_postgres beagle_rabbitmq beagle_pgbouncer
+
+# Start only the Django API
+up-beagle:
+	$(COMPOSE_CMD) up -d --no-deps beagle
+
+# Start only a specific worker (e.g., make worker name=beagle_celery_default_queue)
+up-worker:
+	$(COMPOSE_CMD) up -d --no-deps $(name)

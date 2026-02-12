@@ -1,58 +1,97 @@
-# This file OVERRIDES docker-compose.base.yml
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    # Overriding the command to use runserver
-    command: python3 manage.py runserver 0:5007 --noreload
+  # ----------------------------------------------------------------------------
+  # API / Django Server
+  # ----------------------------------------------------------------------------
+  beagle:
+    command: python3 manage.py runserver 0:${BEAGLE_PORT}
+    working_dir: /app/src
+    ports:
+      - "${BEAGLE_PORT}:${BEAGLE_PORT}"
+    volumes:
+      - ./src:/app/src:z
+      - logs_path:/beagle/server/
+      - static_path:/app/src/static
+
+  # ----------------------------------------------------------------------------
+  # Databases & Infrastructure
+  # ----------------------------------------------------------------------------
+  beagle_postgres:
+    ports:
+      - "${POSTGRES_HOST_PORT:-5432}:5432" # Host mapping
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  beagle_rabbitmq:
+    ports:
+      - "${BEAGLE_RABBITMQ_MANAGEMENT_PORT}:15672"
+      - "${BEAGLE_RABBITMQ_PORT}:5672"
+
+  # ----------------------------------------------------------------------------
+  # Celery Workers
+  # ----------------------------------------------------------------------------
+  beagle_celery_beat:
     working_dir: /app/src
     volumes:
       - ./src:/app/src:z
-    environment:
-      - PYTHONPATH=/app/src
-      - BEAGLE_RABBITMQ_URL=${BEAGLE_RABBITMQ_URL}:${BEAGLE_RABBITMQ_PORT}
-    ports:
-      - "5007:5007"
+    command: celery -A beagle_etl beat -l info
 
-  worker:
-    build:
-      context: .
+  beagle_celery_default_queue:
     working_dir: /app/src
     volumes:
       - ./src:/app/src:z
-    environment:
-      - PYTHONPATH=/app/src
-      - BEAGLE_RABBITMQ_URL=${BEAGLE_RABBITMQ_URL}:${BEAGLE_RABBITMQ_PORT}
+    command: celery -A beagle_etl worker -l info -Q ${BEAGLE_DEFAULT_QUEUE} -n beagle.dev.default
 
-  beat:
-    build:
-      context: .
+  beagle_celery_runner_queue:
     working_dir: /app/src
     volumes:
       - ./src:/app/src:z
-    environment:
-      - PYTHONPATH=/app/src
-      - BEAGLE_RABBITMQ_URL=${BEAGLE_RABBITMQ_URL}:${BEAGLE_RABBITMQ_PORT}
+    command: celery -A beagle_etl worker -l debug -Q ${BEAGLE_RUNNER_QUEUE} -n beagle.dev.runner
 
-  db:
-    # Adding development ports so you can connect via DBeaver/Datagrip
-    ports:
-      - "5433:5432"
+  beagle_celery_job_scheduler_queue:
+    working_dir: /app/src
     volumes:
-      - pgdata:/var/lib/postgresql/data:z
+      - ./src:/app/src:z
+    command: celery -A beagle_etl worker -l info -Q ${BEAGLE_JOB_SCHEDULER_QUEUE} -n beagle.dev.scheduler
 
-  rabbitmq:
-    environment:
-      - RABBITMQ_DEFAULT_USER=${BEAGLE_RABBITMQ_USERNAME}
-      - RABBITMQ_DEFAULT_PASS=${BEAGLE_RABBITMQ_PASSWORD}
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+  beagle_echo_consumer:
+    working_dir: /app/src
+    volumes:
+      - ./src:/app/src:z
+    command: python3 manage.py run_echo_consumer
 
-  memcached:
-    ports:
-      - "11211:11211"
-
+# ----------------------------------------------------------------------------
+# Volume Implementation
+# ----------------------------------------------------------------------------
 volumes:
-  pgdata:
+  postgres_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${PWD}/infra/data/postgres"
+  logs_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${PWD}/infra/data/logs"
+  static_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${PWD}/infra/data/static"
+  celery_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${PWD}/infra/data/celery"
+  rabbitmq_path:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${PWD}/infra/data/rabbitmq"

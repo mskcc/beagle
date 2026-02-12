@@ -1,52 +1,117 @@
 services:
-  api:
+  # ----------------------------------------------------------------------------
+  # Permissions Helper (Ensures volume folders exist with correct ownership)
+  # ----------------------------------------------------------------------------
+  beagle_create_volumes:
+    image: alpine:3.8
+    restart: "no"
+    volumes:
+      - postgres_path:/postgres
+      - logs_path:/logs
+      - static_path:/static
+      - celery_path:/celery
+      - rabbitmq_path:/rabbitmq
+
+  # ----------------------------------------------------------------------------
+  # Core Infrastructure (Databases & Brokers)
+  # ----------------------------------------------------------------------------
+  beagle_postgres:
+    image: postgres:17-trixie
+    networks:
+      - voyager_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_path:/var/lib/postgresql/data/
+
+  beagle_rabbitmq:
+    image: rabbitmq:4.0.6-management-alpine
+    networks:
+      - voyager_net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - rabbitmq_path:/var/lib/rabbitmq/
+
+  # ----------------------------------------------------------------------------
+  # Beagle API (Django)
+  # ----------------------------------------------------------------------------
+  beagle:
     image: mskcc/beagle:${BEAGLE_VERSION}
-    env_file: .env.${ENV}
     networks:
-      - beagle_net
+      - voyager_net
+    env_file:
+      - .env.${ENV}
     depends_on:
-      - db
-      - rabbitmq
-      - memcached
+      beagle_postgres:
+        condition: service_healthy
+      beagle_rabbitmq:
+        condition: service_healthy
 
-  worker:
+  # ----------------------------------------------------------------------------
+  # Celery Stack
+  # ----------------------------------------------------------------------------
+  beagle_celery_beat:
     image: mskcc/beagle:${BEAGLE_VERSION}
-    env_file: .env.${ENV}
     networks:
-      - beagle_net
+      - voyager_net
+    env_file:
+      - .env.${ENV}
     depends_on:
-      - rabbitmq
-      - db
+      - beagle_rabbitmq
 
-  # Add beat if you use it
-  beat:
+  beagle_celery_default_queue:
     image: mskcc/beagle:${BEAGLE_VERSION}
-    env_file: .env.${ENV}
     networks:
-      - beagle_net
+      - voyager_net
+    env_file:
+      - .env.${ENV}
     depends_on:
-      - rabbitmq
-      - db
+      - beagle_rabbitmq
 
-  db:
-    image: postgres:16
-    env_file: .env.${ENV}
+  beagle_celery_runner_queue:
+    image: mskcc/beagle:${BEAGLE_VERSION}
     networks:
-      - beagle_net
+      - voyager_net
+    env_file:
+      - .env.${ENV}
+    depends_on:
+      - beagle_rabbitmq
 
-  rabbitmq:
-    env_file: .env.${ENV}
-    image: rabbitmq:3-management
+  beagle_celery_job_scheduler_queue:
+    image: mskcc/beagle:${BEAGLE_VERSION}
     networks:
-      - beagle_net
+      - voyager_net
+    env_file:
+      - .env.${ENV}
+    depends_on:
+      - beagle_rabbitmq
 
-  # Add the image here so Compose knows what it is globally
-  memcached:
-    env_file: .env.${ENV}
-    image: memcached:1.6
+  beagle_echo_consumer:
+    image: mskcc/beagle:${BEAGLE_VERSION}
     networks:
-      - beagle_net
+      - voyager_net
+    env_file:
+      - .env.${ENV}
+    depends_on:
+      - beagle_rabbitmq
 
+# ----------------------------------------------------------------------------
+# Shared Network & Volume Definitions
+# ----------------------------------------------------------------------------
 networks:
-  beagle_net:
-    driver: bridge
+  voyager_net:
+    name: voyager_network_${BEAGLE_DEPLOYMENT}
+
+volumes:
+  postgres_path:
+  logs_path:
+  static_path:
+  celery_path:
+  rabbitmq_path:

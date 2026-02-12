@@ -24,3 +24,6 @@ src/celerybeat-schedule
 src/echo_client.log
 src/smile_client.log
 src/staticfiles/
+# Local Database Data
+infra/data/
+.beagle_dev_db/
