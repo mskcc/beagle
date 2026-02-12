@@ -26,5 +26,5 @@ build/
 # Documentation and Infrastructure (not needed inside the image)
 docs/
 infra/
-infra/
+!infra/bin/entrypoint.sh
 Makefile

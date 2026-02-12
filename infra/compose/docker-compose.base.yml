@@ -44,6 +44,9 @@ services:
   # ----------------------------------------------------------------------------
   beagle:
     image: mskcc/beagle:${BEAGLE_VERSION}
+    build:
+      context: .
+      dockerfile: Dockerfile
     networks:
       - voyager_net
     env_file:

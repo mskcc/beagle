@@ -20,8 +20,12 @@ COMPOSE_FILES := -f infra/compose/docker-compose.base.yml -f infra/compose/docke
 ENV_FILE := .env.$(ENV)
 
 # 4. Command Definition
-# BEAGLE_VERSION is passed to satisfy the variable in docker-compose.base.yml
-COMPOSE_CMD := BEAGLE_VERSION=$(VERSION) $(DOCKER_BIN) compose $(COMPOSE_FILES) --project-directory . --env-file $(ENV_FILE)
+# Add -p beagle_$(ENV) to the command
+COMPOSE_CMD := BEAGLE_VERSION=$(VERSION) $(DOCKER_BIN) compose \
+    -p beagle_$(ENV) \
+    $(COMPOSE_FILES) \
+    --project-directory . \
+    --env-file $(ENV_FILE)
 
 .PHONY: up down restart logs shell migrate clean build
 
@@ -31,7 +35,7 @@ exec:
 
 # Build images (useful for dev after changing requirements.txt)
 build:
-	$(COMPOSE_CMD) build
+	$(COMPOSE_CMD) build $(args)
 
 prep:
 	@mkdir -p $(PREP_DIRS)
@@ -71,3 +75,13 @@ up-beagle:
 # Start only a specific worker (e.g., make worker name=beagle_celery_default_queue)
 up-worker:
 	$(COMPOSE_CMD) up -d --no-deps $(name)
+
+# List containers for the CURRENT environment only
+ps:
+	@echo "--- Status for Project: beagle_$(ENV) ---"
+	$(COMPOSE_CMD) ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
+
+# List ALL active compose projects on this machine
+status:
+	@echo "--- Active Compose Projects ---"
+	$(DOCKER_BIN) compose ls
