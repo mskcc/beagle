@@ -82,7 +82,7 @@ def _voyager_start_processing(request_id, run_ids, notify=False):
 
 
 def _generate_ticket_description(
-    request_id, job_group_id, job_group_notifier_id, sample_list, pooled_normal_list, request_metadata
+    request_id, job_group_id, job_group_notifier_id, sample_list, request_metadata
 ):
     all_jobs = []
 
@@ -90,7 +90,6 @@ def _generate_ticket_description(
     cnt_samples_failed = 0
 
     all_jobs.extend(sample_list)
-    all_jobs.extend(pooled_normal_list)
 
     number_of_tumors = FileRepository.filter(
         metadata={settings.REQUEST_ID_METADATA_KEY: request_id, "tumorOrNormal": "Tumor"},
@@ -132,7 +131,6 @@ def _generate_ticket_description(
         qc_access_emails,
         number_of_tumors,
         number_of_normals,
-        len(pooled_normal_list),
         data_access_emails,
         other_contact_emails,
     )

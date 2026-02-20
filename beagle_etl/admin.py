@@ -6,10 +6,7 @@ from .models import (
     ETLConfiguration,
     SMILEMessage,
     RequestCallbackJob,
-    NormalizerModel,
-    ValidatorModel,
     SkipProject,
-    CopyFileTask,
 )
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 
@@ -42,38 +39,12 @@ class RequestCallbackJobAdmin(ModelAdmin):
     ordering = ("-created_date",)
 
 
-class NormalizerAdmin(ModelAdmin):
-    list_display = (
-        "condition",
-        "normalizer",
-    )
-
-
-class ValidatorAdmin(ModelAdmin):
-    list_display = ("name",)
-
-
 class SkipProjectAdmin(ModelAdmin):
     list_display = ("skip_projects",)
-
-
-class CopyFileTaskAdmin(ModelAdmin):
-    list_display = (
-        "id",
-        "source",
-        "destination",
-        link_relation("smile_message"),
-        "created_date",
-        "status",
-    )
-    ordering = ("-created_date",)
 
 
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(ETLConfiguration, AssayAdmin)
 admin.site.register(SMILEMessage, SMILEMessagesAdmin)
 admin.site.register(RequestCallbackJob, RequestCallbackJobAdmin)
-admin.site.register(NormalizerModel, NormalizerAdmin)
-admin.site.register(ValidatorModel, ValidatorAdmin)
 admin.site.register(SkipProject, SkipProjectAdmin)
-admin.site.register(CopyFileTask, CopyFileTaskAdmin)

@@ -13,7 +13,6 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.contrib.postgres.indexes import GinIndex
 from django.core.exceptions import ValidationError
-from file_system.tasks import populate_job_group_notifier_metadata
 
 
 logger = logging.getLogger(__name__)
@@ -380,6 +379,7 @@ class FileExtension(models.Model):
 
 class File(BaseModel):
     file_name = models.CharField(max_length=500)
+    original_path = models.CharField(max_length=1500)
     path = models.CharField(max_length=1500, db_index=True)
     file_type = models.ForeignKey(FileType, null=True, on_delete=models.SET_NULL)
     size = models.BigIntegerField()
@@ -399,6 +399,18 @@ class File(BaseModel):
     def get_samples(self):
         return Sample.objects.filter(sample_id__in=self.samples, latest=True).all()
 
+    @property
+    def is_available(self):
+        return self.available
+
+    def set_available(self):
+        self.available = True
+        self.save()
+
+    def set_unavailable(self):
+        self.available = False
+        self.save()
+
     def save(self, *args, **kwargs):
         if not self.size:
             try:
@@ -407,10 +419,6 @@ class File(BaseModel):
                 self.size = 0
         super(File, self).save(*args, **kwargs)
 
-
-class ImportMetadata(BaseModel):
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
-    metadata = JSONField(default=dict)
 
 
 class FileMetadataManager(models.Manager):

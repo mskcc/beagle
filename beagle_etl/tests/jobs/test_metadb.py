@@ -6,19 +6,19 @@ import os
 from mock import patch
 import json
 from deepdiff import DeepDiff
-from django.test import TestCase
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.test import TestCase, override_settings
 from beagle_etl.models import SMILEMessage, SmileMessageStatus
 from beagle_etl.models import JobGroup, JobGroupNotifier, Notifier
 from beagle_etl.jobs.metadb_jobs import update_request_job, update_sample_job, new_request, update_job
 from django.core.management import call_command
-from file_system.models import Request, Sample, Patient, FileMetadata
+from file_system.models import Request, Sample, Patient, FileMetadata, FileGroup
 from file_system.repository import FileRepository
 from study.objects import StudyObject
 
 
-class TestNewRequest(TestCase):
+class TestSmileMessages(TestCase):
     fixtures = [
         "file_system.filegroup.json",
         "file_system.filetype.json",
@@ -91,7 +91,10 @@ class TestNewRequest(TestCase):
         self.update_sample_14269_C_1_new_files_str = json.dumps(self.update_sample_14269_C_1_new_files)
 
         self.etl_user = User.objects.create_superuser("ETL", "voyager-etl@mskcc.org", "password")
+        self.file_group_id = "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
         settings.ETL_USER = self.etl_user.username
+        settings.NOTIFIER_ACTIVE = False
+
 
     @patch("os.access")
     @patch("notifier.tasks.notifier_start")
@@ -99,8 +102,11 @@ class TestNewRequest(TestCase):
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
     @patch("os.path.exists")
+    @patch("beagle_etl.jobs.helper_jobs.calculate_checksum.delay")
+    @override_settings(IMPORT_FILE_GROUP="1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
     def test_new_request(
         self,
+        calculate_checksum,
         path_exists,
         populate_job_group_notifier_metadata,
         job_group_notifier_get,
@@ -108,15 +114,17 @@ class TestNewRequest(TestCase):
         notifier_start,
         access,
     ):
+        calculate_checksum.return_value = None
         path_exists.return_value = True
         populate_job_group_notifier_metadata.return_value = None
         job_group_notifier_get.return_value = self.job_group_notifier
         notifier_start.return_value = True
         send_notification.return_value = True
         access.return_value = os.R_OK
-        settings.NOTIFIER_ACTIVE = False
-        msg = SMILEMessage.objects.create(topic="new-request", message=self.new_request_str)
+        msg = SMILEMessage.objects.create(topic="new-request", request_id="08944_B", gene_panel="", message=self.new_request_str)
+        msg.in_progress()
         new_request(str(msg.id))
+        msg.refresh_from_db()
         request = Request.objects.filter(request_id="08944_B")
         sample_1 = Sample.objects.filter(sample_id="08944_B_1")
         sample_2 = Sample.objects.filter(sample_id="08944_B_2")
@@ -134,7 +142,8 @@ class TestNewRequest(TestCase):
         study = StudyObject.get_by_request("08944_B")
         self.assertIsNotNone(study)
         self.assertListEqual(list(study[0].requests), list(request.all()))
-        files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"})
+        files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"}, file_group=self.file_group_id)
+        self.assertEqual(msg.status, SmileMessageStatus.COMPLETED)
         self.assertEqual(files.count(), 8)
         request = request.first()
         samples = Sample.objects.filter(sample_id__startswith="08944_B").order_by("created_date").all()

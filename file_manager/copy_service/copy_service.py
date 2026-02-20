@@ -2,7 +2,6 @@ import os
 import logging
 from shutil import copyfile
 from django.conf import settings
-from beagle_etl.models import CopyFileTask
 
 
 logger = logging.getLogger(__name__)

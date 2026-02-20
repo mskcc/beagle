@@ -13,10 +13,14 @@ def persist_message(message):
         data_dict = json.loads(message.data)
         if message.subject == settings.METADB_NATS_NEW_REQUEST:
             msg.request_id = data_dict.get(settings.REQUEST_ID_METADATA_KEY)
+            msg.gene_panel = data_dict.get(settings.RECIPE_METADATA_KEY)
         elif message.subject == settings.METADB_NATS_REQUEST_UPDATE:
             msg.request_id = data_dict.get(settings.REQUEST_ID_METADATA_KEY)
+            # TODO: Test this
+            msg.gene_panel = data_dict.get(settings.RECIPE_METADATA_KEY)
         elif message.subject == settings.METADB_NATS_SAMPLE_UPDATE:
             msg.request_id = data_dict["latestSampleMetadata"][settings.SAMPLE_ID_METADATA_KEY]
+            msg.gene_panel = data_dict["latestSampleMetadata"][settings.RECIPE_METADATA_KEY]
         msg.save()
     except Exception as e:
         logger.error(e)

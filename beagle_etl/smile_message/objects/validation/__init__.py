@@ -1,0 +1,1 @@
+from beagle_etl.smile_message.objects.validation.sample_status import SampleStatus

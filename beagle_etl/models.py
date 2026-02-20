@@ -5,9 +5,9 @@ from django.db import models
 from django.db import transaction, IntegrityError
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import JSONField, ArrayField
-from beagle_etl.metadata.normalizer import Normalizer
 from file_system.models import File
 from beagle_etl.jobs.helper_jobs import calculate_checksum
+from notifier.tasks import notifier_start
 from notifier.models import Notifier, JobGroup, JobGroupNotifier
 
 
@@ -58,7 +58,7 @@ class SMILEMessage(BaseModel):
     request_id = models.CharField(max_length=100)
     gene_panel = models.CharField(max_length=100, null=True, blank=True)
     message = models.TextField()
-    log = models.TextField(blank=True, default="")
+    log = models.TextField(blank=True, null=True, default="")
     sample_status = JSONField(blank=True, default=dict)
     job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
     job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
@@ -70,13 +70,18 @@ class SMILEMessage(BaseModel):
 
     def in_progress(self):
         self.status = SmileMessageStatus.IN_PROGRESS
-        self.save(update_fields=["status"])
+        job_group = JobGroup.objects.create()
+        self.job_group = job_group
+        job_group_notifier_id = notifier_start(job_group, self.request_id)
+        job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
+        self.job_group_notifier = job_group_notifier
+        self.save(update_fields=["job_group", "job_group_notifier", "status"])
 
     def copy_files(self):
         self.status = SmileMessageStatus.COPY_FILES
         self.save(update_fields=["status"])
 
-    def completed(self):
+    def complete(self):
         self.status = SmileMessageStatus.COMPLETED
         self.save(update_fields=["status"])
 
@@ -88,66 +93,17 @@ class SMILEMessage(BaseModel):
         self.status = SmileMessageStatus.FAILED
         self.save(update_fields=["status"])
 
+    def add_log(self, message):
+        self.log += f"{message}\n"
+        self.save(update_fields=["log"])
 
-class CopyFileStatus(IntEnum):
-    PENDING = 0
-    COMPLETED = 1
-    FAILED = 2
+    def set_gene_panel(self, gene_panel):
+        self.gene_panel = gene_panel
+        self.save(update_fields=["gene_panel"])
 
-
-class CopyFileTask(BaseModel):
-    smile_message = models.ForeignKey(SMILEMessage, null=True, blank=True, on_delete=models.SET_NULL)
-    source = models.CharField(max_length=2000, null=False, blank=False)
-    destination = models.CharField(max_length=2000, null=False, blank=False)
-    file_object = models.ForeignKey(File, null=True, on_delete=models.CASCADE)
-    status = models.IntegerField(
-        choices=[(status.value, status.name) for status in CopyFileStatus],
-        default=CopyFileStatus.PENDING,
-        db_index=True,
-    )
-
-    def set_completed(self, message):
-        if self.smile_message:
-            try:
-                with transaction.atomic():
-                    copy_file_tasks = CopyFileTask.objects.select_for_update().filter(smile_message=self.smile_message)
-                    self.status = CopyFileStatus.COMPLETED
-                    self.smile_message.log += f"{message}\n"
-                    self.save()
-                    calculate_checksum.delay(str(self.file_object.id))
-                    if not copy_file_tasks.filter(status=CopyFileStatus.PENDING).exists():
-                        if copy_file_tasks.filter(status=CopyFileStatus.COMPLETED).count() == copy_file_tasks.count():
-                            self.smile_message.status = SmileMessageStatus.COMPLETED
-
-                        else:
-                            self.smile_message.status = SmileMessageStatus.FAILED
-                    self.smile_message.save()
-            except IntegrityError as e:
-                logger.error(f"Integrity error {e}")
-        else:
-            self.status = CopyFileStatus.COMPLETED
-            logger.info(f"{message}")
-            self.save()
-
-    def set_failed(self, message=""):
-        if self.smile_message:
-            try:
-                with transaction.atomic():
-                    copy_file_tasks = CopyFileTask.objects.select_for_update().filter(smile_message=self.smile_message)
-                    self.status = CopyFileStatus.FAILED
-                    self.smile_message.log += f"{message}\n"
-                    self.save()
-                    self.file_object.available = False
-                    self.file_object.save(update_fields=["available"])
-                    if not copy_file_tasks.filter(status=CopyFileStatus.PENDING).exists():
-                        self.smile_message.status = SmileMessageStatus.FAILED
-                    self.smile_message.save()
-            except IntegrityError as e:
-                logger.error(f"Integrity error {e}")
-        else:
-            self.status = CopyFileStatus.FAILED
-            logger.error(f"{message}")
-            self.save()
+    def set_sample_status(self, samples):
+        self.sample_status = samples
+        self.save(update_fields=["sample_status"])
 
 
 class RequestCallbackJobStatus(IntEnum):
@@ -170,28 +126,3 @@ class RequestCallbackJob(BaseModel):
     )
     delay = models.IntegerField(default=0)
 
-
-class NormalizerModel(BaseModel):
-    condition = JSONField(null=False, blank=False)
-    normalizer = JSONField(null=False, blank=False)
-
-
-def initialize_normalizer():
-    normalizers = []
-    for normalizer in NormalizerModel.objects.all():
-        normalizers.append(Normalizer(normalizer.condition, normalizer.normalizer))
-    return normalizers
-
-
-class ValidatorModel(BaseModel):
-    name = models.CharField(null=False, blank=False, max_length=30, default="Metadata Schema")
-    schema = JSONField(null=False, blank=False)
-
-    def save(self, *args, **kwargs):
-        if not self.pk and ValidatorModel.objects.exists():
-            raise ValidationError("There is can be only one ValidatorModel instance")
-        return super(ValidatorModel, self).save(*args, **kwargs)
-
-
-def get_metadata_schema():
-    return ValidatorModel.objects.first()

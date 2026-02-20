@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "runner.apps.RunnerConfig",
     "beagle_etl.apps.BeagleEtlConfig",
     "file_system.apps.FileSystemConfig",
+    "file_manager.apps.FileManagerConfig",
     "notifier.apps.NotifierConfig",
     "study.apps.StudyConfig",
     "django.contrib.admin",
@@ -62,7 +63,6 @@ INSTALLED_APPS = [
     "drf_yasg",
     "advanced_filters",
     "ddtrace.contrib.django",
-    "echo_client",
     "smile_client",
 ]
 
@@ -297,11 +297,11 @@ SMILE_SETTINGS = {
     "CALLBACK": "beagle_etl.smile_service.smile_callback.persist_message",
 }
 
-IMPORT_FILE_GROUP = os.environ.get("BEAGLE_IMPORT_FILE_GROUP", "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
+IMPORT_FILE_GROUP = os.environ.get("BEAGLE_IMPORT_FILE_GROUP")
 
-POOLED_NORMAL_FILE_GROUP = os.environ.get("BEAGLE_POOLED_NORMAL_FILE_GROUP", "b6857a56-5d45-451f-b4f6-26148946080f")
+POOLED_NORMAL_FILE_GROUP = os.environ.get("BEAGLE_POOLED_NORMAL_FILE_GROUP")
 
-DMP_BAM_FILE_GROUP = os.environ.get("BEAGLE_DMP_BAM_FILE_GROUP", "9ace63bf-ed55-461c-9ac0-1c5ee710d957")
+DMP_BAM_FILE_GROUP = os.environ.get("BEAGLE_DMP_BAM_FILE_GROUP")
 
 RIDGEBACK_URL = os.environ.get("BEAGLE_RIDGEBACK_URL", "http://localhost:5003")
 
@@ -465,6 +465,7 @@ DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
 MAPPING = json.loads(os.environ.get("BEAGLE_FILE_MAPPING", "{}"))
 COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
+STAGE_DAYS = int(os.environ.get("BEAGLE_STAGE_DAYS", 30))
 
 FASTQ_DEFAULT_LOCATION_PREFIX = os.environ.get("BEAGLE_FASTQ_DEFAULT_LOCATION_PREFIX")
 FASTQ_IRIS_LOCATION_PREFIX = os.environ.get("BEAGLE_FASTQ_IRIS_LOCATION_PREFIX")
@@ -548,15 +549,3 @@ GENE_PANEL_TABLE = {
     "HC_IMPACT": {None: "UNKNOWN", "null": "UNKNOWN", "IMPACT505_BAITS": "IMPACT505"},
 }
 SHELL_PLUS = "ipython"
-
-
-ECHO_SETTINGS = {
-    "USERNAME": os.getenv("ECHO_USERNAME"),
-    "PASSWORD": os.getenv("ECHO_PASSWORD"),
-    "HOST": os.getenv("ECHO_RABBITMQ_HOST"),
-    "PORT": os.getenv("ECHO_RABBITMQ_PORT"),
-    "VHOST": os.getenv("ECHO_VHOST", "/"),
-    "ECHO_TASK_QUEUE": os.getenv("ECHO_TASK_QUEUE"),
-    "ECHO_CONFIRMATION_QUEUE": os.getenv("ECHO_CONFIRMATION_QUEUE"),
-    "CALLBACK": os.getenv("ECHO_CALLBACK"),
-}
