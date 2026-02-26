@@ -62,14 +62,12 @@ class TestCopyOutputs(TestCase):
         return True
 
     @patch("runner.operator.copy_outputs_operator.v2_1_0.copy_outputs_operator.CopyOutputsOperator.get_log_directory")
-    @patch("file_system.models.populate_job_group_notifier_metadata.delay")
-    def test_create_copy_output_jobs(self, populate_job_group_notifier_metadata, get_log_directory):
+    def test_create_copy_output_jobs(self, get_log_directory):
         """
         Test that copy output jobs are correctly created
         """
         print("Running test_create_copy_output_jobs ----")
         # Load fixtures
-        populate_job_group_notifier_metadata.return_value = None
         get_log_directory.return_value = "/path/to/log/dir"
         test_files_fixture = os.path.join(
             settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.with_disambiguate.json"
@@ -91,15 +89,13 @@ class TestCopyOutputs(TestCase):
             self.assertEqual(input_json_valid, True)
 
     @patch("runner.operator.copy_outputs_operator.v2_1_0.copy_outputs_operator.CopyOutputsOperator.get_log_directory")
-    @patch("file_system.models.populate_job_group_notifier_metadata.delay")
     def test_create_copy_output_jobs_without_disambiguate(
-        self, populate_job_group_notifier_metadata, get_log_directory
+        self, get_log_directory
     ):
         """
         Test that copy output jobs are correctly created
         """
         print("Running test_create_copy_output_jobs ----")
-        populate_job_group_notifier_metadata.return_value = None
         get_log_directory.return_value = "/path/to/log/dir"
         # Load fixtures
         test_files_fixture = os.path.join(
