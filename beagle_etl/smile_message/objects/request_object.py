@@ -35,59 +35,68 @@ class RequestMetadata:
     bicAnalysis: bool
     status: RequestStatus
     requestJson: str
-    samples: List['SampleMetadata'] = field(default_factory=list)
+    samples: List["SampleMetadata"] = field(default_factory=list)
     igoDeliveryDate: Optional[str] = None
     ilabRequestId: Optional[str] = None
     pooledNormals: Optional[List[str]] = None
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'RequestMetadata':
+    def from_dict(cls, data: Dict[str, Any]) -> "RequestMetadata":
         """Deserialize from dictionary."""
         # Handle nested status
-        status_data = data.get('status', {})
+        status_data = data.get("status", {})
         status = RequestStatus(**status_data) if status_data else RequestStatus(False, "{}")
 
         # Handle nested samples
-        samples_data = data.get('samples', [])
+        samples_data = data.get("samples", [])
         samples = [SampleMetadata.from_dict(sample) for sample in samples_data]
 
         # Handle delivery date conversion
         delivery_date = None
-        if data.get('igoDeliveryDate'):
-            delivery_date = datetime.fromtimestamp(data["igoDeliveryDate"] / 1000).isoformat()
+        if data.get("igoDeliveryDate"):
+            delivery_date_value = data["igoDeliveryDate"]
+            # If it's already a string (ISO format), use it as-is
+            if isinstance(delivery_date_value, str):
+                delivery_date = delivery_date_value
+            # If it's a number (timestamp in milliseconds), convert it
+            elif isinstance(delivery_date_value, (int, float)):
+                delivery_date = datetime.fromtimestamp(delivery_date_value / 1000).isoformat()
+            else:
+                delivery_date = None
 
         return cls(
-            smileRequestId=data.get('smileRequestId'), # required
-            igoProjectId=data.get('igoProjectId'), # required
-            igoRequestId=data.get('igoRequestId',), # required
+            smileRequestId=data.get("smileRequestId"),  # required
+            igoProjectId=data.get("igoProjectId"),  # required
+            igoRequestId=data.get(
+                "igoRequestId",
+            ),  # required
             igoDeliveryDate=delivery_date,
-            ilabRequestId=data.get('ilabRequestId'),
-            genePanel=data.get('genePanel'), # required
-            projectManagerName=data.get('projectManagerName', ''),
-            piEmail=data.get('piEmail', ''),
-            labHeadName=data.get('labHeadName', ''),
-            labHeadEmail=data.get('labHeadEmail', ''),
-            investigatorName=data.get('investigatorName', ''),
-            investigatorEmail=data.get('investigatorEmail', ''),
-            dataAnalystName=data.get('dataAnalystName', ''),
-            dataAnalystEmail=data.get('dataAnalystEmail', ''),
-            otherContactEmails=data.get('otherContactEmails', ''),
-            dataAccessEmails=data.get('dataAccessEmails', ''),
-            qcAccessEmails=data.get('qcAccessEmails', ''),
-            strand=data.get('strand', 'null'),
-            libraryType=data.get('libraryType'),
-            isCmoRequest=data.get('isCmoRequest'), # required
-            bicAnalysis=data.get('bicAnalysis'),
+            ilabRequestId=data.get("ilabRequestId"),
+            genePanel=data.get("genePanel"),  # required
+            projectManagerName=data.get("projectManagerName", ""),
+            piEmail=data.get("piEmail", ""),
+            labHeadName=data.get("labHeadName", ""),
+            labHeadEmail=data.get("labHeadEmail", ""),
+            investigatorName=data.get("investigatorName", ""),
+            investigatorEmail=data.get("investigatorEmail", ""),
+            dataAnalystName=data.get("dataAnalystName", ""),
+            dataAnalystEmail=data.get("dataAnalystEmail", ""),
+            otherContactEmails=data.get("otherContactEmails", ""),
+            dataAccessEmails=data.get("dataAccessEmails", ""),
+            qcAccessEmails=data.get("qcAccessEmails", ""),
+            strand=data.get("strand", "null"),
+            libraryType=data.get("libraryType"),
+            isCmoRequest=data.get("isCmoRequest"),  # required
+            bicAnalysis=data.get("bicAnalysis"),
             status=status,
-            requestJson=data.get('requestJson', ''),
-            pooledNormals=data.get('pooledNormals', []),
-            samples=samples
+            requestJson=data.get("requestJson", ""),
+            pooledNormals=data.get("pooledNormals", []),
+            samples=samples,
         )
 
     def __post_init__(self):
         """Validate request data after initialization."""
         self._validate_required_fields()
-        self._validate_samples()
         self._validate_gene_panel_consistency()
 
     def to_dict(self, include_samples: bool = True) -> Dict[str, Any]:
@@ -101,36 +110,36 @@ class RequestMetadata:
             Dictionary representation of the request
         """
         result = {
-            'smileRequestId': self.smileRequestId,
-            'igoProjectId': self.igoProjectId,
-            'igoRequestId': self.igoRequestId,
-            'igoDeliveryDate': self.igoDeliveryDate,
-            'ilabRequestId': self.ilabRequestId,
-            'genePanel': self.genePanel,
-            'projectManagerName': self.projectManagerName,
-            'piEmail': self.piEmail,
-            'labHeadName': self.labHeadName,
-            'labHeadEmail': self.labHeadEmail,
-            'investigatorName': self.investigatorName,
-            'investigatorEmail': self.investigatorEmail,
-            'dataAnalystName': self.dataAnalystName,
-            'dataAnalystEmail': self.dataAnalystEmail,
-            'otherContactEmails': self.otherContactEmails,
-            'dataAccessEmails': self.dataAccessEmails,
-            'qcAccessEmails': self.qcAccessEmails,
-            'strand': self.strand,
-            'libraryType': self.libraryType,
-            'isCmoRequest': self.isCmoRequest,
-            'bicAnalysis': self.bicAnalysis,
-            'pooledNormals': self.pooledNormals,
-            'status': {
-                'validationStatus': self.status.validationStatus,
-                'validationReport': self.status.validationReport
-            }
+            "smileRequestId": self.smileRequestId,
+            "igoProjectId": self.igoProjectId,
+            "igoRequestId": self.igoRequestId,
+            "igoDeliveryDate": self.igoDeliveryDate,
+            "ilabRequestId": self.ilabRequestId,
+            "genePanel": self.genePanel,
+            "projectManagerName": self.projectManagerName,
+            "piEmail": self.piEmail,
+            "labHeadName": self.labHeadName,
+            "labHeadEmail": self.labHeadEmail,
+            "investigatorName": self.investigatorName,
+            "investigatorEmail": self.investigatorEmail,
+            "dataAnalystName": self.dataAnalystName,
+            "dataAnalystEmail": self.dataAnalystEmail,
+            "otherContactEmails": self.otherContactEmails,
+            "dataAccessEmails": self.dataAccessEmails,
+            "qcAccessEmails": self.qcAccessEmails,
+            "strand": self.strand,
+            "libraryType": self.libraryType,
+            "isCmoRequest": self.isCmoRequest,
+            "bicAnalysis": self.bicAnalysis,
+            "pooledNormals": self.pooledNormals,
+            "status": {
+                "validationStatus": self.status.validationStatus,
+                "validationReport": self.status.validationReport,
+            },
         }
 
         if include_samples:
-            result['samples'] = [sample.to_dict() for sample in self.samples]
+            result["samples"] = [sample.to_dict() for sample in self.samples]
 
         return result
 
@@ -145,40 +154,30 @@ class RequestMetadata:
             settings.REQUEST_ID_METADATA_KEY: self.igoRequestId,
             settings.PROJECT_ID_METADATA_KEY: self.igoProjectId,
             settings.RECIPE_METADATA_KEY: self.genePanel,
-            'projectManagerName': self.projectManagerName,
-            'piEmail': self.piEmail,
+            "projectManagerName": self.projectManagerName,
+            "piEmail": self.piEmail,
             settings.LAB_HEAD_NAME_METADATA_KEY: self.labHeadName,
             settings.LAB_HEAD_EMAIL_METADATA_KEY: self.labHeadEmail,
             settings.INVESTIGATOR_NAME_METADATA_KEY: self.investigatorName,
             settings.INVESTIGATOR_EMAIL_METADATA_KEY: self.investigatorEmail,
-            'dataAnalystName': self.dataAnalystName,
-            'dataAnalystEmail': self.dataAnalystEmail,
-            'otherContactEmails': self.otherContactEmails,
-            'dataAccessEmails': self.dataAccessEmails,
-            'qcAccessEmails': self.qcAccessEmails,
+            "dataAnalystName": self.dataAnalystName,
+            "dataAnalystEmail": self.dataAnalystEmail,
+            "otherContactEmails": self.otherContactEmails,
+            "dataAccessEmails": self.dataAccessEmails,
+            "qcAccessEmails": self.qcAccessEmails,
         }
 
     def _validate_required_fields(self):
         """Validate that required request fields are not empty."""
         required_fields = {
-            "smileRequestId": self.smileRequestId,
             "igoRequestId": self.igoRequestId,
             "igoProjectId": self.igoProjectId,
             "genePanel": self.genePanel,
         }
 
         for field_name, field_value in required_fields.items():
-            if not field_value or field_value.strip() == '':
-                raise MissingDataException(
-                    f"Required field '{field_name}' is missing or empty for request"
-                )
-
-    def _validate_samples(self):
-        """Validate that the request has samples."""
-        if not self.samples:
-            raise MissingDataException(
-                f"Request {self.igoRequestId} has no samples"
-            )
+            if not field_value or field_value.strip() == "":
+                raise MissingDataException(f"Required field '{field_name}' is missing or empty for request")
 
     def _validate_gene_panel_consistency(self):
         """Validate that all samples have the same gene panel as the request."""
@@ -208,5 +207,3 @@ class RequestMetadata:
             log += sample_log
             status[sample_status.sample_id] = sample_status
         return log, status
-
-

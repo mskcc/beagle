@@ -6,18 +6,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0044_auto_20260211_1458'),
+        ("beagle_etl", "0044_auto_20260211_1458"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='validatormodel',
-            name='basemodel_ptr',
+            model_name="validatormodel",
+            name="basemodel_ptr",
         ),
         migrations.DeleteModel(
-            name='NormalizerModel',
+            name="NormalizerModel",
         ),
         migrations.DeleteModel(
-            name='ValidatorModel',
+            name="ValidatorModel",
         ),
     ]

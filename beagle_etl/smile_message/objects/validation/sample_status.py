@@ -1,5 +1,4 @@
 class SampleStatus(object):
-
     def __init__(self, sample_id, igocomplete, code, status, message):
         self.sample_id = sample_id
         self.igocomplete = igocomplete

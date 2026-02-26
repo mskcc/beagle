@@ -3,58 +3,79 @@ import logging
 import datetime
 from celery import shared_task
 from django.conf import settings
-from beagle_etl.models import (
-    SMILEMessage,
-    SmileMessageStatus,
-    RequestCallbackJobStatus,
-    RequestCallbackJob,
-    SkipProject,
-)
+from beagle_etl.models import SMILEMessage, SmileMessageStatus, RequestCallbackJobStatus, RequestCallbackJob
 from beagle_etl.jobs.metadb_jobs import (
     new_request,
-    update_job,
-    not_supported,
+    update_request_job,
+    update_sample_job,
     request_callback,
 )
+from lib.memcache_lock import memcache_task_lock
 from ddtrace import tracer
+from django.db.models import Case, When, IntegerField
+
 
 logger = logging.getLogger(__name__)
+
+
+def get_pending_smile_messages():
+    """
+    Get pending SMILE messages ordered by topic priority and creation date.
+
+    Returns messages in order: NEW_REQUEST, SAMPLE_UPDATE, REQUEST_UPDATE,
+    with each group sorted by created_date.
+
+    Returns:
+        QuerySet of SMILEMessage objects
+    """
+    return (
+        SMILEMessage.objects.filter(
+            status=SmileMessageStatus.PENDING,
+            topic__in=[
+                settings.METADB_NATS_NEW_REQUEST,
+                settings.METADB_NATS_SAMPLE_UPDATE,
+                settings.METADB_NATS_REQUEST_UPDATE,
+            ],
+        )
+        .annotate(
+            topic_priority=Case(
+                When(topic=settings.METADB_NATS_NEW_REQUEST, then=0),
+                When(topic=settings.METADB_NATS_SAMPLE_UPDATE, then=1),
+                When(topic=settings.METADB_NATS_REQUEST_UPDATE, then=2),
+                default=3,
+                output_field=IntegerField(),
+            )
+        )
+        .order_by("topic_priority", "created_date")
+    )
 
 
 @shared_task
 @tracer.wrap(service="beagle")
 def process_smile_events():
-    update_requests = set()
+    """Process pending SMILE messages in priority order."""
+    messages = get_pending_smile_messages()
 
-    messages = list(
-        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_REQUEST_UPDATE)
-    )
     for msg in messages:
-        msg.in_progress()
-        update_requests.add(msg.request_id)
-    messages = list(
-        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_SAMPLE_UPDATE)
-    )
-    for msg in messages:
-        msg.in_progress()
-        update_requests.add("_".join(msg.request_id.split("_")[:-1]))
-
-    messages = list(
-        SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING, topic=settings.METADB_NATS_NEW_REQUEST)
-    )
-    for message in messages:
-        if message.request_id in update_requests:
-            update_requests.remove(message.request_id)
-            current_span = tracer.current_span()
-            request_id = message.request_id
-            current_span.set_tag("request.id", request_id)
-        logger.info(f"New request: {message.request_id}")
-        message.in_progress()
-        new_request.delay(str(message.id))
-
-    for req in list(update_requests):
-        logger.info(f"Update request/samples: {req}")
-        update_job.delay(req)
+        lock_id = f"lock_smile_{msg.request_id}"
+        print(lock_id)
+        with memcache_task_lock(lock_id, msg) as acquired:
+            if acquired:
+                msg.in_progress()
+                current_span = tracer.current_span()
+                current_span.set_tag("request.id", msg.request_id)
+                logger.info(
+                    f"Processing {str(msg.id)} with igoRequestId={msg.request_id} received on topic={msg.topic}"
+                )
+                if msg.topic == settings.METADB_NATS_NEW_REQUEST:
+                    print("New Request")
+                    new_request.delay(str(msg.id))
+                elif msg.topic == settings.METADB_NATS_SAMPLE_UPDATE:
+                    print("Update Sample")
+                    update_sample_job(msg.id)
+                elif msg.topic == settings.METADB_NATS_REQUEST_UPDATE:
+                    print("Update Request")
+                    update_request_job(msg.id)
 
     unknown_topics = SMILEMessage.objects.filter(status=SmileMessageStatus.PENDING).exclude(
         topic__in=(
@@ -65,20 +86,16 @@ def process_smile_events():
     )
 
     for msg in unknown_topics:
-        msg.in_progress()
-        not_supported.delay(str(msg.id))
         logger.error(f"Unknown subject: {msg.topic}")
+        msg.add_log(f"Unknown subject: {msg.topic}")
+        msg.not_supported()
 
 
 @shared_task
 def process_request_callback_jobs():
     requests = RequestCallbackJob.objects.filter(status=RequestCallbackJobStatus.PENDING)
     for request in requests:
-        skip_projects_config = SkipProject.objects.first()
-        if request.request_id in skip_projects_config.skip_projects:
-            # TODO: Remove this when problem with redeliveries of old projects is gone
-            pass
-        elif datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
+        if datetime.datetime.now(tz=pytz.UTC) > request.created_date + datetime.timedelta(minutes=request.delay):
             logger.info(f"Submitting request callback {request.request_id}")
             request_callback.delay(
                 request.request_id,

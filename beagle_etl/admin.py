@@ -6,7 +6,6 @@ from .models import (
     ETLConfiguration,
     SMILEMessage,
     RequestCallbackJob,
-    SkipProject,
 )
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 
@@ -39,12 +38,7 @@ class RequestCallbackJobAdmin(ModelAdmin):
     ordering = ("-created_date",)
 
 
-class SkipProjectAdmin(ModelAdmin):
-    list_display = ("skip_projects",)
-
-
 admin.site.register(Operator, OperatorAdmin)
 admin.site.register(ETLConfiguration, AssayAdmin)
 admin.site.register(SMILEMessage, SMILEMessagesAdmin)
 admin.site.register(RequestCallbackJob, RequestCallbackJobAdmin)
-admin.site.register(SkipProject, SkipProjectAdmin)

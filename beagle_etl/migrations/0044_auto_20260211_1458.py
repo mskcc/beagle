@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('beagle_etl', '0043_delete_copyfiletask'),
+        ("beagle_etl", "0043_delete_copyfiletask"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='smilemessage',
-            name='log',
-            field=models.TextField(blank=True, default='', null=True),
+            model_name="smilemessage",
+            name="log",
+            field=models.TextField(blank=True, default="", null=True),
         ),
     ]

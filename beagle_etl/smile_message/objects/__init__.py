@@ -6,17 +6,17 @@ from beagle_etl.smile_message.objects.sample_object import (
     SampleAlias,
     PatientAlias,
     Library,
-    Run
+    Run,
 )
 
 __all__ = [
-    'RequestMetadata',
-    'RequestStatus',
-    'SampleMetadata',
-    'SampleStatusObj',
-    'CmoSampleIdFields',
-    'SampleAlias',
-    'PatientAlias',
-    'Library',
-    'Run'
+    "RequestMetadata",
+    "RequestStatus",
+    "SampleMetadata",
+    "SampleStatusObj",
+    "CmoSampleIdFields",
+    "SampleAlias",
+    "PatientAlias",
+    "Library",
+    "Run",
 ]

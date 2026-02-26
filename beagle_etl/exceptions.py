@@ -106,4 +106,5 @@ class FailedToFetchRequestMetadata(ETLExceptions):
     """
     Failed to fetch request metadata
     """
+
     code = 113

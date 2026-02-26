@@ -420,7 +420,6 @@ class File(BaseModel):
         super(File, self).save(*args, **kwargs)
 
 
-
 class FileMetadataManager(models.Manager):
     def _update_request(self, metadata):
         return Request.objects.create_or_update_instance(

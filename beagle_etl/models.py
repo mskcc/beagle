@@ -2,13 +2,10 @@ import uuid
 import logging
 from enum import IntEnum
 from django.db import models
-from django.db import transaction, IntegrityError
-from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import JSONField, ArrayField
-from file_system.models import File
-from beagle_etl.jobs.helper_jobs import calculate_checksum
 from notifier.tasks import notifier_start
 from notifier.models import Notifier, JobGroup, JobGroupNotifier
+from beagle_etl.jobs.import_helper import generate_ticket_description
 
 
 logger = logging.getLogger()
@@ -38,10 +35,6 @@ class ETLConfiguration(models.Model):
     all_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
     disabled_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
     hold_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
-
-
-class SkipProject(models.Model):
-    skip_projects = ArrayField(models.CharField(max_length=100), null=True, blank=True)
 
 
 class SmileMessageStatus(IntEnum):
@@ -77,20 +70,20 @@ class SMILEMessage(BaseModel):
         self.job_group_notifier = job_group_notifier
         self.save(update_fields=["job_group", "job_group_notifier", "status"])
 
-    def copy_files(self):
-        self.status = SmileMessageStatus.COPY_FILES
-        self.save(update_fields=["status"])
-
-    def complete(self):
+    def complete(self, request_metadata=None):
         self.status = SmileMessageStatus.COMPLETED
         self.save(update_fields=["status"])
+        if self.job_group_notifier and request_metadata:
+            self._generate_description(request_metadata)
+
+    def failed(self, request_metadata=None):
+        self.status = SmileMessageStatus.FAILED
+        self.save(update_fields=["status"])
+        if self.job_group_notifier and request_metadata:
+            self._generate_description(request_metadata)
 
     def not_supported(self):
         self.status = SmileMessageStatus.NOT_SUPPORTED
-        self.save(update_fields=["status"])
-
-    def failed(self):
-        self.status = SmileMessageStatus.FAILED
         self.save(update_fields=["status"])
 
     def add_log(self, message):
@@ -104,6 +97,15 @@ class SMILEMessage(BaseModel):
     def set_sample_status(self, samples):
         self.sample_status = samples
         self.save(update_fields=["sample_status"])
+
+    def _generate_description(self, request_metadata):
+        generate_ticket_description(
+            self.request_id,
+            str(self.job_group.id),
+            str(self.job_group_notifier.id),
+            self.sample_status,
+            request_metadata,
+        )
 
 
 class RequestCallbackJobStatus(IntEnum):
@@ -125,4 +127,3 @@ class RequestCallbackJob(BaseModel):
         db_index=True,
     )
     delay = models.IntegerField(default=0)
-

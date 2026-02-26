@@ -4,7 +4,6 @@ from beagle_etl.smile_message.objects import RequestMetadata, SampleMetadata
 
 
 class TestSmileMessageDeserialization(TestCase):
-
     def setUp(self):
         """Set up test data with anonymized JSON."""
         self.json_data = {
@@ -29,11 +28,8 @@ class TestSmileMessageDeserialization(TestCase):
             "libraryType": "null",
             "isCmoRequest": True,
             "bicAnalysis": True,
-            "status": {
-                "validationStatus": True,
-                "validationReport": "{}"
-            },
-            "requestJson": "{\"requestId\":\"12345_B\"}",
+            "status": {"validationStatus": True, "validationReport": "{}"},
+            "requestJson": '{"requestId":"12345_B"}',
             "pooledNormals": None,
             "samples": [
                 {
@@ -62,15 +58,12 @@ class TestSmileMessageDeserialization(TestCase):
                     "baitSet": "TestPanel500_BAITS",
                     "datasource": "igo",
                     "igoComplete": True,
-                    "status": {
-                        "validationStatus": True,
-                        "validationReport": "{}"
-                    },
+                    "status": {"validationStatus": True, "validationReport": "{}"},
                     "cmoSampleIdFields": {
                         "naToExtract": "",
                         "normalizedPatientId": "TEST_PATIENT001",
                         "sampleType": "DNA",
-                        "recipe": "TestPanel500"
+                        "recipe": "TestPanel500",
                     },
                     "qcReports": [],
                     "libraries": [
@@ -94,33 +87,18 @@ class TestSmileMessageDeserialization(TestCase):
                                     "flowCellLanes": [1],
                                     "fastqs": [
                                         "/data/fastq/RUN_0001_TESTFC01/Project_12345_B/Sample_TEST001_Sample1_IGO_12345_B_1/TEST001_Sample1_IGO_12345_B_1_S1_R1_001.fastq.gz",
-                                        "/data/fastq/RUN_0001_TESTFC01/Project_12345_B/Sample_TEST001_Sample1_IGO_12345_B_1/TEST001_Sample1_IGO_12345_B_1_S1_R2_001.fastq.gz"
-                                    ]
+                                        "/data/fastq/RUN_0001_TESTFC01/Project_12345_B/Sample_TEST001_Sample1_IGO_12345_B_1/TEST001_Sample1_IGO_12345_B_1_S1_R2_001.fastq.gz",
+                                    ],
                                 }
-                            ]
+                            ],
                         }
                     ],
                     "sampleAliases": [
-                        {
-                            "value": "TEST001_Sample1",
-                            "namespace": "investigatorId"
-                        },
-                        {
-                            "value": "12345_B_1",
-                            "namespace": "igoId"
-                        }
+                        {"value": "TEST001_Sample1", "namespace": "investigatorId"},
+                        {"value": "12345_B_1", "namespace": "igoId"},
                     ],
-                    "patientAliases": [
-                        {
-                            "value": "C-ABC123",
-                            "namespace": "cmoId"
-                        }
-                    ],
-                    "additionalProperties": {
-                        "igoRequestId": "12345_B",
-                        "isCmoSample": "true",
-                        "altId": "T1A-V01"
-                    }
+                    "patientAliases": [{"value": "C-ABC123", "namespace": "cmoId"}],
+                    "additionalProperties": {"igoRequestId": "12345_B", "isCmoSample": "true", "altId": "T1A-V01"},
                 },
                 {
                     "smileSampleId": "22222222-3333-4444-5555-666666666666",
@@ -148,15 +126,12 @@ class TestSmileMessageDeserialization(TestCase):
                     "baitSet": "TestPanel500_BAITS",
                     "datasource": "igo",
                     "igoComplete": True,
-                    "status": {
-                        "validationStatus": True,
-                        "validationReport": "{}"
-                    },
+                    "status": {"validationStatus": True, "validationReport": "{}"},
                     "cmoSampleIdFields": {
                         "naToExtract": "",
                         "normalizedPatientId": "TEST_PATIENT001",
                         "sampleType": "DNA",
-                        "recipe": "TestPanel500"
+                        "recipe": "TestPanel500",
                     },
                     "qcReports": [],
                     "libraries": [
@@ -180,35 +155,20 @@ class TestSmileMessageDeserialization(TestCase):
                                     "flowCellLanes": [1],
                                     "fastqs": [
                                         "/data/fastq/RUN_0001_TESTFC01/Project_12345_B/Sample_Normal_Sample_001_IGO_12345_B_2/Normal_Sample_001_IGO_12345_B_2_S2_R1_001.fastq.gz",
-                                        "/data/fastq/RUN_0001_TESTFC01/Project_12345_B/Sample_Normal_Sample_001_IGO_12345_B_2/Normal_Sample_001_IGO_12345_B_2_S2_R2_001.fastq.gz"
-                                    ]
+                                        "/data/fastq/RUN_0001_TESTFC01/Project_12345_B/Sample_Normal_Sample_001_IGO_12345_B_2/Normal_Sample_001_IGO_12345_B_2_S2_R2_001.fastq.gz",
+                                    ],
                                 }
-                            ]
+                            ],
                         }
                     ],
                     "sampleAliases": [
-                        {
-                            "value": "Normal_Sample_001",
-                            "namespace": "investigatorId"
-                        },
-                        {
-                            "value": "12345_B_2",
-                            "namespace": "igoId"
-                        }
+                        {"value": "Normal_Sample_001", "namespace": "investigatorId"},
+                        {"value": "12345_B_2", "namespace": "igoId"},
                     ],
-                    "patientAliases": [
-                        {
-                            "value": "C-ABC123",
-                            "namespace": "cmoId"
-                        }
-                    ],
-                    "additionalProperties": {
-                        "igoRequestId": "12345_B",
-                        "isCmoSample": "true",
-                        "altId": "T1A-V02"
-                    }
-                }
-            ]
+                    "patientAliases": [{"value": "C-ABC123", "namespace": "cmoId"}],
+                    "additionalProperties": {"igoRequestId": "12345_B", "isCmoSample": "true", "altId": "T1A-V02"},
+                },
+            ],
         }
 
     def test_deserialize_request_metadata(self):

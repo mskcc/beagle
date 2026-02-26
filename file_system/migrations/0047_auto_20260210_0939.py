@@ -16,17 +16,17 @@ def populate_original_paths(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('file_system', '0046_migrate_patient_aliases'),
+        ("file_system", "0046_migrate_patient_aliases"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='file',
-            name='original_path',
-            field=models.CharField(default='', max_length=1500),
+            model_name="file",
+            name="original_path",
+            field=models.CharField(default="", max_length=1500),
             preserve_default=False,
         ),
         migrations.DeleteModel(
-            name='ImportMetadata',
+            name="ImportMetadata",
         ),
     ]
