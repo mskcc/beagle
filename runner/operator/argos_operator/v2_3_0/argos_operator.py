@@ -250,12 +250,13 @@ class ArgosOperator(Operator):
                 tumor_current = tumor.first()
                 bait_set = tumor_current.metadata["baitSet"]
                 preservation_types = tumor_current.metadata["preservation"]
+                sample_origin = tumor_current.metadata["sampleOrigin"]
                 pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(
-                    run_ids, preservation_types, bait_set
+                    run_ids, preservation_types, bait_set, sample_origin
                 )
                 for f in pooled_normal_files:
                     metadata = build_pooled_normal_sample_by_file(
-                        f, run_ids, preservation_types, bait_set_reformatted, sample_name
+                        f, run_ids, preservation_types, bait_set_reformatted, sample_origin, sample_name
                     )["metadata"]
                     sample = f
                     sample.metadata = metadata
@@ -321,6 +322,8 @@ class ArgosOperator(Operator):
                 pi = sample_data["pi"]
             if "pi_email" in sample_data:
                 pi_email = sample_data["pi_email"]
+            if "sample_origin" in sample_data:
+                sample_origin = sample_data["sample_origin"]
             dmp_bam_id = sample_id.replace("s_", "").replace("_", "-")
             dmp_bam_slug = Q(file__file_group=FileGroup.objects.get(slug="dmp-bams"))
             dmp_bam_files = FileRepository.filter(q=dmp_bam_slug)
@@ -328,7 +331,9 @@ class ArgosOperator(Operator):
             sample = list()
             if len(data) > 0:
                 s = data[0]
-                metadata = build_dmp_sample(s, patient_id, bait_set, tumor_type, request_id, pi, pi_email)["metadata"]
+                metadata = build_dmp_sample(
+                    s, patient_id, bait_set, tumor_type, request_id, pi, pi_email, sample_origin
+                )["metadata"]
                 s.metadata = metadata
                 if s:
                     is_dmp_sample = True

@@ -56,6 +56,13 @@ class PipelineName(models.Model):
     name = models.CharField(max_length=30, null=False, blank=False)
 
 
+def _default_user():
+    try:
+        return getuser()
+    except KeyError:
+        return "unknown"
+
+
 class Pipeline(BaseModel):
     pipeline_type = models.IntegerField(
         choices=[(pt.value, pt.name) for pt in ProtocolType], db_index=True, default=ProtocolType.CWL
@@ -65,7 +72,7 @@ class Pipeline(BaseModel):
     github = models.CharField(max_length=300, editable=True)
     version = models.CharField(max_length=100, editable=True)
     entrypoint = models.CharField(max_length=100, editable=True)
-    user = models.CharField(default=getuser(), max_length=100)
+    user = models.CharField(default=_default_user, max_length=100)
     output_file_group = models.ForeignKey(FileGroup, on_delete=models.CASCADE)
     output_directory = models.CharField(max_length=300, null=True, editable=True)
     log_directory = models.CharField(max_length=300, null=True, editable=True)
