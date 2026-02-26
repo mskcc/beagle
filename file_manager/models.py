@@ -18,12 +18,8 @@ class FileProviderStatus(IntEnum):
 
 
 class SampleProviderJobManager(models.Manager):
-
     def get_or_create_for_sample(self, sample_id):
-        return self.get_or_create(
-            sample_id=sample_id,
-            defaults={'status': FileProviderStatus.SCHEDULED}
-        )
+        return self.get_or_create(sample_id=sample_id, defaults={"status": FileProviderStatus.SCHEDULED})
 
     def is_sample_completed(self, sample_id):
         try:
@@ -60,7 +56,6 @@ class SampleProviderJob(BaseModel):
 
 
 class FileProviderManager(models.Manager):
-
     def provide_file(self, file_object, original_path, staged_path):
         """
         Create a FileProviderJob for the given file, preventing duplicates.
@@ -70,10 +65,12 @@ class FileProviderManager(models.Manager):
             # select_for_update locks the matching rows
             existing = (
                 FileProviderJob.objects.select_for_update()
-                .filter(file_object=file_object,
-                        original_path=original_path,
-                        staged_path=staged_path,
-                        status__in=(FileProviderStatus.SCHEDULED, FileProviderStatus.IN_PROGRESS))
+                .filter(
+                    file_object=file_object,
+                    original_path=original_path,
+                    staged_path=staged_path,
+                    status__in=(FileProviderStatus.SCHEDULED, FileProviderStatus.IN_PROGRESS),
+                )
                 .first()
             )
 
@@ -88,7 +85,6 @@ class FileProviderManager(models.Manager):
             return job, True
 
 
-
 class FileProviderJob(BaseModel):
     file_object = models.ForeignKey(File, null=True, on_delete=models.CASCADE)
     original_path = models.CharField(max_length=1500, db_index=True)
@@ -100,12 +96,7 @@ class FileProviderJob(BaseModel):
     )
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['file_object'],
-                name='unique_file_provider_job_per_file'
-            )
-        ]
+        constraints = [models.UniqueConstraint(fields=["file_object"], name="unique_file_provider_job_per_file")]
 
     def in_progress(self):
         self.status = FileProviderStatus.IN_PROGRESS
@@ -116,7 +107,6 @@ class FileProviderJob(BaseModel):
         self.save()
 
     objects = FileProviderManager()
-
 
 
 class CleanupFileJob(BaseModel):

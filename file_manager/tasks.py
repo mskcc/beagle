@@ -3,7 +3,7 @@ import logging
 from celery import shared_task
 from django.conf import settings
 from datetime import date, datetime, timedelta
-from copy_service.copy_service import CopyService
+from file_manager.copy_service.copy_service import CopyService
 from .models import FileProviderStatus, FileProviderJob, SampleProviderJob, CleanupFileJob
 
 
@@ -29,9 +29,11 @@ def stage_file_job(file_provide_job_id, sample_job=None):
             logger.warning(f"SampleProviderJob for id {sample_job} not found")
 
     clean_up_date = date.today() + timedelta(days=settings.STAGE_DAYS)
-    CleanupFileJob.objects.create(file_object=file_provide_job.file_object,
-                                  original_path=file_provide_job.original_path,
-                                  cleanup_date=clean_up_date)
+    CleanupFileJob.objects.create(
+        file_object=file_provide_job.file_object,
+        original_path=file_provide_job.original_path,
+        cleanup_date=clean_up_date,
+    )
 
 
 @shared_task

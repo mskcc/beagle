@@ -6,18 +6,18 @@ from file_manager.models import FileProviderStatus, FileProviderJob, CleanupFile
 
 
 class FileManager(object):
-
     def __init__(self, file_group=settings.IMPORT_FILE_GROUP):
         self.file_group = file_group
 
     def stage_sample(self, sample_id):
         sample_job, created = SampleProviderJob.objects.get_or_create_for_sample(sample_id)
 
-        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY, sample_id},
-                                      file_group=self.file_group)
-        gene_panel = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY, sample_id},
-                                           file_group=self.file_group,
-                                           values_metadata=settings.RECIPE_METADATA_KEY).first()
+        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY, sample_id}, file_group=self.file_group)
+        gene_panel = FileRepository.filter(
+            metadata={settings.SAMPLE_ID_METADATA_KEY, sample_id},
+            file_group=self.file_group,
+            values_metadata=settings.RECIPE_METADATA_KEY,
+        ).first()
 
         files_to_stage = 0
         for f in files:
@@ -33,7 +33,6 @@ class FileManager(object):
             self.stage_file(f.file, gene_panel, sample_id)
 
         return sample_job
-
 
     def stage_file(self, file_obj, gene_panel, sample_job=None):
         if not file_obj.is_available:
