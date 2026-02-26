@@ -3,7 +3,7 @@ Test for constructing Argos samples
 """
 from uuid import UUID
 from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from runner.operator.argos_operator.v2_3_0.bin.make_sample import Fastqs, build_sample
 
 from file_system.models import File, FileGroup, FileMetadata, FileType
@@ -13,6 +13,8 @@ import json
 class TestMakeSample(TestCase):
     fixtures = ["file_system.filegroup.json", "file_system.storage.json"]
 
+
+    @override_settings(IMPORT_FILE_GROUP="1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
     def test_build_sample1(self):
         """
         Test for building a sample
