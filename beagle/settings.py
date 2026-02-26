@@ -307,7 +307,6 @@ RIDGEBACK_URL = os.environ.get("BEAGLE_RIDGEBACK_URL", "http://localhost:5003")
 
 LOG_PATH = os.environ.get("BEAGLE_LOG_PATH", "beagle-server.log")
 
-ECHO_LOG_PATH = os.environ.get("BEAGLE_ECHO_LOG_PATH", "echo_client.log")
 SMILE_LOG_PATH = os.environ.get("BEAGLE_SMILE_LOG_PATH", "smile_client.log")
 
 LOGGING = {
@@ -333,14 +332,6 @@ LOGGING = {
             "backupCount": 10,
             "formatter": "simple",
         },
-        "echo_client_log": {
-            "level": "DEBUG",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": ECHO_LOG_PATH,
-            "maxBytes": 209715200,
-            "backupCount": 10,
-            "formatter": "simple",
-        },
         "smile_client_log": {
             "level": "DEBUG",
             "class": "logging.handlers.RotatingFileHandler",
@@ -357,8 +348,7 @@ LOGGING = {
             "level": "DEBUG",
             "propagate": True,
         },
-        "echo_client": {"level": "DEBUG", "handlers": ["echo_client_log", "console"]},
-        "smile_client": {"level": "DEBUG", "handlers": ["echo_client_log", "console"]},
+        "smile_client": {"level": "DEBUG", "handlers": ["smile_client_log", "console"]},
     },
 }
 
