@@ -89,9 +89,7 @@ class TestCopyOutputs(TestCase):
             self.assertEqual(input_json_valid, True)
 
     @patch("runner.operator.copy_outputs_operator.v2_1_0.copy_outputs_operator.CopyOutputsOperator.get_log_directory")
-    def test_create_copy_output_jobs_without_disambiguate(
-        self, get_log_directory
-    ):
+    def test_create_copy_output_jobs_without_disambiguate(self, get_log_directory):
         """
         Test that copy output jobs are correctly created
         """

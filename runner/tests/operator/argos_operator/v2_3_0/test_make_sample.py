@@ -13,7 +13,6 @@ import json
 class TestMakeSample(TestCase):
     fixtures = ["file_system.filegroup.json", "file_system.storage.json"]
 
-
     @override_settings(IMPORT_FILE_GROUP="1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
     def test_build_sample1(self):
         """
