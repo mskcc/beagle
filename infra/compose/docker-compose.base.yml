@@ -8,7 +8,6 @@ services:
       - static_path:/static
       - celery_path:/celery
       - rabbitmq_path:/rabbitmq
-    # Inheriting the chown logic from your original setup
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -47,11 +46,18 @@ services:
       - voyager_net
     env_file:
       - ./.env.${ENV}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sSf http://localhost:${BEAGLE_PORT}/ || exit 1" ]
+      timeout: 10s
+      interval: 30s
+      retries: 3
     depends_on:
       beagle_postgres:
         condition: service_healthy
+        restart: true
       beagle_rabbitmq:
         condition: service_healthy
+        restart: false
 
   # All Celery workers inherit the same base image and env
   beagle_celery_beat: &worker
