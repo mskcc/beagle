@@ -101,7 +101,7 @@ class UpdateSample:
             dbGap=data.get("dbGap"),
             sampleClass=data.get("sampleClass"),
             sampleCategory=data.get("sampleCategory"),
-            datasource=data.get("datasource"),
+            datasource=data.get("datasource") or "igo",
             revisable=data.get("revisable"),
             primarySampleAlias=data.get("primarySampleAlias"),
             latestSampleMetadata=latest_sample_metadata,

@@ -434,17 +434,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-  beagle_echo_consumer:
-    <<: *beagle_celery
-    command:
-      - |
-        echo 'Running echo consumer...'
-        python ${BEAGLE_PATH}/manage.py run_echo_consumer
-    healthcheck:
-      test: "pgrep -f 'python ${BEAGLE_PATH}/manage.py run_echo_consumer' || exit 1"
-      interval: 30s
-      timeout: 10s
-      retries: 3
   beagle_smile_consumer:
     <<: *beagle_celery
     command:

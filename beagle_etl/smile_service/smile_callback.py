@@ -15,11 +15,19 @@ def persist_message(message):
             msg.request_id = data_dict.get(settings.REQUEST_ID_METADATA_KEY)
             msg.gene_panel = data_dict.get(settings.RECIPE_METADATA_KEY)
         elif message.subject == settings.METADB_NATS_REQUEST_UPDATE:
-            msg.request_id = data_dict.get(settings.REQUEST_ID_METADATA_KEY)
-            # TODO: Test this
-            msg.gene_panel = data_dict.get(settings.RECIPE_METADATA_KEY)
+            if isinstance(data_dict, list) and len(data_dict) > 0:
+                last_item = data_dict[-1]
+                msg.request_id = last_item.get(settings.REQUEST_ID_METADATA_KEY)
+                # Try to extract recipe from nested requestMetadataJson
+                request_metadata_json = last_item.get("requestMetadataJson")
+                if request_metadata_json:
+                    try:
+                        request_metadata = json.loads(request_metadata_json)
+                        msg.gene_panel = request_metadata.get(settings.RECIPE_METADATA_KEY)
+                    except:
+                        pass  # If parsing fails, gene_panel remains None
         elif message.subject == settings.METADB_NATS_SAMPLE_UPDATE:
-            msg.request_id = data_dict["latestSampleMetadata"][settings.SAMPLE_ID_METADATA_KEY]
+            msg.request_id = data_dict["latestSampleMetadata"][settings.REQUEST_ID_METADATA_KEY]
             msg.gene_panel = data_dict["latestSampleMetadata"][settings.RECIPE_METADATA_KEY]
         msg.save()
     except Exception as e:

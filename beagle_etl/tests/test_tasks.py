@@ -10,17 +10,14 @@ from datetime import timedelta
 
 
 class TestGetPendingSmileMessages(TestCase):
-    """Test that get_pending_smile_messages returns messages in the correct order."""
+    """Test that get_pending_smile_messages returns the highest priority message per request_id."""
 
     def setUp(self):
         """Create test messages with different topics and timestamps."""
         # Create a base time
         base_time = timezone.now()
 
-        # Create messages with different topics and timestamps
-        # The order should be: NEW_REQUEST (by date), SAMPLE_UPDATE (by date), REQUEST_UPDATE (by date)
-
-        # Create NEW_REQUEST messages
+        # Create messages for different request_ids to test basic functionality
         self.new_request_1 = SMILEMessage.objects.create(
             topic=settings.METADB_NATS_NEW_REQUEST,
             request_id="REQ_001",
@@ -37,7 +34,6 @@ class TestGetPendingSmileMessages(TestCase):
             created_date=base_time + timedelta(hours=3),
         )
 
-        # Create SAMPLE_UPDATE messages
         self.sample_update_1 = SMILEMessage.objects.create(
             topic=settings.METADB_NATS_SAMPLE_UPDATE,
             request_id="REQ_003",
@@ -54,7 +50,6 @@ class TestGetPendingSmileMessages(TestCase):
             created_date=base_time + timedelta(hours=5),
         )
 
-        # Create REQUEST_UPDATE messages
         self.request_update_1 = SMILEMessage.objects.create(
             topic=settings.METADB_NATS_REQUEST_UPDATE,
             request_id="REQ_005",
@@ -71,106 +66,143 @@ class TestGetPendingSmileMessages(TestCase):
             created_date=base_time + timedelta(hours=6),
         )
 
-    def test_message_ordering(self):
-        """Test that messages are retrieved in the correct order: NEW_REQUEST, SAMPLE_UPDATE, REQUEST_UPDATE, each sorted by date."""
-        # Call the function
+    def test_one_message_per_request_id(self):
+        """Test that only one message per request_id is returned (each test message has unique request_id)."""
         messages = get_pending_smile_messages()
-
-        # Convert to list to check order
         message_list = list(messages)
 
-        # Assert we have all 6 messages
+        # All 6 messages should be returned since they all have different request_ids
         self.assertEqual(len(message_list), 6)
 
-        # Expected order:
-        # 1. new_request_1 (NEW_REQUEST, hour 1)
-        # 2. new_request_2 (NEW_REQUEST, hour 3)
-        # 3. sample_update_1 (SAMPLE_UPDATE, hour 2)
-        # 4. sample_update_2 (SAMPLE_UPDATE, hour 5)
-        # 5. request_update_1 (REQUEST_UPDATE, hour 4)
-        # 6. request_update_2 (REQUEST_UPDATE, hour 6)
+        # Verify each request_id appears only once
+        request_ids = [msg.request_id for msg in message_list]
+        self.assertEqual(len(request_ids), len(set(request_ids)))
 
-        self.assertEqual(message_list[0].id, self.new_request_1.id)
-        self.assertEqual(message_list[0].topic, settings.METADB_NATS_NEW_REQUEST)
+    def test_highest_priority_message_per_request(self):
+        """Test that when a request has multiple pending messages, only the highest priority one is returned."""
+        base_time = timezone.now()
 
-        self.assertEqual(message_list[1].id, self.new_request_2.id)
-        self.assertEqual(message_list[1].topic, settings.METADB_NATS_NEW_REQUEST)
+        # Create multiple messages for the same request_id with different priorities
+        # REQUEST_UPDATE (lowest priority) - created first
+        update_msg = SMILEMessage.objects.create(
+            topic=settings.METADB_NATS_REQUEST_UPDATE,
+            request_id="REQ_MULTI",
+            message='{"test": "update"}',
+            status=SmileMessageStatus.PENDING,
+            created_date=base_time,
+        )
 
-        self.assertEqual(message_list[2].id, self.sample_update_1.id)
-        self.assertEqual(message_list[2].topic, settings.METADB_NATS_SAMPLE_UPDATE)
+        # SAMPLE_UPDATE (medium priority)
+        sample_msg = SMILEMessage.objects.create(
+            topic=settings.METADB_NATS_SAMPLE_UPDATE,
+            request_id="REQ_MULTI",
+            message='{"test": "sample"}',
+            status=SmileMessageStatus.PENDING,
+            created_date=base_time + timedelta(minutes=1),
+        )
 
-        self.assertEqual(message_list[3].id, self.sample_update_2.id)
-        self.assertEqual(message_list[3].topic, settings.METADB_NATS_SAMPLE_UPDATE)
-
-        self.assertEqual(message_list[4].id, self.request_update_1.id)
-        self.assertEqual(message_list[4].topic, settings.METADB_NATS_REQUEST_UPDATE)
-
-        self.assertEqual(message_list[5].id, self.request_update_2.id)
-        self.assertEqual(message_list[5].topic, settings.METADB_NATS_REQUEST_UPDATE)
-
-    def test_topic_priority_groups(self):
-        """Test that all NEW_REQUEST messages come before SAMPLE_UPDATE, and all SAMPLE_UPDATE before REQUEST_UPDATE."""
-        messages = get_pending_smile_messages()
-
-        # Track which topic group we're in
-        previous_priority = -1
-
-        for msg in messages:
-            if msg.topic == settings.METADB_NATS_NEW_REQUEST:
-                current_priority = 0
-            elif msg.topic == settings.METADB_NATS_SAMPLE_UPDATE:
-                current_priority = 1
-            elif msg.topic == settings.METADB_NATS_REQUEST_UPDATE:
-                current_priority = 2
-            else:
-                current_priority = 3
-
-            # Current priority should never be less than previous
-            # (we should never go backwards in topic groups)
-            self.assertGreaterEqual(
-                current_priority,
-                previous_priority,
-                f"Topic priority went backwards: {previous_priority} -> {current_priority}",
-            )
-            previous_priority = current_priority
-
-    def test_within_topic_date_ordering(self):
-        """Test that within each topic group, messages are ordered by created_date."""
-        messages = get_pending_smile_messages()
-
-        # Group messages by topic
-        topic_groups = {}
-        for msg in messages:
-            if msg.topic not in topic_groups:
-                topic_groups[msg.topic] = []
-            topic_groups[msg.topic].append(msg)
-
-        # Check that within each topic, messages are ordered by date
-        for topic, msgs in topic_groups.items():
-            previous_date = None
-            for msg in msgs:
-                if previous_date is not None:
-                    self.assertGreaterEqual(
-                        msg.created_date, previous_date, f"Messages within topic {topic} are not ordered by date"
-                    )
-                previous_date = msg.created_date
-
-    def test_only_pending_messages_included(self):
-        """Test that only PENDING messages are included in the query."""
-        # Create a completed message
-        SMILEMessage.objects.create(
+        # NEW_REQUEST (highest priority)
+        new_msg = SMILEMessage.objects.create(
             topic=settings.METADB_NATS_NEW_REQUEST,
-            request_id="REQ_COMPLETED",
-            message='{"test": "completed"}',
-            status=SmileMessageStatus.COMPLETED,
-            created_date=timezone.now(),
+            request_id="REQ_MULTI",
+            message='{"test": "new"}',
+            status=SmileMessageStatus.PENDING,
+            created_date=base_time + timedelta(minutes=2),
         )
 
         messages = get_pending_smile_messages()
+        message_list = list(messages)
 
-        # Should still only have 6 PENDING messages
-        self.assertEqual(messages.count(), 6)
+        # Should return 7 messages total (6 from setUp + 1 for REQ_MULTI)
+        self.assertEqual(len(message_list), 7)
 
-        # Verify none are completed
-        for msg in messages:
-            self.assertEqual(msg.status, SmileMessageStatus.PENDING)
+        # Find the message for REQ_MULTI
+        multi_messages = [msg for msg in message_list if msg.request_id == "REQ_MULTI"]
+        self.assertEqual(len(multi_messages), 1, "Should return exactly one message for REQ_MULTI")
+
+        # Verify it's the NEW_REQUEST message (highest priority)
+        self.assertEqual(multi_messages[0].id, new_msg.id)
+        self.assertEqual(multi_messages[0].topic, settings.METADB_NATS_NEW_REQUEST)
+
+    def test_priority_order_with_same_request(self):
+        """Test NEW_REQUEST > SAMPLE_UPDATE > REQUEST_UPDATE priority for the same request_id."""
+        base_time = timezone.now()
+
+        # Test 1: Only REQUEST_UPDATE and SAMPLE_UPDATE pending
+        SMILEMessage.objects.create(
+            topic=settings.METADB_NATS_REQUEST_UPDATE,
+            request_id="REQ_TEST1",
+            message='{"test": "update"}',
+            status=SmileMessageStatus.PENDING,
+            created_date=base_time,
+        )
+        sample_update = SMILEMessage.objects.create(
+            topic=settings.METADB_NATS_SAMPLE_UPDATE,
+            request_id="REQ_TEST1",
+            message='{"test": "sample"}',
+            status=SmileMessageStatus.PENDING,
+            created_date=base_time + timedelta(minutes=1),
+        )
+
+        messages = get_pending_smile_messages()
+        test1_messages = [msg for msg in messages if msg.request_id == "REQ_TEST1"]
+        self.assertEqual(len(test1_messages), 1)
+        self.assertEqual(test1_messages[0].id, sample_update.id)
+
+    def test_earliest_message_when_same_priority(self):
+        """Test that when multiple messages have the same priority, the earliest is returned."""
+        base_time = timezone.now()
+
+        # Create two NEW_REQUEST messages for the same request_id
+        early_msg = SMILEMessage.objects.create(
+            topic=settings.METADB_NATS_NEW_REQUEST,
+            request_id="REQ_SAME_PRIORITY",
+            message='{"test": "early"}',
+            status=SmileMessageStatus.PENDING,
+            created_date=base_time,
+        )
+
+        late_msg = SMILEMessage.objects.create(
+            topic=settings.METADB_NATS_NEW_REQUEST,
+            request_id="REQ_SAME_PRIORITY",
+            message='{"test": "late"}',
+            status=SmileMessageStatus.PENDING,
+            created_date=base_time + timedelta(hours=1),
+        )
+
+        messages = get_pending_smile_messages()
+        same_priority_messages = [msg for msg in messages if msg.request_id == "REQ_SAME_PRIORITY"]
+
+        self.assertEqual(len(same_priority_messages), 1)
+        self.assertEqual(same_priority_messages[0].id, early_msg.id)
+
+    def test_only_pending_messages_included(self):
+        """Test that only PENDING messages are included in the query."""
+        base_time = timezone.now()
+
+        # Create a completed NEW_REQUEST message for a request that also has pending messages
+        SMILEMessage.objects.create(
+            topic=settings.METADB_NATS_NEW_REQUEST,
+            request_id="REQ_COMPLETED_TEST",
+            message='{"test": "completed"}',
+            status=SmileMessageStatus.COMPLETED,
+            created_date=base_time,
+        )
+
+        # Create a pending REQUEST_UPDATE for the same request
+        pending_msg = SMILEMessage.objects.create(
+            topic=settings.METADB_NATS_REQUEST_UPDATE,
+            request_id="REQ_COMPLETED_TEST",
+            message='{"test": "pending"}',
+            status=SmileMessageStatus.PENDING,
+            created_date=base_time + timedelta(minutes=1),
+        )
+
+        messages = get_pending_smile_messages()
+        message_list = list(messages)
+
+        # Should return the pending REQUEST_UPDATE, not the completed NEW_REQUEST
+        completed_test_messages = [msg for msg in message_list if msg.request_id == "REQ_COMPLETED_TEST"]
+        self.assertEqual(len(completed_test_messages), 1)
+        self.assertEqual(completed_test_messages[0].id, pending_msg.id)
+        self.assertEqual(completed_test_messages[0].status, SmileMessageStatus.PENDING)

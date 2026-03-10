@@ -47,9 +47,7 @@ app.conf.task_routes = {
     "file_system.tasks.check_fastq_files": {"queue": settings.BEAGLE_CHECK_FILES_QUEUE},
     "beagle_etl.tasks.job_processor": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.process_smile_events": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
-    "beagle_etl.jobs.metadb_jobs.new_request": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
-    "beagle_etl.jobs.metadb_jobs.update_request_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
-    "beagle_etl.jobs.metadb_jobs.update_sample_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "beagle_etl.tasks.process_job_with_lock": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.update_job": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.not_supported": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.request_callback": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
@@ -59,7 +57,7 @@ app.conf.task_routes = {
 app.conf.beat_schedule = {
     "process_request_callback_jobs": {
         "task": "beagle_etl.tasks.process_request_callback_jobs",
-        "schedule": settings.PROCESS_SMILE_MESSAGES_PERIOD,
+        "schedule": settings.PROCESS_REQUEST_CALLBACK_PERIOD,
         "options": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     },
     "process_smile_imports": {

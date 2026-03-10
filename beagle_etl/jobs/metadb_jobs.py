@@ -181,7 +181,6 @@ def request_update_notification(request_id):
 
 @shared_task
 def new_request(message_id):
-    # TODO: New Request Completed
     message = SMILEMessage.objects.get(id=message_id)
 
     try:
@@ -228,7 +227,7 @@ def new_request(message_id):
                         metadata.update(sample_metadata)
                         fastq_location = fix_path_iris(fastq)
                         try:
-                            file_obj = create_or_update_file(fastq_location, metadata)
+                            file_obj = create_or_update_file(fastq_location, metadata, job_group_id=jgn_id)
                         except FailedToRegisterFileException as e:
                             logger.error(f"Failed to register file {fastq_location}")
                             message.add_log(f"Failed to register file {fastq_location}")
@@ -246,10 +245,11 @@ def new_request(message_id):
 
     sample_status = sorted([sample.to_dict() for sample in status.values()], key=lambda d: d["sample"])
     message.set_sample_status(sample_status)
-    # TODO: Check is this logic ok
+
     message.complete(request_metadata) if import_status else message.failed(request_metadata)
 
     fastq_metadata = fetch_fastq_metadata(data.igoRequestId)
+
     create_request_callback_instance(
         data.igoRequestId,
         message,
@@ -456,6 +456,7 @@ def update_request_job(message_id):
     jgn_id = None
     if message.job_group_notifier:
         jgn_id = str(message.job_group_notifier.id)
+    logger.info(f"Job group notifier id:{jgn_id}")
 
     redelivery_event = RedeliveryEvent(jgn_id).to_dict()
     send_notification.delay(redelivery_event)
@@ -466,7 +467,7 @@ def update_request_job(message_id):
         new_metadata = copy.deepcopy(f.metadata)
         new_metadata.update(request_update.request_metadata())
         try:
-            update_file_object(f.file, f.file.path, new_metadata)
+            update_file_object(f.file, f.file.path, new_metadata, jgn_id)
         except FailedToRegisterFileException as e:
             failed_samples.append(f.metadata[settings.SAMPLE_ID_METADATA_KEY])
 
@@ -484,7 +485,7 @@ def update_request_job(message_id):
 
     sample_status = sorted([sample for sample in sample_status.values()], key=lambda d: d["sample"])
     message.set_sample_status(sample_status)
-    message.complete(request_update)
+    message.complete(request_metadata=request_update.request_metadata())
 
 
 @shared_task
@@ -514,6 +515,7 @@ def update_sample_job(message_id):
     jgn_id = None
     if message.job_group_notifier:
         jgn_id = str(message.job_group_notifier.id)
+    logger.info(f"Job group notifier id:{jgn_id}")
 
     new_paths = []
     files = FileRepository.filter(
@@ -543,7 +545,8 @@ def update_sample_job(message_id):
                 metadata.update(sample_metadata)
                 fastq_location = fix_path_iris(fastq)
                 try:
-                    file_obj = create_or_update_file(fastq_location, metadata)
+                    file_obj = create_or_update_file(fastq_location, metadata, job_group_id=jgn_id)
+                    file_obj.set_unavailable()
                     new_paths.append(fastq_location)
                 except FailedToRegisterFileException as e:
                     update_completed = False
@@ -553,7 +556,7 @@ def update_sample_job(message_id):
                     sample_status.status = "FAILED"
                     sample_status.message += f"{str(e)}\n"
 
-    message.set_sample_status(sample_status.to_dict())
+    message.set_sample_status([sample_status.to_dict()])
     # Remove unnecessary files
     files_to_remove = set(file_paths) - set(new_paths)
     for fi in list(files_to_remove):
@@ -564,14 +567,14 @@ def update_sample_job(message_id):
     message.complete(request_metadata) if update_completed else message.failed(request_metadata)
 
 
-def create_or_update_file(path, metadata, file_group=None, file_type="fastq"):
+def create_or_update_file(path, metadata, file_group=None, file_type="fastq", job_group_id=None):
     if file_group is None:
         file_group = settings.IMPORT_FILE_GROUP
     file_obj = File.objects.filter(original_path=path, file_group=file_group).first()
     if not file_obj:
         return create_file_object(path, file_group, metadata, file_type)
     else:
-        return update_file_object(file_obj, path, metadata)
+        return update_file_object(file_obj, path, metadata, job_group_id)
 
 
 def create_file_object(path, file_group, metadata, file_type):

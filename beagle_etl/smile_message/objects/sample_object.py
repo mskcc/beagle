@@ -207,7 +207,7 @@ class SampleMetadata:
             tissueLocation=data.get("tissueLocation"),
             genePanel=data.get("genePanel"),  # required
             baitSet=data.get("baitSet"),  # required
-            datasource=data.get("datasource"),
+            datasource=data.get("datasource") or "igo",
             igoComplete=data.get("igoComplete"),
             status=status,
             cmoSampleIdFields=cmo_fields,

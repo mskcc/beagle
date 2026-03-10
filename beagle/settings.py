@@ -320,12 +320,12 @@ LOGGING = {
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
         "file": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": LOG_PATH,
             "maxBytes": 209715200,
@@ -342,13 +342,17 @@ LOGGING = {
         },
     },
     "loggers": {
-        "django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]},
+        "django_auth_ldap": {"level": "INFO", "handlers": ["console"]},
         "django": {
             "handlers": ["file", "console"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": True,
         },
-        "smile_client": {"level": "DEBUG", "handlers": ["smile_client_log", "console"]},
+        "smile_client": {"level": "INFO", "handlers": ["smile_client_log", "console"]},
+    },
+    "root": {
+        "handlers": ["file", "console"],
+        "level": "INFO",
     },
 }
 
@@ -380,7 +384,8 @@ BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagl
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
 BEAGLE_TMPDIR = os.environ.get("BEAGLE_TMPDIR", "/tmp")
 
-PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PERIOD", 900)
+PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PERIOD", 90)
+PROCESS_REQUEST_CALLBACK_PERIOD = os.environ.get("BEAGLE_PROCESS_REQUEST_CALLBACK_PERIOD", 900)
 CHECK_JOB_STATUS_PERIOD = os.environ.get("BEAGLE_CHECK_JOB_STATUS_PERIOD", 60)
 PROCESS_TRIGGERS_PERIOD = os.environ.get("BEAGLE_PROCESS_TRIGGERS_PERIOD", 120)
 CHECK_JOB_TIMEOUTS = os.environ.get("BEAGLE_CHECK_JOB_TIMEOUTS", 86400.0)
