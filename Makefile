@@ -52,6 +52,9 @@ restart:
 logs:
 	$(COMPOSE_CMD) logs -f
 
+logs-worker:
+	$(COMPOSE_CMD) logs $(name)
+
 # Note: working_dir is /app/src, so we call 'python3 manage.py'
 shell:
 	$(COMPOSE_CMD) exec beagle python3 manage.py shell
