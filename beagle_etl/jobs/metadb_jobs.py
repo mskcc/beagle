@@ -582,6 +582,7 @@ def create_file_object(path, file_group, metadata, file_type):
     serializer = CreateFileSerializer(data=data)
     if serializer.is_valid():
         file = serializer.save()
+        file.set_unavailable()
         calculate_checksum.delay(str(file.id))
         return file
     else:

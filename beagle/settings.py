@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "advanced_filters",
     "ddtrace.contrib.django",
     "smile_client",
+    "django_celery_results",
 ]
 
 
@@ -251,6 +252,7 @@ RABBITMQ_PASSWORD = os.environ.get("BEAGLE_RABBITMQ_PASSWORD", "guest")
 RABBITMQ_URL = os.environ.get("BEAGLE_RABBITMQ_URL", "localhost")
 
 CELERY_BROKER_URL = "amqp://%s:%s@%s/" % (RABBITMQ_USERNAME, RABBITMQ_PASSWORD, RABBITMQ_URL)
+CELERY_RESULT_BACKEND = 'django-db'  # Use Django database as result backend for chord support
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -381,6 +383,7 @@ BEAGLE_RUNNER_QUEUE = os.environ.get("BEAGLE_RUNNER_QUEUE", "beagle_runner_queue
 BEAGLE_DEFAULT_QUEUE = os.environ.get("BEAGLE_DEFAULT_QUEUE", "beagle_default_queue")
 BEAGLE_CHECK_FILES_QUEUE = os.environ.get("BEAGLE_CHECK_FILES_QUEUE", "beagle_check_files_queue")
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagle_job_scheduler_queue")
+BEAGLE_FILE_MANAGER_QUEUE = os.environ.get("BEAGLE_FILE_MANAGER_QUEUE", "beagle_file_manager_queue")
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
 BEAGLE_TMPDIR = os.environ.get("BEAGLE_TMPDIR", "/tmp")
 

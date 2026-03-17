@@ -37,6 +37,7 @@ app.conf.task_routes = {
     "runner.tasks.create_jobs_from_request": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.create_jobs_from_chaining": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.create_jobs_from_pairs": {"queue": settings.BEAGLE_RUNNER_QUEUE},
+    "runner.tasks.create_operator_run_from_jobs": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.add_pipeline_to_cache": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.running_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "runner.tasks.terminate_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
@@ -52,6 +53,9 @@ app.conf.task_routes = {
     "beagle_etl.jobs.metadb_jobs.not_supported": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.request_callback": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.calculate_checksum": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "file_manager.tasks.stage_file_job": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
+    "file_manager.tasks.check_for_clean_up": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
+    "file_manager.tasks.clean_up_file": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
 }
 
 app.conf.beat_schedule = {
@@ -94,5 +98,10 @@ app.conf.beat_schedule = {
         "task": "file_system.tasks.check_fastq_files",
         "schedule": crontab(day_of_week=1, hour=0, minute=0),
         "options": {"queue": settings.BEAGLE_CHECK_FILES_QUEUE},
+    },
+    "check_staged_file_cleanup": {
+        "task": "file_manager.tasks.check_for_clean_up",
+        "schedule": crontab(hour=2, minute=0),
+        "options": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
     },
 }
