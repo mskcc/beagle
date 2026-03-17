@@ -92,6 +92,7 @@ def create_operator_run_from_jobs(
     job_group_notifier_id=None,
     parent=None,
     notify=False,
+    **kwargs,
 ):
     operator_model = Operator.objects.get(id=operator_id)
     operator = OperatorFactory.get_by_model(
@@ -104,7 +105,7 @@ def create_operator_run_from_jobs(
     )
     jobs = []
     try:
-        jobs = operator.get_jobs()
+        jobs = operator.get_jobs(**kwargs)
         if operator.logger.message:
             event = OperatorErrorEvent(job_group_notifier_id, operator.logger.message)
             send_notification.delay(event.to_dict())
@@ -1093,13 +1094,21 @@ def run_routine_operator_job(operator, job_group_id=None):
 
 
 def create_aion_job(operator, lab_head_email, job_group_id=None, job_group_notifier_id=None):
-    jobs = operator.get_jobs(lab_head_email)
-    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
+    create_operator_run_from_jobs.delay(
+        operator_id=operator.model.id,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        lab_head_email=lab_head_email,
+    )
 
 
 def create_tempo_mpgen_job(operator, pairing_override=None, job_group_id=None, job_group_notifier_id=None):
-    jobs = operator.get_jobs(pairing_override)
-    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
+    create_operator_run_from_jobs.delay(
+        operator_id=operator.model.id,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        pairing_override=pairing_override,
+    )
 
 
 @shared_task
