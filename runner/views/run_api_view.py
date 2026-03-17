@@ -60,7 +60,7 @@ from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
 from file_system.models import FileGroup
 from runner.tasks import (
     create_aion_job,
-    create_jobs_from_operator,
+    create_operator_run_from_jobs,
     create_jobs_from_pairs,
     create_jobs_from_request,
     create_run_task,
@@ -469,15 +469,7 @@ class RunOperatorViewSet(GenericAPIView):
                 except JobGroupNotifier.DoesNotExist:
                     job_group_notifier_id = notifier_start(job_group, req, operator=pipeline.operator)
 
-                operator_model = Operator.objects.get(id=pipeline.operator_id)
-                operator = OperatorFactory.get_by_model(
-                    operator_model,
-                    run_ids=run_ids,
-                    job_group_id=job_group_id,
-                    job_group_notifier_id=job_group_notifier_id,
-                    pipeline=str(pipeline.id),
-                )
-                create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
+                create_operator_run_from_jobs.delay(pipeline.operator_id, run_ids=run_ids, job_group_id=job_group_id, job_group_notifier_id=job_group_notifier_id)
         else:
             return Response({"details": "Not Implemented"}, status=status.HTTP_400_BAD_REQUEST)
 
