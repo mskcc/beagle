@@ -32,22 +32,26 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path('stage-sample/', self.admin_site.admin_view(self.stage_sample_view), name='file_manager_stage_sample'),
+            path("stage-sample/", self.admin_site.admin_view(self.stage_sample_view), name="file_manager_stage_sample"),
         ]
         return custom_urls + urls
 
     def stage_sample_view(self, request):
         """Admin view to manually stage files for a sample"""
-        if request.method == 'POST':
-            sample_id = request.POST.get('sample_id', '').strip()
-            file_group = request.POST.get('file_group', settings.IMPORT_FILE_GROUP)
+        if request.method == "POST":
+            sample_id = request.POST.get("sample_id", "").strip()
+            file_group = request.POST.get("file_group", settings.IMPORT_FILE_GROUP)
 
             if not sample_id:
-                messages.error(request, 'Sample ID is required')
-                return render(request, 'admin/file_manager/stage_sample.html', {
-                    'title': 'Stage Sample Files',
-                    'default_file_group': settings.IMPORT_FILE_GROUP,
-                })
+                messages.error(request, "Sample ID is required")
+                return render(
+                    request,
+                    "admin/file_manager/stage_sample.html",
+                    {
+                        "title": "Stage Sample Files",
+                        "default_file_group": settings.IMPORT_FILE_GROUP,
+                    },
+                )
 
             try:
                 file_manager = FileManager(file_group=file_group)
@@ -61,29 +65,33 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
                             task.delay()
                         messages.success(
                             request,
-                            f'Staging {len(task_sigs)} files for sample {sample_id}. '
-                            f'Job ID: {sample_job.id}'
+                            f"Staging {len(task_sigs)} files for sample {sample_id}. " f"Job ID: {sample_job.id}",
                         )
                     else:
                         messages.warning(
                             request,
-                            f'Sample {sample_id} has {sample_job.total_files} files to stage, '
-                            f'but no tasks were created (files may already be staging)'
+                            f"Sample {sample_id} has {sample_job.total_files} files to stage, "
+                            f"but no tasks were created (files may already be staging)",
                         )
                 else:
-                    messages.info(request, f'No files need staging for sample {sample_id}')
+                    messages.info(request, f"No files need staging for sample {sample_id}")
 
                 # Redirect to the job detail page
-                return redirect('admin:file_manager_sampleproviderjob_change', sample_job.id)
+                return redirect("admin:file_manager_sampleproviderjob_change", sample_job.id)
 
             except Exception as e:
                 import traceback
-                messages.error(request, f'Error staging files: {str(e)}\n{traceback.format_exc()}')
 
-        return render(request, 'admin/file_manager/stage_sample.html', {
-            'title': 'Stage Sample Files',
-            'default_file_group': settings.IMPORT_FILE_GROUP,
-        })
+                messages.error(request, f"Error staging files: {str(e)}\n{traceback.format_exc()}")
+
+        return render(
+            request,
+            "admin/file_manager/stage_sample.html",
+            {
+                "title": "Stage Sample Files",
+                "default_file_group": settings.IMPORT_FILE_GROUP,
+            },
+        )
 
     def progress_percentage(self, obj):
         if obj.total_files == 0:
@@ -134,6 +142,7 @@ class CleanupFileJobAdmin(admin.ModelAdmin):
     readonly_fields = ("id", "created_date", "modified_date")
     raw_id_fields = ("file_object",)
     date_hierarchy = "cleanup_date"
+    actions = ["cleanup_files_immediately"]
 
     def original_path_short(self, obj):
         return obj.original_path[-50:] if len(obj.original_path) > 50 else obj.original_path
@@ -153,3 +162,41 @@ class CleanupFileJobAdmin(admin.ModelAdmin):
             return f"In {days} days"
 
     days_until_cleanup.short_description = "Cleanup In"
+
+    def cleanup_files_immediately(self, request, queryset):
+        """Clean up staged files immediately (requires confirmation)"""
+        from file_manager.tasks import clean_up_file
+
+        if "confirm" not in request.POST:
+            # Show confirmation page
+            pending_jobs = queryset.filter(status=FileProviderStatus.SCHEDULED)
+
+            context = {
+                "title": "Confirm File Cleanup",
+                "jobs": pending_jobs,
+                "action": "cleanup_files_immediately",
+                "queryset": queryset,
+            }
+            return render(request, "admin/file_manager/confirm_cleanup.html", context)
+
+        # User confirmed, proceed with cleanup
+        cleaned_count = 0
+        failed_count = 0
+
+        for job in queryset:
+            if job.status == FileProviderStatus.SCHEDULED:
+                try:
+                    clean_up_file.delay(str(job.id))
+                    cleaned_count += 1
+                except Exception as e:
+                    failed_count += 1
+                    messages.error(request, f"Failed to queue cleanup for {job.file_object.file_name}: {str(e)}")
+
+        if cleaned_count > 0:
+            messages.success(request, f"Queued cleanup for {cleaned_count} file(s)")
+        if failed_count > 0:
+            messages.warning(request, f"Failed to queue cleanup for {failed_count} file(s)")
+
+        return None
+
+    cleanup_files_immediately.short_description = "Clean up staged files immediately (DANGER)"
