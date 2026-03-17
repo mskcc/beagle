@@ -226,23 +226,23 @@ def get_unfiltered_matched_normal(patient_id, fillout_unfiltered_normals, reques
             unfiltered_matched_normal_bam = unfiltered_matched_normal_bam
             unfiltered_matched_normal_sample_id = unfiltered_matched_normal_bam.file_name.rstrip(".bam")
 
-    # Case 4
-    if not unfiltered_matched_normal_bam:
-        warnings.append(
-            "WARNING: Could not find matching IGO unfiltered normal bam file for patient {}. "
-            "Searching for DMP ACCESS sample."
-        )
-        unfiltered_matched_normal_bam = (
-            FileMetadata.objects.filter(
-                file__file_group=DMP_FILE_GROUP,
-                metadata__patient__cmo=patient_id.lstrip("C-"),
-                metadata__type="N",
-                metadata__assay="XS2",
-                file__path__endswith=DMP_REGEX,
-            )
-            .order_by("-metadata__imported")
-            .first()
-        )
+        # Case 4
+        # if not unfiltered_matched_normal_bam:
+        #     warnings.append(
+        #         "WARNING: Could not find matching IGO unfiltered normal bam file for patient {}. "
+        #         "Searching for DMP ACCESS sample."
+        #     )
+        #     unfiltered_matched_normal_bam = (
+        #         FileMetadata.objects.filter(
+        #             file__file_group=DMP_FILE_GROUP,
+        #             metadata__patient__cmo=patient_id.lstrip("C-"),
+        #             metadata__type="N",
+        #             metadata__assay="XS2",
+        #             file__path__endswith=DMP_REGEX,
+        #         )
+        #         .order_by("-metadata__imported")
+        #         .first()
+        #     )
         # if not unfiltered_matched_normal_bam:
         #     unfiltered_matched_normal_bam = (
         #         FileMetadata.objects.filter(
