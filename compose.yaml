@@ -445,6 +445,27 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+  beagle_celery_file_manager_queue:
+    <<: *beagle_celery
+    command:
+      - |
+        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE}.pid
+        [ -e $$PIDFILE ] && rm $$PIDFILE
+        echo 'Running runner queue worker...'
+
+         celery --workdir ${BEAGLE_PATH} \
+          -A beagle_etl worker \
+          -l info \
+          -Q ${BEAGLE_FILE_MANAGER_QUEUE} \
+          -f /beagle/celery/logs/${BEAGLE_FILE_MANAGER_QUEUE}.log \
+          --pidfile $$PIDFILE \
+          --concurrency=30 \
+          -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE}
+    healthcheck:
+      test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE} || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 3
   beagle_celery_runner_queue:
     <<: *beagle_celery
     command:
