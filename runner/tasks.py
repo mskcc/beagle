@@ -52,7 +52,7 @@ def stage_files_for_operator(
         staging_tasks, sample_jobs = stage_files(request_id, pairing, job_group_id)
     except Exception as e:
         logger.warning(
-            format_log(f"Failed to stage files: {str(e)}", request_id=operator.request_id, job_group_id=job_group_id)
+            format_log(f"Failed to stage files: {str(e)}", job_group_id=job_group_id)
         )
 
     if staging_tasks:
