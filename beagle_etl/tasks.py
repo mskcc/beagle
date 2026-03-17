@@ -30,7 +30,7 @@ def process_job_with_lock(job_func_name, message_id):
     message = SMILEMessage.objects.get(id=message_id)
     lock_id = f"lock_smile_{message.request_id}"
 
-    with memcache_task_lock(lock_id, message) as acquired:
+    with memcache_task_lock(lock_id, message_id) as acquired:
         if not acquired:
             print(f"Could not acquire lock for request {message.request_id}, skipping job {job_func_name}")
             logger.info(f"Could not acquire lock for request {message.request_id}, skipping job {job_func_name}")
