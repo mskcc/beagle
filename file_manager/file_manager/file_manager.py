@@ -1,8 +1,11 @@
 from django.conf import settings
 from file_system.repository import FileRepository
-from file_manager.copy_service import CopyService
+from file_manager.copy_service.copy_service import CopyService
 from file_manager.tasks import stage_file_job
 from file_manager.models import FileProviderStatus, FileProviderJob, CleanupFileJob, SampleProviderJob
+import logging
+
+logger = logging.getLogger("django")
 
 
 class FileManager(object):
@@ -10,11 +13,15 @@ class FileManager(object):
         self.file_group = file_group
 
     def stage_sample(self, sample_id):
+        """
+        Stage files for a sample.
+        Returns (SampleProviderJob, list of task signatures)
+        """
         sample_job, created = SampleProviderJob.objects.get_or_create_for_sample(sample_id)
 
-        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY, sample_id}, file_group=self.file_group)
+        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: sample_id}, file_group=self.file_group)
         gene_panel = FileRepository.filter(
-            metadata={settings.SAMPLE_ID_METADATA_KEY, sample_id},
+            metadata={settings.SAMPLE_ID_METADATA_KEY: sample_id},
             file_group=self.file_group,
             values_metadata=settings.RECIPE_METADATA_KEY,
         ).first()
@@ -29,15 +36,24 @@ class FileManager(object):
         sample_job.total_files = files_to_stage
         sample_job.save()
 
+        task_signatures = []
         for f in files:
-            self.stage_file(f.file, gene_panel, sample_id)
+            task_sig = self.stage_file(f.file, gene_panel, str(sample_job.id))
+            if task_sig:
+                task_signatures.append(task_sig)
 
-        return sample_job
+        return sample_job, task_signatures
 
     def stage_file(self, file_obj, gene_panel, sample_job=None):
+        """
+        Stage a file and return task signature.
+        Returns: Task signature or None
+        """
         if not file_obj.is_available:
             new_path = CopyService.remap(gene_panel, file_obj.path)
             if new_path != file_obj.path:
                 fp_job, created = FileProviderJob.objects.provide_file(file_obj, file_obj.path, new_path)
                 if created:
-                    stage_file_job.delay(fp_job.id, sample_job)
+                    # Return signature for chord
+                    return stage_file_job.si(str(fp_job.id), sample_job)
+        return None

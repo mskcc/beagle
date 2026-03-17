@@ -1,4 +1,4 @@
-import shutil
+import os
 import logging
 from celery import shared_task
 from django.conf import settings
@@ -15,30 +15,33 @@ def stage_file_job(file_provide_job_id, sample_job=None):
     file_provide_job = FileProviderJob.objects.get(id=file_provide_job_id)
     file_provide_job.in_progress()
 
-    CopyService.copy(file_provide_job.original_path, file_provide_job.staged_path)
-    file_provide_job.file_object.path = file_provide_job.staged_path
-    file_provide_job.file_object.set_available()
+    try:
+        CopyService.copy(file_provide_job.original_path, file_provide_job.staged_path)
+        file_provide_job.file_object.path = file_provide_job.staged_path
+        file_provide_job.file_object.set_available()
+    except Exception as e:
+        logger.error(f"Failed to copy file {str(e)}")
+        file_provide_job.set_failed()
+    else:
+        file_provide_job.set_completed()
+        if sample_job:
+            try:
+                sample_job = SampleProviderJob.objects.get(id=sample_job)
+                sample_job.increment_completed()
+            except SampleProviderJob.DoesNotExist:
+                logger.warning(f"SampleProviderJob for id {sample_job} not found")
 
-    file_provide_job.set_completed()
-
-    if sample_job:
-        try:
-            sample_job = SampleProviderJob.objects.get(id=sample_job)
-            sample_job.increment_completed()
-        except SampleProviderJob.DoesNotExist:
-            logger.warning(f"SampleProviderJob for id {sample_job} not found")
-
-    clean_up_date = date.today() + timedelta(days=settings.STAGE_DAYS)
-    CleanupFileJob.objects.create(
-        file_object=file_provide_job.file_object,
-        original_path=file_provide_job.original_path,
-        cleanup_date=clean_up_date,
-    )
+        clean_up_date = date.today() + timedelta(days=settings.STAGE_DAYS)
+        CleanupFileJob.objects.create(
+            file_object=file_provide_job.file_object,
+            original_path=file_provide_job.original_path,
+            cleanup_date=clean_up_date,
+        )
 
 
 @shared_task
 def check_for_clean_up():
-    clean_up_jobs = CleanupFileJob.objects.filter(cleanup_dat=date.today())
+    clean_up_jobs = CleanupFileJob.objects.filter(cleanup_date=date.today())
     for job in clean_up_jobs:
         clean_up_file.delay(str(job.id))
 
@@ -50,11 +53,18 @@ def clean_up_file(clean_up_file_job_id):
     except CleanupFileJob.DoesNotExist:
         logger.error(f"CleanupFileJob with id {clean_up_file_job_id} doesn't exist")
         return
+
+    file_path = clean_up_file_job.file_object.path
     try:
-        shutil.rmtree(clean_up_file_job.file_object.file.path)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            logger.info(f"Successfully deleted file {file_path}")
+        else:
+            logger.warning(f"File {file_path} does not exist, skipping deletion")
     except Exception as e:
-        logger.error(f"Failed to delete file {clean_up_file_job.file_object.file.path}. {str(e)}")
-    else:
-        clean_up_file_job.file_object.path = clean_up_file_job.original_path
-        clean_up_file_job.file_object.file.set_unavailable()
-        clean_up_file_job.set_completed()
+        logger.error(f"Failed to delete file {file_path}. {str(e)}")
+        return
+
+    clean_up_file_job.file_object.path = clean_up_file_job.original_path
+    clean_up_file_job.file_object.set_unavailable()
+    clean_up_file_job.set_completed()

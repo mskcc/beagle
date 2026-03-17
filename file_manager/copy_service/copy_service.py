@@ -18,7 +18,7 @@ class CopyService(object):
         subpaths_iter = iter(subpaths)
         for subpath in subpaths_iter:
             if not os.path.exists(subpath):
-                os.makedirs(dirname, mode=settings.COPY_DIR_PERMISSION)
+                os.makedirs(dirname, mode=settings.COPY_DIR_PERMISSION, exist_ok=True)
                 break
 
         copyfile(path_from, path_to)
@@ -46,3 +46,4 @@ class CopyService(object):
         for prefix, dst in recipe_mapping.items():
             if path.startswith(dst):
                 return dst, prefix
+        return None, None

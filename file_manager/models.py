@@ -2,6 +2,7 @@ import uuid
 from enum import IntEnum
 from django.db import models
 from django.db import transaction
+from django.db.models import F
 from file_system.models import File
 
 
@@ -15,6 +16,7 @@ class FileProviderStatus(IntEnum):
     SCHEDULED = 0
     IN_PROGRESS = 1
     COMPLETED = 2
+    FAILED = 3
 
 
 class SampleProviderJobManager(models.Manager):
@@ -46,13 +48,17 @@ class SampleProviderJob(BaseModel):
         return self.total_files > 0 and self.completed_files >= self.total_files
 
     def increment_completed(self):
-        """Increment completed files count and update status if all done."""
-        self.completed_files += 1
-        if self.is_completed():
-            self.status = FileProviderStatus.COMPLETED
-        else:
-            self.status = FileProviderStatus.IN_PROGRESS
-        self.save()
+        """Increment completed files count and update status if all done (thread-safe)."""
+        with transaction.atomic():
+            job = SampleProviderJob.objects.select_for_update().get(id=self.id)
+            SampleProviderJob.objects.filter(id=self.id).update(completed_files=F("completed_files") + 1)
+            job.refresh_from_db()
+
+            if job.is_completed():
+                job.status = FileProviderStatus.COMPLETED
+            else:
+                job.status = FileProviderStatus.IN_PROGRESS
+            job.save()
 
 
 class FileProviderManager(models.Manager):
@@ -104,6 +110,10 @@ class FileProviderJob(BaseModel):
 
     def set_completed(self):
         self.status = FileProviderStatus.COMPLETED
+        self.save()
+
+    def set_failed(self):
+        self.status = FileProviderStatus.FAILED
         self.save()
 
     objects = FileProviderManager()
