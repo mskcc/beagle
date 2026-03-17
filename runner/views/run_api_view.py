@@ -469,7 +469,12 @@ class RunOperatorViewSet(GenericAPIView):
                 except JobGroupNotifier.DoesNotExist:
                     job_group_notifier_id = notifier_start(job_group, req, operator=pipeline.operator)
 
-                create_operator_run_from_jobs.delay(pipeline.operator_id, run_ids=run_ids, job_group_id=job_group_id, job_group_notifier_id=job_group_notifier_id)
+                create_operator_run_from_jobs.delay(
+                    pipeline.operator_id,
+                    run_ids=run_ids,
+                    job_group_id=job_group_id,
+                    job_group_notifier_id=job_group_notifier_id,
+                )
         else:
             return Response({"details": "Not Implemented"}, status=status.HTTP_400_BAD_REQUEST)
 

@@ -44,29 +44,44 @@ from ddtrace import tracer
 logger = logging.getLogger("django")
 
 
-def stage_files_for_operator(operator, request_id=None, pairing=None, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):
+def stage_files_for_operator(
+    operator, request_id=None, pairing=None, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False
+):
     staging_tasks = []
     try:
         staging_tasks, sample_jobs = stage_files(request_id, pairing, job_group_id)
     except Exception as e:
-        logger.warning(format_log(f"Failed to stage files: {str(e)}", request_id=operator.request_id,
-                                      job_group_id=job_group_id))
+        logger.warning(
+            format_log(f"Failed to stage files: {str(e)}", request_id=operator.request_id, job_group_id=job_group_id)
+        )
 
     if staging_tasks:
         # Use chord: run all staging tasks, then create runs when all complete
-        logger.info(format_log(f"Staging {len(staging_tasks)} files, waiting for completion", job_group_id=job_group_id))
+        logger.info(
+            format_log(f"Staging {len(staging_tasks)} files, waiting for completion", job_group_id=job_group_id)
+        )
         callback = create_operator_run_from_jobs.si(
-                operator, request_id, pairing, job_group_id, job_group_notifier_id, parent, notify
+            operator, request_id, pairing, job_group_id, job_group_notifier_id, parent, notify
         )
         chord(staging_tasks)(callback)
     else:
         # No staging needed, create runs immediately
         logger.info(format_log("No staging required, creating runs immediately", request_id=operator.request_id))
-        create_operator_run_from_jobs(operator, request_id, pairing, job_group_id, job_group_notifier_id, parent, notify=notify)
+        create_operator_run_from_jobs(
+            operator, request_id, pairing, job_group_id, job_group_notifier_id, parent, notify=notify
+        )
+
 
 @shared_task
 def create_operator_run_from_jobs(
-    operator_id, request_id=None, pairing=None, run_ids=None, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False
+    operator_id,
+    request_id=None,
+    pairing=None,
+    run_ids=None,
+    job_group_id=None,
+    job_group_notifier_id=None,
+    parent=None,
+    notify=False,
 ):
     operator_model = Operator.objects.get(id=operator_id)
     operator = OperatorFactory.get_by_model(
@@ -75,7 +90,7 @@ def create_operator_run_from_jobs(
         job_group_notifier_id=job_group_notifier_id,
         request_id=request_id,
         pairing=pairing,
-        run_ids=run_ids
+        run_ids=run_ids,
     )
     jobs = []
     try:
@@ -101,12 +116,17 @@ def create_operator_run_from_jobs(
             ).to_dict()
             send_notification.delay(event)
         logger.info(
-            format_log("Operator get_jobs failed %s", str(e), job_group_id=job_group_id,
-                       request_id=operator.request_id))
+            format_log("Operator get_jobs failed %s", str(e), job_group_id=job_group_id, request_id=operator.request_id)
+        )
 
     if not jobs:
-        logger.error(format_log("Could not create operator run due to no jobs being passed", job_group_id=job_group_id,
-                                request_id=operator.request_id))
+        logger.error(
+            format_log(
+                "Could not create operator run due to no jobs being passed",
+                job_group_id=job_group_id,
+                request_id=operator.request_id,
+            )
+        )
         return
 
     try:
@@ -233,8 +253,7 @@ def stage_files(request_id=None, pairing=None, job_group_id=None):
         samples = list(samples)
 
     else:
-        logger.info(
-            format_log("No samples to stage", job_group_id=job_group_id))
+        logger.info(format_log("No samples to stage", job_group_id=job_group_id))
         return staging_tasks, sample_jobs
 
     file_manager = FileManager()
@@ -244,8 +263,9 @@ def stage_files(request_id=None, pairing=None, job_group_id=None):
         if sample_job.total_files > 0:
             sample_jobs[sample] = sample_job
             staging_tasks.extend(task_sigs)
-            logger.info(format_log(f"Sample {sample} requires staging of {sample_job.total_files} files",
-                                  request_id=request_id))
+            logger.info(
+                format_log(f"Sample {sample} requires staging of {sample_job.total_files} files", request_id=request_id)
+            )
 
     return staging_tasks, sample_jobs
 
@@ -300,7 +320,13 @@ def create_jobs_from_request(
     )
     generate_description(operator, job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
-    stage_files_for_operator(operator_id, request_id=request_id, job_group_id=job_group_id, job_group_notifier_id=job_group_notifier_id, notify=notify)
+    stage_files_for_operator(
+        operator_id,
+        request_id=request_id,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        notify=notify,
+    )
 
 
 @shared_task
@@ -341,10 +367,12 @@ def create_jobs_from_pairs(
 
     generate_description(operator, job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
-    stage_files_for_operator(pipeline.operator_id,
-                             pairing={"pairs": pairs},
-                             job_group_id=job_group_id,
-                             job_group_notifier_id=job_group_notifier_id)
+    stage_files_for_operator(
+        pipeline.operator_id,
+        pairing={"pairs": pairs},
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+    )
 
 
 def _generate_summary(req):
@@ -431,7 +459,13 @@ def create_jobs_from_chaining(
             "Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id), job_group_id=job_group_id
         )
     )
-    create_operator_run_from_jobs(to_operator_id, run_ids=run_ids, job_group_id=job_group_id, job_group_notifier_id=job_group_notifier_id, parent=parent)
+    create_operator_run_from_jobs(
+        to_operator_id,
+        run_ids=run_ids,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        parent=parent,
+    )
 
 
 @shared_task
