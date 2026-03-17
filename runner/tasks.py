@@ -61,14 +61,26 @@ def stage_files_for_operator(
             format_log(f"Staging {len(staging_tasks)} files, waiting for completion", job_group_id=job_group_id)
         )
         callback = create_operator_run_from_jobs.si(
-            operator, request_id, pairing, job_group_id, job_group_notifier_id, parent, notify
+            operator_id=operator,
+            request_id=request_id,
+            pairing=pairing,
+            job_group_id=job_group_id,
+            job_group_notifier_id=job_group_notifier_id,
+            parent=parent,
+            notify=notify,
         )
         chord(staging_tasks)(callback)
     else:
         # No staging needed, create runs immediately
         logger.info(format_log("No staging required, creating runs immediately", request_id=operator.request_id))
         create_operator_run_from_jobs(
-            operator, request_id, pairing, job_group_id, job_group_notifier_id, parent, notify=notify
+            operator_id=operator,
+            request_id=request_id,
+            pairing=pairing,
+            job_group_id=job_group_id,
+            job_group_notifier_id=job_group_notifier_id,
+            parent=parent,
+            notify=notify,
         )
 
 
