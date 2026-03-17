@@ -72,7 +72,7 @@ def stage_files_for_operator(
         chord(staging_tasks)(callback)
     else:
         # No staging needed, create runs immediately
-        logger.info(format_log("No staging required, creating runs immediately", request_id=operator.request_id))
+        logger.info(format_log("No staging required, creating runs immediately", job_group_id=job_group_id))
         create_operator_run_from_jobs(
             operator_id=operator,
             request_id=request_id,
