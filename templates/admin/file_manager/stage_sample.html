@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="content-main">
-    <h1>{{ title }}</h1>
+    <h1>Stage Sample Files</h1>
 
     {% if messages %}
         {% for message in messages %}
@@ -18,14 +18,14 @@
 
         <div class="form-row">
             <div>
-                <label for="sample_id">Sample ID:</label>
-                <input type="text"
-                       name="sample_id"
-                       id="sample_id"
-                       required
-                       placeholder="e.g., 12345_1_1"
-                       style="width: 300px;">
-                <p class="help">Enter the sample ID (primaryId) to stage files for</p>
+                <label for="sample_ids">Sample ID(s):</label>
+                <textarea name="sample_ids"
+                          id="sample_ids"
+                          required
+                          placeholder="Enter one or more sample IDs (comma, space, or newline separated)&#10;e.g., 12345_1_1, 12345_1_2&#10;or one per line"
+                          rows="5"
+                          style="width: 500px; font-family: monospace;"></textarea>
+                <p class="help">Enter one or more sample IDs (primaryId) separated by commas, spaces, or newlines</p>
             </div>
         </div>
 

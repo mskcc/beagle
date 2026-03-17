@@ -21,7 +21,20 @@ class FileProviderStatus(IntEnum):
 
 class SampleProviderJobManager(models.Manager):
     def get_or_create_for_sample(self, sample_id):
-        return self.get_or_create(sample_id=sample_id, defaults={"status": FileProviderStatus.SCHEDULED})
+        """
+        Get or create a SampleProviderJob for a sample.
+        If a completed job exists, delete it and create a new one.
+        """
+        try:
+            existing = self.get(sample_id=sample_id)
+            # If completed, delete it and create a new one
+            if existing.status == FileProviderStatus.COMPLETED:
+                existing.delete()
+                return self.create(sample_id=sample_id, status=FileProviderStatus.SCHEDULED), True
+            # If in progress or scheduled, reuse it
+            return existing, False
+        except SampleProviderJob.DoesNotExist:
+            return self.create(sample_id=sample_id, status=FileProviderStatus.SCHEDULED), True
 
     def is_sample_completed(self, sample_id):
         try:
@@ -102,7 +115,13 @@ class FileProviderJob(BaseModel):
     )
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["file_object"], name="unique_file_provider_job_per_file")]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["file_object"],
+                condition=models.Q(status__in=[FileProviderStatus.SCHEDULED, FileProviderStatus.IN_PROGRESS]),
+                name="unique_active_file_provider_job_per_file",
+            )
+        ]
 
     def in_progress(self):
         self.status = FileProviderStatus.IN_PROGRESS

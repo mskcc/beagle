@@ -37,47 +37,72 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
         return custom_urls + urls
 
     def stage_sample_view(self, request):
-        """Admin view to manually stage files for a sample"""
+        """Admin view to manually stage files for multiple samples"""
         if request.method == "POST":
-            sample_id = request.POST.get("sample_id", "").strip()
+            sample_ids_input = request.POST.get("sample_ids", "").strip()
             file_group = request.POST.get("file_group", settings.IMPORT_FILE_GROUP)
 
-            if not sample_id:
-                messages.error(request, "Sample ID is required")
+            if not sample_ids_input:
+                messages.error(request, "At least one Sample ID is required")
                 return render(
                     request,
                     "admin/file_manager/stage_sample.html",
                     {
-                        "title": "Stage Sample Files",
+                        "default_file_group": settings.IMPORT_FILE_GROUP,
+                    },
+                )
+
+            # Parse sample IDs - support comma, space, or newline separated
+            sample_ids = [
+                s.strip() for s in sample_ids_input.replace("\n", ",").replace(" ", ",").split(",") if s.strip()
+            ]
+
+            if not sample_ids:
+                messages.error(request, "No valid Sample IDs provided")
+                return render(
+                    request,
+                    "admin/file_manager/stage_sample.html",
+                    {
                         "default_file_group": settings.IMPORT_FILE_GROUP,
                     },
                 )
 
             try:
                 file_manager = FileManager(file_group=file_group)
-                sample_job, task_sigs = file_manager.stage_sample(sample_id)
+                staged_samples = []
+                total_files_staged = 0
 
-                if sample_job.total_files > 0:
-                    # Execute tasks
-                    if task_sigs:
-                        # Execute each task individually (no chord needed in admin)
-                        for task in task_sigs:
-                            task.delay()
-                        messages.success(
-                            request,
-                            f"Staging {len(task_sigs)} files for sample {sample_id}. " f"Job ID: {sample_job.id}",
-                        )
-                    else:
-                        messages.warning(
-                            request,
-                            f"Sample {sample_id} has {sample_job.total_files} files to stage, "
-                            f"but no tasks were created (files may already be staging)",
-                        )
-                else:
-                    messages.info(request, f"No files need staging for sample {sample_id}")
+                for sample_id in sample_ids:
+                    try:
+                        sample_job, task_sigs = file_manager.stage_sample(sample_id)
 
-                # Redirect to the job detail page
-                return redirect("admin:file_manager_sampleproviderjob_change", sample_job.id)
+                        if sample_job.total_files > 0:
+                            if task_sigs:
+                                # Execute each task individually
+                                for task in task_sigs:
+                                    task.delay()
+                                staged_samples.append(f"{sample_id} ({len(task_sigs)} files)")
+                                total_files_staged += len(task_sigs)
+                            else:
+                                messages.warning(
+                                    request,
+                                    f"Sample {sample_id} has {sample_job.total_files} files to stage, "
+                                    f"but no tasks were created (files may already be staging)",
+                                )
+                        else:
+                            messages.info(request, f"No files need staging for sample {sample_id}")
+                    except Exception as e:
+                        messages.error(request, f"Error staging sample {sample_id}: {str(e)}")
+
+                if staged_samples:
+                    messages.success(
+                        request,
+                        f"Successfully staged {total_files_staged} files for {len(staged_samples)} sample(s): "
+                        f"{', '.join(staged_samples)}",
+                    )
+
+                # Redirect to the job list
+                return redirect("admin:file_manager_sampleproviderjob_changelist")
 
             except Exception as e:
                 import traceback
@@ -88,7 +113,6 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
             request,
             "admin/file_manager/stage_sample.html",
             {
-                "title": "Stage Sample Files",
                 "default_file_group": settings.IMPORT_FILE_GROUP,
             },
         )

@@ -34,6 +34,11 @@ class FileManager(object):
                     files_to_stage += 1
 
         sample_job.total_files = files_to_stage
+
+        # Mark as completed immediately if no files need staging
+        if files_to_stage == 0:
+            sample_job.status = FileProviderStatus.COMPLETED
+
         sample_job.save()
 
         task_signatures = []
