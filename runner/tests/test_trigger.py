@@ -7,7 +7,7 @@ from beagle_etl.models import Operator
 from runner.operator.operator_factory import OperatorFactory
 from runner.run.objects.run_creator_object import RunCreator
 from runner.models import OperatorRun, RunStatus, TriggerRunType, Run
-from runner.tasks import process_triggers, complete_job, fail_job, create_jobs_from_operator
+from runner.tasks import process_triggers, complete_job, fail_job, create_operator_run_from_jobs
 
 
 class TestOperatorTriggers(TestCase):
@@ -50,9 +50,7 @@ class TestOperatorTriggers(TestCase):
         send_notification.return_value = None
         memcache_task_lock.return_value = True
         Run.objects.all().delete()
-
-        operator = OperatorFactory.get_by_model(Operator.objects.get(id=1), request_id="bar")
-        create_jobs_from_operator(operator, None)
+        create_operator_run_from_jobs(1, request_id="bar")
         self.assertEqual(len(Run.objects.all()), 1)
         self.assertEqual(RunStatus(Run.objects.first().status), RunStatus.FAILED)
 

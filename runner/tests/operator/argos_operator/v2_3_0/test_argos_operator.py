@@ -2,13 +2,12 @@
 Tests for Argos Operator class
 """
 import os
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from runner.operator.operator_factory import OperatorFactory
 from beagle_etl.models import Operator
 from django.conf import settings
 from django.core.management import call_command
-from file_system.models import File, FileMetadata, FileGroup, FileType
-from pprint import pprint
+from file_system.models import File, FileMetadata, FileGroup
 
 
 class TestArgosOperator(TestCase):
@@ -56,6 +55,7 @@ class TestArgosOperator(TestCase):
         self.assertEqual(operator._jobs, [])
         self.assertEqual(len(operator.files), 4)
 
+    @override_settings(IMPORT_FILE_GROUP="1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
     def test_operator_factory_argos3(self):
         """
         Test that a Argos operator has access to all files in the database, even non-Argos files

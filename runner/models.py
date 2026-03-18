@@ -8,7 +8,6 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 from django.conf import settings
-from rest_framework import serializers
 from getpass import getuser
 
 

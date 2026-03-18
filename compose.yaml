@@ -248,9 +248,7 @@ services:
           - -c
           - |
             sleep 10
-            rabbitmqctl add_user ${ECHO_RABBITMQ_USERNAME} ${ECHO_RABBITMQ_PASSWORD}
             rabbitmqctl add_user ${DATADOG_RABBITMQ_USERNAME} ${DATADOG_RABBITMQ_PASSWORD}
-            rabbitmqctl set_permissions -p / ${ECHO_RABBITMQ_USERNAME} ".*" ".*" ".*"
             rabbitmqctl set_permissions -p / ${DATADOG_RABBITMQ_USERNAME} ".*" ".*" ".*"
         user: root
     healthcheck:
@@ -434,17 +432,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-  beagle_echo_consumer:
-    <<: *beagle_celery
-    command:
-      - |
-        echo 'Running echo consumer...'
-        python ${BEAGLE_PATH}/manage.py run_echo_consumer
-    healthcheck:
-      test: "pgrep -f 'python ${BEAGLE_PATH}/manage.py run_echo_consumer' || exit 1"
-      interval: 30s
-      timeout: 10s
-      retries: 3
   beagle_smile_consumer:
     <<: *beagle_celery
     command:
@@ -453,6 +440,27 @@ services:
         python ${BEAGLE_PATH}/manage.py run_smile_consumer --subject=MDB_STREAM.consumers.cmo-new-request
     healthcheck:
       test: "pgrep -f 'python ${BEAGLE_PATH}/manage.py run_smile_consumer' || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  beagle_celery_file_manager_queue:
+    <<: *beagle_celery
+    command:
+      - |
+        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE}.pid
+        [ -e $$PIDFILE ] && rm $$PIDFILE
+        echo 'Running runner queue worker...'
+
+         celery --workdir ${BEAGLE_PATH} \
+          -A beagle_etl worker \
+          -l info \
+          -Q ${BEAGLE_FILE_MANAGER_QUEUE} \
+          -f /beagle/celery/logs/${BEAGLE_FILE_MANAGER_QUEUE}.log \
+          --pidfile $$PIDFILE \
+          --concurrency=30 \
+          -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE}
+    healthcheck:
+      test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE} || exit 1"
       interval: 30s
       timeout: 10s
       retries: 3

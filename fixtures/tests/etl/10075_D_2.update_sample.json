@@ -1,0 +1,169 @@
+{
+  "smileSampleId": "5fe2dc20-92f4-4763-b437-fa1e2fb1b93f",
+  "primarySampleAlias": "10075_D_2",
+  "sampleClass": "Normal",
+  "sampleCategory": "research",
+  "datasource": "igo",
+  "revisable": true,
+  "sampleAliases": [
+    {
+      "value": "TestSample001",
+      "namespace": "investigatorId"
+    },
+    {
+      "value": "10075_D_2",
+      "namespace": "igoId"
+    }
+  ],
+  "patient": {
+    "smilePatientId": "bb700db3-790b-4ddf-827e-155920d22219",
+    "patientAliases": [
+      {
+        "value": "C-TEST001",
+        "namespace": "cmoId"
+      }
+    ],
+    "cmoPatientId": {
+      "value": "C-TEST001",
+      "namespace": "cmoId"
+    }
+  },
+  "latestSampleMetadata": {
+    "primaryId": "10075_D_2",
+    "cmoPatientId": "C-TEST001",
+    "investigatorSampleId": "TestSample001",
+    "cmoSampleName": "C-TEST001-X001-d",
+    "sampleName": "TestSample001",
+    "igoRequestId": "10075_D",
+    "importDate": "2022-03-23",
+    "cmoInfoIgoId": "10075_D_2",
+    "oncotreeCode": "CLL",
+    "collectionYear": "",
+    "tubeId": "",
+    "cfDNA2dBarcode": null,
+    "species": "Human",
+    "sex": "F",
+    "tumorOrNormal": "Tumor",
+    "sampleType": "Primary",
+    "preservation": "Frozen",
+    "sampleClass": "PDX",
+    "sampleOrigin": "Tissue",
+    "tissueLocation": "",
+    "genePanel": "GENESET101_BAITS",
+    "baitSet": "GENESET101_BAITS",
+    "igoComplete": true,
+    "qcReports": [],
+    "libraries": [
+      {
+        "barcodeId": null,
+        "barcodeIndex": null,
+        "libraryIgoId": "10075_D_2",
+        "libraryVolume": 35.0,
+        "libraryConcentrationNgul": 34.8,
+        "dnaInputNg": null,
+        "captureConcentrationNm": "11.49425287356322",
+        "captureInputNg": "400.0",
+        "captureName": "Pool-10075_D-Tube1_1",
+        "runs": [
+          {
+            "runMode": "HiSeq High Output",
+            "runId": "TEST_RUN_001",
+            "flowCellId": "TESTFLOW001",
+            "readLength": "101/8/8/101",
+            "runDate": "2022-03-20",
+            "flowCellLanes": [5],
+            "fastqs": [
+              "/ifs/archive/GCL/hiseq/FASTQ/TEST_RUN_001/Project_10075_D/Sample_TestSample001_IGO_10075_D_2/TestSample001_IGO_10075_D_2_S1_R1_001.fastq.gz",
+              "/ifs/archive/GCL/hiseq/FASTQ/TEST_RUN_001/Project_10075_D/Sample_TestSample001_IGO_10075_D_2/TestSample001_IGO_10075_D_2_S1_R2_001.fastq.gz"
+            ]
+          }
+        ]
+      }
+    ],
+    "cmoSampleIdFields": {
+      "naToExtract": "DNA",
+      "normalizedPatientId": "TEST001",
+      "sampleType": "Tissue",
+      "recipe": "GENESET101_BAITS"
+    },
+    "additionalProperties": {
+      "isCmoSample": "true",
+      "igoRequestId": "10075_D"
+    },
+    "status": {
+      "validationStatus": true,
+      "validationReport": "{}"
+    }
+  },
+  "sampleMetadataList": [
+    {
+      "primaryId": "10075_D_2",
+      "cmoPatientId": "C-TEST001",
+      "investigatorSampleId": "TestSample001",
+      "cmoSampleName": "C-TEST001-X001-d",
+      "sampleName": "TestSample001",
+      "igoRequestId": "10075_D",
+      "importDate": "2022-03-23",
+      "cmoInfoIgoId": "10075_D_2",
+      "oncotreeCode": "CLL",
+      "collectionYear": "",
+      "tubeId": "",
+      "cfDNA2dBarcode": null,
+      "species": "Human",
+      "sex": "F",
+      "tumorOrNormal": "Tumor",
+      "sampleType": "Primary",
+      "preservation": "Frozen",
+      "sampleClass": "PDX",
+      "sampleOrigin": "Tissue",
+      "tissueLocation": "",
+      "genePanel": "GENESET101_BAITS",
+      "baitSet": "GENESET101_BAITS",
+      "igoComplete": true,
+      "qcReports": [],
+      "libraries": [
+        {
+          "barcodeId": null,
+          "barcodeIndex": null,
+          "libraryIgoId": "10075_D_2",
+          "libraryVolume": 35.0,
+          "libraryConcentrationNgul": 34.8,
+          "dnaInputNg": null,
+          "captureConcentrationNm": "11.49425287356322",
+          "captureInputNg": "400.0",
+          "captureName": "Pool-10075_D-Tube1_1",
+          "runs": [
+            {
+              "runMode": "HiSeq High Output",
+              "runId": "TEST_RUN_001",
+              "flowCellId": "TESTFLOW001",
+              "readLength": "101/8/8/101",
+              "runDate": "2022-03-20",
+              "flowCellLanes": [5],
+              "fastqs": [
+                "/ifs/archive/GCL/hiseq/FASTQ/TEST_RUN_001/Project_10075_D/Sample_TestSample001_IGO_10075_D_2/TestSample001_IGO_10075_D_2_S1_R1_001.fastq.gz",
+                "/ifs/archive/GCL/hiseq/FASTQ/TEST_RUN_001/Project_10075_D/Sample_TestSample001_IGO_10075_D_2/TestSample001_IGO_10075_D_2_S1_R2_001.fastq.gz"
+              ]
+            }
+          ]
+        }
+      ],
+      "cmoSampleIdFields": {
+        "naToExtract": "DNA",
+        "normalizedPatientId": "TEST001",
+        "sampleType": "Tissue",
+        "recipe": "GENESET101_BAITS"
+      },
+      "additionalProperties": {
+        "isCmoSample": "true",
+        "igoRequestId": "10075_D"
+      },
+      "status": {
+        "validationStatus": true,
+        "validationReport": "{}"
+      }
+    }
+  ],
+  "tempo": null,
+  "dbGap": null
+}

@@ -57,7 +57,7 @@ class TestPairRequest(TestCase):
             file_group=file_group_instance, file_type=filetype_instance, file_name="foo"
         )
 
-        FileMetadata.objects.create_or_update(file=file_instance, metadata="{}")
+        FileMetadata.objects.create_or_update(file=file_instance, metadata={})
 
         # check that only one file entry exists in the test db
         files = File.objects.all()

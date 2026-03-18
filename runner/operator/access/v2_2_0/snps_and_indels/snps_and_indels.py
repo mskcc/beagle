@@ -610,7 +610,7 @@ class AccessV2LegacySNV(Operator):
             for key, files in sample_info.items():
                 for f in files:
                     if key == "geno_samples":
-                        sample_id_duplex = f[0].file_name.split("_")[0]
+                        sample_id_duplex = f[0].file_name.split("_")[0] + "-DUPLEX"
                         sample_id_simplex = f[1].file_name.split("_")[0] + "-SIMPLEX"
                         genotyping_bams_ids.append(sample_id_duplex)
                         genotyping_bams_ids.append(sample_id_simplex)

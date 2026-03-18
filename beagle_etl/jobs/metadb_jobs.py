@@ -1,14 +1,15 @@
-import os
 import copy
 import json
 import logging
-import re
 
 from deepdiff import DeepDiff
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 from celery import shared_task
 from django.conf import settings
+from beagle_etl.smile_message.objects.request_object import RequestMetadata
+from beagle_etl.smile_message.objects.update_request import UpdateRequest
+from beagle_etl.smile_message.objects.update_sample import UpdateSample
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import (
     ETLSetRecipeEvent,
@@ -29,43 +30,22 @@ from notifier.events import (
     VoyagerCantProcessRequestAllNormalsEvent,
     SMILEUpdateEvent,
 )
-from notifier.tasks import send_notification, notifier_start
+from notifier.tasks import send_notification
 from notifier.helper import get_emails_to_notify
-from beagle_etl.exceptions import ETLExceptions
-from beagle_etl.models import (
-    Operator,
-    ETLConfiguration,
-    SMILEMessage,
-    SmileMessageStatus,
-    RequestCallbackJob,
-    RequestCallbackJobStatus,
-    initialize_normalizer,
-    CopyFileTask,
-)
+from beagle_etl.models import Operator, ETLConfiguration, SMILEMessage, RequestCallbackJob, RequestCallbackJobStatus
 from file_system.serializers import UpdateFileSerializer
-from file_system.exceptions import MetadataValidationException
 from file_system.repository.file_repository import FileRepository
-from file_system.models import File, FileGroup, FileMetadata, FileType, Request, Sample
+from file_system.models import File
 from beagle_etl.exceptions import (
-    FailedToFetchSampleException,
     FailedToSubmitToOperatorException,
-    ErrorInconsistentDataException,
-    MissingDataException,
-    FailedToFetchPoolNormalException,
-    FailedToCalculateChecksum,
-    FailedToCopyFilePermissionDeniedException,
-    FailedToCopyFileException,
-    IncorrectlyFormattedPrimaryId,
-    FailedToLocateTheFileException,
+    FailedToRegisterFileException,
+    FailedToFetchRequestMetadata,
+    ETLExceptions,
 )
 
 from runner.tasks import create_jobs_from_request
 from file_system.serializers import CreateFileSerializer
-from file_system.helper.checksum import sha1, FailedToCalculateChecksum
-from runner.operator.helper import format_sample_name
-from beagle_etl.copy_service import CopyService
-from beagle_etl.jobs.helper_jobs import check_file_permissions, fix_path_iris
-from beagle_etl.jobs.notification_helper import _generate_ticket_description
+from beagle_etl.jobs.helper_jobs import fix_path_iris, calculate_checksum
 from django.contrib.auth.models import User
 from study.models import Study
 from study.objects import StudyObject
@@ -92,6 +72,72 @@ def fetch_operators_wfastq(fastq_metadata):
             ):
                 operators.append(obj)
     return operators
+
+
+def normalize_fastq_value(val):
+    if isinstance(val, list):
+        return set(val)
+    elif isinstance(val, str):
+        return {val}
+    else:
+        return set()
+
+
+def fetch_fastq_metadata(request_id):
+    """
+    input: request_id <string>: request_id received in a smile message.
+    output:
+        - fastq_metadata <dict>: fastq metadata that is generalized to an entire request.
+    """
+    fastq_file = (
+        FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
+        )
+        .values_list("metadata", flat=True)
+        .first()
+    )
+    if fastq_file:
+        fastq_metadata = {
+            settings.BAITSET_METADATA_KEY: fastq_file.get(settings.BAITSET_METADATA_KEY),
+            "runMode": fastq_file.get("runMode"),
+            "species": fastq_file.get("species"),
+            "platform": fastq_file.get("platform"),
+            "genePanel": fastq_file.get("genePanel"),
+            settings.REQUEST_ID_METADATA_KEY: fastq_file.get(settings.REQUEST_ID_METADATA_KEY),
+            settings.PROJECT_ID_METADATA_KEY: fastq_file.get(settings.PROJECT_ID_METADATA_KEY),
+            settings.ONCOTREE_METADATA_KEY: fastq_file.get(settings.ONCOTREE_METADATA_KEY),
+            settings.PRESERVATION_METADATA_KEY: fastq_file.get(settings.PRESERVATION_METADATA_KEY),
+            "sampleOrigin": fastq_file.get("sampleOrigin"),
+        }
+    else:
+        fastq_metadata = {}
+    return fastq_metadata
+
+
+def fetch_request_metadata(request_id):
+    file_example = FileRepository.filter(
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
+    ).first()
+    if file_example:
+        request_metadata = {
+            settings.REQUEST_ID_METADATA_KEY: file_example.metadata[settings.REQUEST_ID_METADATA_KEY],
+            settings.PROJECT_ID_METADATA_KEY: file_example.metadata[settings.PROJECT_ID_METADATA_KEY],
+            settings.RECIPE_METADATA_KEY: file_example.metadata[settings.RECIPE_METADATA_KEY],
+            "projectManagerName": file_example.metadata["projectManagerName"],
+            "piEmail": file_example.metadata["piEmail"],
+            settings.LAB_HEAD_NAME_METADATA_KEY: file_example.metadata[settings.LAB_HEAD_NAME_METADATA_KEY],
+            settings.LAB_HEAD_EMAIL_METADATA_KEY: file_example.metadata[settings.LAB_HEAD_EMAIL_METADATA_KEY],
+            settings.INVESTIGATOR_NAME_METADATA_KEY: file_example.metadata[settings.INVESTIGATOR_NAME_METADATA_KEY],
+            settings.INVESTIGATOR_EMAIL_METADATA_KEY: file_example.metadata[settings.INVESTIGATOR_EMAIL_METADATA_KEY],
+            "dataAnalystName": file_example.metadata["dataAnalystName"],
+            "dataAnalystEmail": file_example.metadata["dataAnalystEmail"],
+            "otherContactEmails": file_example.metadata["otherContactEmails"],
+            "dataAccessEmails": file_example.metadata["dataAccessEmails"],
+            "qcAccessEmails": file_example.metadata["qcAccessEmails"],
+        }
+        return request_metadata
+    else:
+        raise FailedToFetchRequestMetadata(f"No files for {request_id} previously imported")
 
 
 def create_request_callback_instance(
@@ -136,215 +182,83 @@ def request_update_notification(request_id):
 @shared_task
 def new_request(message_id):
     message = SMILEMessage.objects.get(id=message_id)
-    log = ""
-    data = json.loads(message.message)
-    request_id = data.get(settings.REQUEST_ID_METADATA_KEY)
 
-    if not data.get(settings.IS_CMO_REQUEST):
-        logger.info(f"Request {request_id} is not CMO Request")
-        log += f"Request {request_id} is not CMO Request\n"
-        message.status = SmileMessageStatus.COMPLETED
-        message.log = log
-        message.save()
+    try:
+        data = RequestMetadata.from_dict(json.loads(message.message))
+    except Exception as e:
+        message.add_log(str(e))
+        message.failed()
         return
 
-    gene_panel = data.get(settings.RECIPE_METADATA_KEY)
-    message.gene_panel = gene_panel
-    message.save(update_fields=["gene_panel"])
-    log += f"Importing new request: {request_id} with genePanel: {gene_panel}\n"
-    logger.info(f"Importing new request: {request_id} with genePanel: {gene_panel}\n")
+    if not data.isCmoRequest:
+        # Non CmoRequests not supported
+        logger.info(f"Request {data.igoRequestId} is not CMO Request")
+        message.add_log(f"Request {data.igoRequestId} is not CMO Request")
+        message.not_supported()
+        return
 
-    sample_jobs = []
-    valid_samples = set()
+    logger.info(f"Importing new request: {data.igoRequestId} with genePanel: {data.genePanel}\n")
+    message.add_log(f"Importing new request: {data.igoRequestId} with genePanel: {data.genePanel}")
 
-    samples = data.get("samples")
-    for idx, sample in enumerate(samples):
-        igocomplete = sample.get("igoComplete")
-        try:
-            validate_sample(sample["primaryId"], sample.get("libraries", []), igocomplete, gene_panel)
-            sample_status = {
-                "type": "SAMPLE",
-                "igocomplete": igocomplete,
-                "sample": sample["primaryId"],
-                "status": "COMPLETED",
-                "message": "",
-                "code": None,
-            }
-            sample_jobs.append(sample_status)
-            valid_samples.add(sample["primaryId"])
-        except Exception as e:
-            if isinstance(e, ETLExceptions):
-                sample_status = {
-                    "type": "SAMPLE",
-                    "igocomplete": igocomplete,
-                    "sample": sample["primaryId"],
-                    "status": "FAILED",
-                    "message": str(e),
-                    "code": e.code,
-                }
-            else:
-                sample_status = {
-                    "type": "SAMPLE",
-                    "igocomplete": igocomplete,
-                    "sample": sample["primaryId"],
-                    "status": "FAILED",
-                    "message": str(e),
-                    "code": None,
-                }
-            sample_jobs.append(sample_status)
-    message.sample_status = sample_jobs
-    message.save(update_fields=("sample_status",))
+    # Validate samples and fastqs
+    log, status = data.validate_all_samples()
+    message.add_log(log)
 
-    job_group = JobGroup.objects.create()
-    message.job_group = job_group
-    job_group_notifier_id = notifier_start(job_group, request_id)
-    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
-    message.job_group_notifier = job_group_notifier
-    message.save(
-        update_fields=(
-            "job_group",
-            "job_group_notifier",
-        )
-    )
+    jgn_id = None
+    if message.job_group_notifier:
+        jgn_id = str(message.job_group_notifier.id)
 
-    project_id = data.get(settings.PROJECT_ID_METADATA_KEY)
-    recipe = data.get(settings.RECIPE_METADATA_KEY)
-    set_recipe_event = ETLSetRecipeEvent(str(job_group_notifier_id), recipe).to_dict()
+    set_recipe_event = ETLSetRecipeEvent(jgn_id, data.genePanel).to_dict()
     send_notification.delay(set_recipe_event)
 
-    project_manager_name = data.get("projectManagerName")
-    pi_email = data.get("piEmail")
-    lab_head_name = data.get(settings.LAB_HEAD_NAME_METADATA_KEY)
-    lab_head_email = data.get(settings.LAB_HEAD_EMAIL_METADATA_KEY)
-    investigator_name = data.get(settings.INVESTIGATOR_NAME_METADATA_KEY)
-    investigator_email = data.get(settings.INVESTIGATOR_EMAIL_METADATA_KEY)
-    data_analyst_name = data.get("dataAnalystName")
-    data_analyst_email = data.get("dataAnalystEmail")
-    other_contact_emails = data.get("otherContactEmails")
-    data_access_email = data.get("dataAccessEmails")
-    qc_access_email = data.get("qcAccessEmails")
+    study, _ = Study.objects.get_or_create(study_id=StudyObject.generate_study_id(data.labHeadName))
 
-    study, _ = Study.objects.get_or_create(study_id=StudyObject.generate_study_id(lab_head_email))
+    valid_samples = {k for k, v in status.items() if v.status == "COMPLETED"}
+    request_metadata = data.request_metadata()
 
-    request_metadata = {
-        settings.REQUEST_ID_METADATA_KEY: request_id,
-        settings.PROJECT_ID_METADATA_KEY: project_id,
-        settings.RECIPE_METADATA_KEY: recipe,
-        "projectManagerName": project_manager_name,
-        "piEmail": pi_email,
-        settings.LAB_HEAD_NAME_METADATA_KEY: lab_head_name,
-        settings.LAB_HEAD_EMAIL_METADATA_KEY: lab_head_email,
-        settings.INVESTIGATOR_NAME_METADATA_KEY: investigator_name,
-        settings.INVESTIGATOR_EMAIL_METADATA_KEY: investigator_email,
-        "dataAnalystName": data_analyst_name,
-        "dataAnalystEmail": data_analyst_email,
-        "otherContactEmails": other_contact_emails,
-        "dataAccessEmails": data_access_email,
-        "qcAccessEmails": qc_access_email,
-    }
-    if data.get("deliveryDate"):
-        delivery_date = datetime.fromtimestamp(data["deliveryDate"] / 1000)
-    else:
-        delivery_date = datetime.now()
-    data["deliveryDate"] = delivery_date
+    import_status = True
+    for sample in data.samples:
+        if sample.primaryId in valid_samples:
+            for library in sample.libraries:
+                for run in library.runs:
+                    for fastq in run.fastqs:
+                        sample_metadata = sample.sample_metadata(library, run, fastq)
+                        metadata = copy.deepcopy(request_metadata)
+                        metadata.update(sample_metadata)
+                        fastq_location = fix_path_iris(fastq)
+                        try:
+                            file_obj = create_or_update_file(fastq_location, metadata, job_group_id=jgn_id)
+                        except FailedToRegisterFileException as e:
+                            logger.error(f"Failed to register file {fastq_location}")
+                            message.add_log(f"Failed to register file {fastq_location}")
+                            # Update sample status
+                            status[sample.primaryId].status = "FAILED"
+                            status[sample.primaryId].message += f"{str(e)}\n"
+                            import_status = False
+                        else:
+                            sample_objs = file_obj.get_samples()
+                            request_obj = file_obj.get_request()
+                            if sample_objs:
+                                [study.samples.add(sample_obj) for sample_obj in sample_objs]
+                            if request_obj:
+                                study.requests.add(request_obj)
 
-    smile_job_status = message.status
+    sample_status = sorted([sample.to_dict() for sample in status.values()], key=lambda d: d["sample"])
+    message.set_sample_status(sample_status)
 
-    for idx, sample in enumerate(data.get("samples")):
-        sample_id = sample["primaryId"]
-        if sample_id not in valid_samples:
-            smile_job_status = SmileMessageStatus.FAILED
-            continue
-        igocomplete = sample.get("igoComplete")
-        logger.info("Parsing sample: %s" % sample_id)
-        libraries = sample.pop("libraries")
-        for library in libraries:
-            logger.info("Processing library %s" % library)
-            runs = library.pop("runs")
-            for run in runs:
-                logger.info("Processing run %s" % run)
-                fastqs = run.pop("fastqs")
-                for fastq in fastqs:
-                    fastq_location = fix_path_iris(fastq)
-                    logger.info("Adding file %s" % fastq_location)
-                    try:
-                        create_or_update_file(
-                            message,
-                            fastq_location,
-                            request_id,
-                            settings.IMPORT_FILE_GROUP,
-                            "fastq",
-                            igocomplete,
-                            sample,
-                            library,
-                            run,
-                            request_metadata,
-                            R1_or_R2(fastq),
-                        )
-                    except Exception as e:
-                        logger.error(e)
-        sample = Sample.objects.filter(sample_id=sample_id, latest=True).first()
-        if sample:
-            study.samples.add(sample)
+    message.complete(request_metadata) if import_status else message.failed(request_metadata)
 
-    request = Request.objects.filter(request_id=request_id, latest=True).first()
-    if not request:
-        log += f"No samples imported for request {request_id}"
-        logger.error(f"No samples imported for request {request_id}")
-        smile_job_status = SmileMessageStatus.FAILED
-    else:
-        study.requests.add(request)
-    pooled_normal = data.get("pooledNormals") if data.get("pooledNormals") is not None else []
-    pooled_normal_jobs = []
-    for pn in pooled_normal:
-        try:
-            create_pooled_normal(message, pn, str(settings.POOLED_NORMAL_FILE_GROUP))
-        except Exception as e:
-            pooled_normal_jobs.append(
-                {"type": "POOLED_NORMAL", "sample": "", "status": "FAILED", "message": str(e), "code": None}
-            )
-        else:
-            pooled_normal_jobs.append(
-                {"type": "POOLED_NORMAL", "sample": "", "status": "COMPLETED", "message": pn, "code": None}
-            )
+    fastq_metadata = fetch_fastq_metadata(data.igoRequestId)
 
-    _generate_ticket_description(
-        request_id, str(job_group.id), job_group_notifier_id, sample_jobs, pooled_normal_jobs, request_metadata
-    )
-
-    if (
-        CopyFileTask.objects.filter(smile_message=message).count() == 0
-        and smile_job_status != SmileMessageStatus.FAILED
-    ):
-        smile_job_status = SmileMessageStatus.COMPLETED
-
-    message.status = smile_job_status
-    message.log = log
-    message.save()
-
-
-# Run Operator
-def run_operator(message_id):
-    msg = SMILEMessage.objects.get(message_id=message_id)
-    fastq_metadata = fetch_fastq_metadata(msg.request_id)
     create_request_callback_instance(
-        msg.request_id,
-        msg,
-        msg.gene_panel,
-        msg.sample_status,
-        msg.job_group,
-        msg.job_group_notifier,
+        data.igoRequestId,
+        message,
+        data.genePanel,
+        sample_status,
+        message.job_group,
+        message.job_group_notifier,
         fastq_metadata=fastq_metadata,
     )
-
-
-def normalize_fastq_value(val):
-    if isinstance(val, list):
-        return set(val)
-    elif isinstance(val, str):
-        return {val}
-    else:
-        return set()
 
 
 @shared_task
@@ -523,665 +437,144 @@ def request_callback(request_id, recipe, fastq_metadata, sample_jobs, job_group_
 
 
 @shared_task
-def update_request_job(message_id, job_group, job_group_notifier):
-    job_group_notifier_id = str(job_group_notifier.id)
+def update_request_job(message_id):
     message = SMILEMessage.objects.get(id=message_id)
-    metadata = json.loads(message.message)[-1]
-    data = json.loads(metadata["requestMetadataJson"])
-    request_id = metadata.get(settings.REQUEST_ID_METADATA_KEY)
+    try:
+        data = UpdateRequest.from_list(json.loads(message.message))
+    except Exception as e:
+        message.add_log(str(e))
+        message.failed()
+        return
+
+    request_update = data.get_latest_update().requestMetadataJson
+
+    # List all files to update
     files = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
+        metadata={settings.REQUEST_ID_METADATA_KEY: request_update.igoRequestId}, file_group=settings.IMPORT_FILE_GROUP
     )
 
-    project_id = data.get("projectId")
-    recipe = data.get(settings.LIMS_RECIPE_METADATA_KEY)
-    redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
+    jgn_id = None
+    if message.job_group_notifier:
+        jgn_id = str(message.job_group_notifier.id)
+    logger.info(f"Job group notifier id:{jgn_id}")
+
+    redelivery_event = RedeliveryEvent(jgn_id).to_dict()
     send_notification.delay(redelivery_event)
 
-    project_manager_name = data.get("projectManagerName")
-    pi_email = data.get("piEmail")
-    lab_head_name = data.get(settings.LAB_HEAD_NAME_METADATA_KEY)
-    lab_head_email = data.get(settings.LAB_HEAD_EMAIL_METADATA_KEY)
-    investigator_name = data.get(settings.INVESTIGATOR_NAME_METADATA_KEY)
-    investigator_email = data.get(settings.INVESTIGATOR_EMAIL_METADATA_KEY)
-    data_analyst_name = data.get("dataAnalystName")
-    data_analyst_email = data.get("dataAnalystEmail")
-    other_contact_emails = data.get("otherContactEmails")
-    data_access_email = data.get("dataAccessEmails")
-    qc_access_email = data.get("qcAccessEmails")
-
-    request_metadata = {
-        settings.REQUEST_ID_METADATA_KEY: request_id,
-        settings.PROJECT_ID_METADATA_KEY: project_id,
-        settings.RECIPE_METADATA_KEY: recipe,
-        "projectManagerName": project_manager_name,
-        "piEmail": pi_email,
-        settings.LAB_HEAD_NAME_METADATA_KEY: lab_head_name,
-        settings.LAB_HEAD_EMAIL_METADATA_KEY: lab_head_email,
-        settings.INVESTIGATOR_NAME_METADATA_KEY: investigator_name,
-        settings.INVESTIGATOR_EMAIL_METADATA_KEY: investigator_email,
-        "dataAnalystName": data_analyst_name,
-        "dataAnalystEmail": data_analyst_email,
-        "otherContactEmails": other_contact_emails,
-        "dataAccessEmails": data_access_email,
-        "qcAccessEmails": qc_access_email,
-    }
-
-    samples = list()
-    sample_status_list = list()
+    sample_status = dict()
+    failed_samples = []
     for f in files:
         new_metadata = copy.deepcopy(f.metadata)
-        new_metadata.update(request_metadata)
-        if f.metadata[settings.SAMPLE_ID_METADATA_KEY] not in samples:
-            sample_status = {
+        new_metadata.update(request_update.request_metadata())
+        try:
+            update_file_object(f.file, f.file.path, new_metadata, jgn_id)
+        except FailedToRegisterFileException as e:
+            failed_samples.append(f.metadata[settings.SAMPLE_ID_METADATA_KEY])
+
+        if f.metadata[settings.SAMPLE_ID_METADATA_KEY] not in sample_status.keys():
+            status = "FAILED" if f.metadata[settings.SAMPLE_ID_METADATA_KEY] in failed_samples else "COMPLETED"
+            status = {
                 "type": "SAMPLE",
                 "igocomplete": f.metadata[settings.IGO_COMPLETE_METADATA_KEY],
                 "sample": f.metadata[settings.SAMPLE_ID_METADATA_KEY],
-                "status": "COMPLETED",
-                "message": f"File {f.file.path} request metadata updated",
+                "status": status,
+                "message": f"Files for {f.metadata[settings.SAMPLE_ID_METADATA_KEY]} updated",
                 "code": None,
             }
-            samples.append(f.metadata[settings.SAMPLE_ID_METADATA_KEY])
-            sample_status_list.append(sample_status)
-        ddiff = DeepDiff(f.metadata, new_metadata, ignore_order=True)
-        diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
-        msg = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
-        update = RedeliveryUpdateEvent(job_group_notifier_id, msg).to_dict()
-        diff_details_event = LocalStoreFileEvent(job_group_notifier_id, diff_file_name, str(ddiff)).to_dict()
-        send_notification.delay(update)
-        send_notification.delay(diff_details_event)
-        update_file_object(f.file, f.file.path, new_metadata)
+            sample_status[f.metadata[settings.SAMPLE_ID_METADATA_KEY]] = status
 
-    pooled_normal = data.get("pooledNormals", [])
-    if pooled_normal is None:
-        pooled_normal = []
-    pooled_normal_jobs = []
-    for pn in pooled_normal:
-        try:
-            create_pooled_normal(pn, str(settings.POOLED_NORMAL_FILE_GROUP))
-        except Exception as e:
-            pooled_normal_jobs.append(
-                {"type": "POOLED_NORMAL", "sample": "", "status": "FAILED", "message": str(e), "code": None}
-            )
-        else:
-            pooled_normal_jobs.append(
-                {"type": "POOLED_NORMAL", "sample": "", "status": "COMPLETED", "message": pn, "code": None}
-            )
-    message.sample_status = sample_status_list
-    message.status = SmileMessageStatus.COMPLETED
-    message.save()
-
-    return request_metadata, pooled_normal
-
-
-def fetch_request_metadata(request_id):
-    file_example = FileRepository.filter(
-        metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
-    ).first()
-    request_metadata = {
-        settings.REQUEST_ID_METADATA_KEY: file_example.metadata[settings.REQUEST_ID_METADATA_KEY],
-        settings.PROJECT_ID_METADATA_KEY: file_example.metadata[settings.PROJECT_ID_METADATA_KEY],
-        settings.RECIPE_METADATA_KEY: file_example.metadata[settings.RECIPE_METADATA_KEY],
-        "projectManagerName": file_example.metadata["projectManagerName"],
-        "piEmail": file_example.metadata["piEmail"],
-        settings.LAB_HEAD_NAME_METADATA_KEY: file_example.metadata[settings.LAB_HEAD_NAME_METADATA_KEY],
-        settings.LAB_HEAD_EMAIL_METADATA_KEY: file_example.metadata[settings.LAB_HEAD_EMAIL_METADATA_KEY],
-        settings.INVESTIGATOR_NAME_METADATA_KEY: file_example.metadata[settings.INVESTIGATOR_NAME_METADATA_KEY],
-        settings.INVESTIGATOR_EMAIL_METADATA_KEY: file_example.metadata[settings.INVESTIGATOR_EMAIL_METADATA_KEY],
-        "dataAnalystName": file_example.metadata["dataAnalystName"],
-        "dataAnalystEmail": file_example.metadata["dataAnalystEmail"],
-        "otherContactEmails": file_example.metadata["otherContactEmails"],
-        "dataAccessEmails": file_example.metadata["dataAccessEmails"],
-        "qcAccessEmails": file_example.metadata["qcAccessEmails"],
-    }
-    return request_metadata
-
-
-def fetch_fastq_metadata(request_id):
-    """
-    input: request_id <string>: request_id received in a smile message.
-    output:
-        - fastq_metadata <dict>: fastq metadata that is generalized to an entire request.
-    """
-    fastq_file = (
-        FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: request_id}, file_group=settings.IMPORT_FILE_GROUP
-        )
-        .values_list("metadata", flat=True)
-        .first()
-    )
-    if fastq_file:
-        fastq_metadata = {
-            settings.BAITSET_METADATA_KEY: fastq_file.get(settings.BAITSET_METADATA_KEY),
-            "runMode": fastq_file.get("runMode"),
-            "species": fastq_file.get("species"),
-            "platform": fastq_file.get("platform"),
-            "genePanel": fastq_file.get("genePanel"),
-            settings.REQUEST_ID_METADATA_KEY: fastq_file.get(settings.REQUEST_ID_METADATA_KEY),
-            settings.PROJECT_ID_METADATA_KEY: fastq_file.get(settings.PROJECT_ID_METADATA_KEY),
-            settings.ONCOTREE_METADATA_KEY: fastq_file.get(settings.ONCOTREE_METADATA_KEY),
-            settings.PRESERVATION_METADATA_KEY: fastq_file.get(settings.PRESERVATION_METADATA_KEY),
-            "sampleOrigin": fastq_file.get("sampleOrigin"),
-        }
-    else:
-        fastq_metadata = {}
-    return fastq_metadata
+    sample_status = sorted([sample for sample in sample_status.values()], key=lambda d: d["sample"])
+    message.set_sample_status(sample_status)
+    message.complete(request_metadata=request_update.request_metadata())
 
 
 @shared_task
-def update_job(request_id):
-    sample_update_messages = (
-        SMILEMessage.objects.filter(
-            request_id__startswith=request_id,
-            topic=settings.METADB_NATS_SAMPLE_UPDATE,
-            status=SmileMessageStatus.PENDING,
-        )
-        .order_by("created_date")
-        .all()
-    )
-    request_update_messages = (
-        SMILEMessage.objects.filter(
-            request_id__startswith=request_id,
-            topic=settings.METADB_NATS_REQUEST_UPDATE,
-            status=SmileMessageStatus.PENDING,
-        )
-        .order_by("created_date")
-        .all()
-    )
-
-    job_group = JobGroup()
-    job_group.save()
-    job_group_notifier_id = notifier_start(job_group, request_id)
-    job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id)
-    sample_status = []
-    for msg in sample_update_messages:
-        sample_status.extend(update_sample_job(str(msg.id), job_group, job_group_notifier))
-    request_metadata = dict()
-    pooled_normal = list()
-    for msg in request_update_messages:
-        request_metadata, pooled_normal = update_request_job(str(msg.id), job_group, job_group_notifier)
-
-    if not request_metadata:
-        request_metadata = fetch_request_metadata(request_id)
-    fastq_metadata = fetch_fastq_metadata(request_id)
-    recipe = fastq_metadata.get(settings.RECIPE_METADATA_KEY)
-    _generate_ticket_description(
-        request_id, str(job_group.id), job_group_notifier_id, sample_status, pooled_normal, request_metadata
-    )
-
-
-@shared_task
-def update_sample_job(message_id, job_group, job_group_notifier):
+def update_sample_job(message_id):
     message = SMILEMessage.objects.get(id=message_id)
-    job_group_notifier_id = str(job_group_notifier.id)
-    data = json.loads(message.message)
-    latest = data["latestSampleMetadata"]
-    latest["datasource"] = data["datasource"]
-    latest["sampleAliases"] = data["sampleAliases"]
-    latest["smileSampleId"] = data["smileSampleId"]
-    latest["smilePatientId"] = data["patient"]["smilePatientId"]
-    latest["patientAliases"] = data["patient"]["patientAliases"]
-    primary_id = latest.get(settings.SAMPLE_ID_METADATA_KEY)
+    try:
+        data = UpdateSample.from_dict(json.loads(message.message))
+    except ETLExceptions as e:
+        message.add_log(str(e))
+        message.failed()
+        return
+
+    if not data.latestSampleMetadata.is_cmo_sample():
+        # Non CMO samples not supported
+        logger.info(f"Sample {data.latestSampleMetadata.primaryId} is not a CMO sample")
+        message.add_log(f"Sample {data.latestSampleMetadata.primaryId} is not a CMO sample")
+        message.not_supported()
+        return
+
+    log, sample_status = data.latestSampleMetadata.validate_with_file_checks(redelivery=True)
+    message.add_log(log)
+
+    if sample_status.status != "COMPLETED":
+        message.failed()
+        return
+
+    jgn_id = None
+    if message.job_group_notifier:
+        jgn_id = str(message.job_group_notifier.id)
+    logger.info(f"Job group notifier id:{jgn_id}")
+
+    new_paths = []
     files = FileRepository.filter(
-        metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id}, file_group=settings.IMPORT_FILE_GROUP
+        metadata={settings.SAMPLE_ID_METADATA_KEY: data.latestSampleMetadata.primaryId},
+        file_group=settings.IMPORT_FILE_GROUP,
     ).all()
-    file_paths = [f.file.path for f in files]
-    new_files = []
-    recipe = latest.get(settings.RECIPE_METADATA_KEY)
-    request_id = latest.get(settings.REQUEST_ID_METADATA_KEY)
-    igocomplete = latest.get(settings.IGO_COMPLETE_METADATA_KEY)
+    file_paths = [file_obj.file.original_path for file_obj in files]
 
     if not files:
-        logger.warning("Nothing to update %s. Creating new files." % primary_id)
-        project_id = latest.get(settings.PROJECT_ID_METADATA_KEY)
-        project_manager_name = latest.get("projectManagerName")
-        pi_email = latest.get("piEmail")
-        lab_head_name = latest.get(settings.LAB_HEAD_NAME_METADATA_KEY)
-        lab_head_email = latest.get(settings.LAB_HEAD_EMAIL_METADATA_KEY)
-        investigator_name = latest.get(settings.INVESTIGATOR_NAME_METADATA_KEY)
-        investigator_email = latest.get(settings.INVESTIGATOR_EMAIL_METADATA_KEY)
-        data_analyst_name = latest.get("dataAnalystName")
-        data_analyst_email = latest.get("dataAnalystEmail")
-        other_contact_emails = latest.get("otherContactEmails")
-        data_access_email = latest.get("dataAccessEmails")
-        qc_access_email = latest.get("qcAccessEmails")
-        oncotree_code = latest.get(settings.ONCOTREE_METADATA_KEY)
-        datasource = latest.get("datasource")
-        sample_aliases = latest.get("sampleAliases")
-        smile_sample_id = latest.get("smileSampleId")
-        cfdna_2dbarcode = latest.get("cfDNA2dBarcode")
-        cmo_info_igo_id = latest.get("cmoInfoIgoId")
-        patient_aliases = latest.get("patientAliases")
-        smile_patient_id = latest.get("smilePatientId")
-    else:
-        project_id = files[0].metadata.get(settings.PROJECT_ID_METADATA_KEY)
-        oncotree_code = files[0].metadata.get(settings.ONCOTREE_METADATA_KEY)
-        project_manager_name = files[0].metadata.get("projectManagerName")
-        pi_email = files[0].metadata.get("piEmail")
-        lab_head_name = files[0].metadata.get(settings.LAB_HEAD_NAME_METADATA_KEY)
-        lab_head_email = files[0].metadata.get(settings.LAB_HEAD_EMAIL_METADATA_KEY)
-        investigator_name = files[0].metadata.get(settings.INVESTIGATOR_NAME_METADATA_KEY)
-        investigator_email = files[0].metadata.get(settings.INVESTIGATOR_EMAIL_METADATA_KEY)
-        data_analyst_name = files[0].metadata.get("dataAnalystName")
-        data_analyst_email = files[0].metadata.get("dataAnalystEmail")
-        other_contact_emails = files[0].metadata.get("otherContactEmails")
-        data_access_email = files[0].metadata.get("dataAccessEmails")
-        qc_access_email = files[0].metadata.get("qcAccessEmails")
-        datasource = files[0].metadata.get("datasource")
-        sample_aliases = files[0].metadata.get("sampleAliases")
-        smile_sample_id = files[0].metadata.get("smileSampleId")
-        cfdna_2dbarcode = files[0].metadata.get("cfDNA2dBarcode")
-        cmo_info_igo_id = files[0].metadata.get("cmoInfoIgoId")
-        patient_aliases = files[0].metadata.get("patientAliases")
-        smile_patient_id = files[0].metadata.get("smilePatientId")
+        error_message = f"No files registered {data.latestSampleMetadata.primaryId}. Update Sample Job Failed"
+        logger.warning(error_message)
+        message.add_log(error_message)
+        message.failed()
+        return
 
-    request_metadata = {
-        settings.REQUEST_ID_METADATA_KEY: request_id,
-        settings.PROJECT_ID_METADATA_KEY: project_id,
-        settings.RECIPE_METADATA_KEY: recipe,
-        settings.ONCOTREE_METADATA_KEY: oncotree_code,
-        "projectManagerName": project_manager_name,
-        "piEmail": pi_email,
-        settings.LAB_HEAD_NAME_METADATA_KEY: lab_head_name,
-        settings.LAB_HEAD_EMAIL_METADATA_KEY: lab_head_email,
-        settings.INVESTIGATOR_NAME_METADATA_KEY: investigator_name,
-        settings.INVESTIGATOR_EMAIL_METADATA_KEY: investigator_email,
-        "dataAnalystName": data_analyst_name,
-        "dataAnalystEmail": data_analyst_email,
-        "otherContactEmails": other_contact_emails,
-        "dataAccessEmails": data_access_email,
-        "qcAccessEmails": qc_access_email,
-        "datasource": datasource,
-        "sampleAliases": sample_aliases,
-        "smileSampleId": smile_sample_id,
-        "cfDNA2dBarcode": cfdna_2dbarcode,
-        "cmoInfoIgoId": cmo_info_igo_id,
-        "patientAliases": patient_aliases,
-        "smilePatientId": smile_patient_id,
-    }
-
-    redelivery_event = RedeliveryEvent(job_group_notifier_id).to_dict()
+    redelivery_event = RedeliveryEvent(jgn_id).to_dict()
     send_notification.delay(redelivery_event)
 
-    request_metadata[settings.SAMPLE_ID_METADATA_KEY] = latest[settings.SAMPLE_ID_METADATA_KEY]
-    request_metadata[settings.PATIENT_ID_METADATA_KEY] = latest.get(settings.PATIENT_ID_METADATA_KEY)
-    request_metadata["investigatorSampleId"] = latest.get("investigatorSampleId")
-    request_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY] = latest.get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
-    request_metadata[settings.SAMPLE_NAME_METADATA_KEY] = latest.get(settings.SAMPLE_NAME_METADATA_KEY)
-    request_metadata["importDate"] = latest.get("importDate")
-    request_metadata["collectionYear"] = latest.get("collectionYear")
-    request_metadata["tubeId"] = latest.get("tubeId")
-    request_metadata["species"] = latest.get("species")
-    request_metadata["sex"] = latest.get("sex")
-    request_metadata["tumorOrNormal"] = latest.get("tumorOrNormal")
-    request_metadata[settings.CMO_SAMPLE_CLASS_METADATA_KEY] = latest.get(settings.CMO_SAMPLE_CLASS_METADATA_KEY)
-    request_metadata["preservation"] = latest.get("preservation")
-    request_metadata[settings.SAMPLE_CLASS_METADATA_KEY] = latest.get(settings.SAMPLE_CLASS_METADATA_KEY)
-    request_metadata["sampleOrigin"] = latest.get("sampleOrigin")
-    request_metadata["tissueLocation"] = latest.get("tissueLocation")
-    request_metadata["baitSet"] = latest.get("baitSet")
-    request_metadata["qcReports"] = latest.get("qcReports")
-    request_metadata["cmoSampleIdFields"] = latest.get("cmoSampleIdFields")
-    request_metadata[settings.RECIPE_METADATA_KEY] = latest.get(settings.RECIPE_METADATA_KEY)
-    request_metadata["igoComplete"] = igocomplete
+    request_metadata = fetch_request_metadata(data.latestSampleMetadata.igoRequestId)
 
-    logger.info("Parsing sample: %s" % primary_id)
-    libraries = latest.pop("libraries")
-    message.status = SmileMessageStatus.COMPLETED
-    for library in libraries:
-        logger.info("Processing library %s" % library)
-        runs = library.pop("runs")
-        for run in runs:
-            logger.info("Processing run %s" % run)
-            fastqs = run.pop("fastqs")
-
-            for fastq in fastqs:
-                logger.info("Adding file %s" % fastq)
+    update_completed = True
+    for library in data.latestSampleMetadata.libraries:
+        for run in library.runs:
+            for fastq in run.fastqs:
+                metadata = copy.deepcopy(request_metadata)
+                sample_metadata = data.latestSampleMetadata.sample_metadata(library, run, fastq)
+                metadata.update(sample_metadata)
+                fastq_location = fix_path_iris(fastq)
                 try:
-                    fastq_location = fix_path_iris(fastq)
-                    new_path = CopyService.remap(recipe, fastq_location)
-                    f = FileRepository.filter(path=new_path).first()
-                    if f:
-                        new_metadata = copy.deepcopy(f.metadata)
-                        new_metadata.update(request_metadata)
-                    create_or_update_file(
-                        message,
-                        fastq_location,
-                        request_id,
-                        settings.IMPORT_FILE_GROUP,
-                        "fastq",
-                        igocomplete,
-                        latest,
-                        library,
-                        run,
-                        request_metadata,
-                        R1_or_R2(fastq),
-                    )
-                    new_files.append(new_path)
-                    ddiff = DeepDiff(f.metadata, new_metadata, ignore_order=True)
-                    diff_file_name = "%s_metadata_update_%s.json" % (f.file.file_name, f.version + 1)
-                    msg = "Updating file metadata: %s, details in file %s\n" % (f.file.path, diff_file_name)
-                    update = RedeliveryUpdateEvent(job_group_notifier_id, msg).to_dict()
-                    diff_details_event = LocalStoreFileEvent(
-                        job_group_notifier_id, diff_file_name, str(ddiff)
-                    ).to_dict()
-                    send_notification.delay(update)
-                    send_notification.delay(diff_details_event)
-                except Exception as e:
-                    message.status = SmileMessageStatus.FAILED
-                    logger.error(e)
+                    file_obj = create_or_update_file(fastq_location, metadata, job_group_id=jgn_id)
+                    file_obj.set_unavailable()
+                    new_paths.append(fastq_location)
+                except FailedToRegisterFileException as e:
+                    update_completed = False
+                    update_file_error_message = f"Failed to register file {fastq_location}"
+                    message.add_log(update_file_error_message)
+                    logger.error(update_file_error_message)
+                    sample_status.status = "FAILED"
+                    sample_status.message += f"{str(e)}\n"
 
+    message.set_sample_status([sample_status.to_dict()])
     # Remove unnecessary files
-    files_to_remove = set(file_paths) - set(new_files)
+    files_to_remove = set(file_paths) - set(new_paths)
     for fi in list(files_to_remove):
-        logger.info(f"Removing file {fi}.")
+        file_removed_message = f"File {fi} removed from the Sample"
+        message.add_log(file_removed_message)
+        logger.warning(file_removed_message)
         File.objects.filter(path=fi, file_group_id=settings.IMPORT_FILE_GROUP).delete()
-
-    message.save()
-    sample_status = {
-        "type": "SAMPLE",
-        "igocomplete": True,
-        "sample": primary_id,
-        "status": "COMPLETED",
-        "message": "File %s request metadata updated",
-        "code": None,
-    }
-    message.sample_status = sample_status
-    message.save()
-    return [sample_status]
+    message.complete(request_metadata) if update_completed else message.failed(request_metadata)
 
 
-@shared_task
-def not_supported(message_id):
-    message = SMILEMessage.objects.get(id=message_id)
-    message.status = SmileMessageStatus.NOT_SUPPORTED
-    message.save()
-
-
-def get_run_id_from_string(string):
-    """
-    Parse the runID from a character string
-    Split on the final '_' in the string
-
-    Examples
-    --------
-        get_run_id_from_string("JAX_0397_BHCYYWBBXY")
-        >>> JAX_0397
-    """
-    parts = string.split("_")
-    if len(parts) > 1:
-        parts.pop(-1)
-        output = "_".join(parts)
-        return output
+def create_or_update_file(path, metadata, file_group=None, file_type="fastq", job_group_id=None):
+    if file_group is None:
+        file_group = settings.IMPORT_FILE_GROUP
+    file_obj = File.objects.filter(original_path=path, file_group=file_group).first()
+    if not file_obj:
+        return create_file_object(path, file_group, metadata, file_type)
     else:
-        return string
-
-
-def create_pooled_normal(message, filepath, file_group_id):
-    """
-    Parse the file path provided for a Pooled Normal sample into the metadata fields needed to
-    create the File and FileMetadata entries in the database
-
-    Parameters:
-    -----------
-    filepath: str
-        path to file for the sample
-    file_group_id: UUID
-        primary key for FileGroup to use for imported File entry
-
-    Examples
-    --------
-        filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
-        file_group_id = settings.IMPORT_FILE_GROUP
-        create_pooled_normal(filepath, file_group_id)
-
-    Notes
-    -----
-    For filepath string such as "JAX_0397_BHCYYWBBXY";
-    - runId = JAX_0397
-    - flowCellId = HCYYWBBXY
-    - [A|B] might be the flowcell bay the flowcell is placed into
-    """
-    # if FileRepository.filter(path=filepath):
-    try:
-        File.objects.get(path=filepath)
-    except File.DoesNotExist:
-        logger.info(f"Creating pooled normal with path {filepath}")
-    else:
-        logger.info(f"Pooled normal with path {filepath} already exists")
-        return
-    file_group_obj = FileGroup.objects.get(id=file_group_id)
-    file_type_obj = FileType.objects.filter(name="fastq").first()
-    assays = ETLConfiguration.objects.first()
-    assay_list = assays.all_recipes
-    recipe = None
-    try:
-        parts = filepath.split("/")
-        path_shift = 0
-        # path_shift needed for /ifs/archive/GCL/hiseq/ -> /igo/delivery/ transition
-        if "igo" in parts[1]:
-            path_shift = 2
-        run_id = get_run_id_from_string(parts[6 - path_shift])
-        pooled_normal_folder = parts[8 - path_shift]
-        preservation_type = pooled_normal_folder
-        preservation_type = preservation_type.split("Sample_")[1]
-        preservation_type = preservation_type.split("POOLEDNORMAL")[0]
-        potential_recipe = list(filter(lambda single_assay: single_assay in pooled_normal_folder, assay_list))
-        if potential_recipe:
-            potential_recipe.sort(key=len, reverse=True)
-            recipe = potential_recipe[0]
-    except Exception as e:
-        raise FailedToFetchPoolNormalException("Failed to parse metadata for pooled normal file %s" % filepath)
-    if preservation_type not in ("FFPE", "FROZEN", "MOUSE"):
-        logger.info("Invalid preservation type %s" % preservation_type)
-        return
-    if recipe in assays.disabled_recipes:
-        logger.info("Recipe %s, is marked as disabled" % recipe)
-        return
-    if None in [run_id, preservation_type, recipe]:
-        logger.info("Invalid metadata runId:%s preservation:%s recipe:%s" % (run_id, preservation_type, recipe))
-        return
-    metadata = {"runId": run_id, "preservation": preservation_type, settings.RECIPE_METADATA_KEY: recipe}
-    new_path = CopyService.remap(recipe, filepath)
-    if new_path != filepath:
-        CopyService.create_copy_task(message, filepath, new_path)
-    try:
-        f = File.objects.create(
-            file_name=os.path.basename(filepath), path=filepath, file_group=file_group_obj, file_type=file_type_obj
-        )
-        FileMetadata.objects.create_or_update(file=f, metadata=metadata)
-    except Exception as e:
-        logger.info("File already exist %s." % filepath)
-
-
-def validate_sample(sample_id, libraries, igocomplete, gene_panel, redelivery=False):
-    conflict = False
-    missing_fastq = False
-    files_unavailable = False
-    permission_error = False
-    permission_error_files = []
-    missing_files = []
-    failed_runs = []
-    conflict_files = []
-
-    pattern = re.compile(settings.PRIMARY_ID_REGEX)
-    if not pattern.fullmatch(sample_id):
-        logger.error(f"primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}")
-        raise IncorrectlyFormattedPrimaryId(
-            f"Failed to import, primaryId:{sample_id} incorrectly formatted for genePanel:{gene_panel}"
-        )
-
-    if not libraries:
-        if igocomplete:
-            raise ErrorInconsistentDataException(
-                f"Failed to fetch SampleManifest for sampleId:{sample_id}. Libraries empty."
-            )
-        else:
-            raise MissingDataException(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Libraries empty.")
-    for library in libraries:
-        runs = library.get("runs")
-        if not runs:
-            logger.error(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty.")
-            if igocomplete:
-                raise ErrorInconsistentDataException(
-                    f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty."
-                )
-            else:
-                raise MissingDataException(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Runs empty.")
-        run_dict = convert_to_dict(runs)
-        for run in run_dict.values():
-            fastqs = run.get("fastqs")
-            if not fastqs:
-                logger.error(f"Failed to fetch SampleManifest for sampleId:{sample_id}. Fastqs empty.")
-                missing_fastq = True
-                run_id = run["runId"] if run["runId"] else "None"
-                failed_runs.append(run_id)
-                continue
-    #         else:
-    #             if not redelivery:
-    #                 for fastq in fastqs:
-    #                     # Check do files exist
-    #                     try:
-    #                         fastq_location = locate_file(fastq)
-    #                     except FailedToLocateTheFileException as e:
-    #                         files_unavailable = True
-    #                         missing_files.append(fastq)
-    #                         continue
-    #                     # Check files permissions
-    #                     try:
-    #                         check_file_permissions(fastq_location)
-    #                     except FailedToCopyFilePermissionDeniedException as e:
-    #                         permission_error = True
-    #                         permission_error_files.append(fastq)
-    #                         continue
-    #                     # Check is file already registered
-    #                     try:
-    #                         file_search = File.objects.get(path=fastq_location, file_group=settings.IMPORT_FILE_GROUP)
-    #                     except File.DoesNotExist:
-    #                         continue
-    #                     logger.info("Processing %s" % fastq)
-    #                     if file_search:
-    #                         conflict = True
-    #                         conflict_files.append((file_search.path, str(file_search.id)))
-    if missing_fastq:
-        raise ErrorInconsistentDataException(
-            f"Missing fastq data for igcomplete: {igocomplete} sample {sample_id} : {' '.join(failed_runs)}"
-        )
-    # if files_unavailable:
-    #     raise FailedToLocateTheFileException(f"Missing fastq files for sample {sample_id} {', '.join(missing_files)}")
-    # if permission_error:
-    #     raise FailedToCopyFilePermissionDeniedException(
-    #         f"Failed to access files for sample {sample_id} {', '.join(permission_error_files)}. Bad permissions"
-    #     )
-    # if not redelivery:
-    #     if conflict:
-    #         res_str = ""
-    #         for f in conflict_files:
-    #             res_str += "%s: %s" % (f[0], f[1])
-    #         raise ErrorInconsistentDataException(f"Conflict of fastq file(s) {res_str}")
-
-
-def R1_or_R2(filename):
-    reversed_filename = "".join(reversed(filename))
-    R1_idx = reversed_filename.find("1R")
-    R2_idx = reversed_filename.find("2R")
-    if R1_idx == -1 and R2_idx == -1:
-        return "UNKNOWN"
-    elif R1_idx > 0 and R2_idx == -1:
-        return "R1"
-    elif R2_idx > 0 and R1_idx == -1:
-        return "R2"
-    elif R1_idx > 0 and R2_idx > 0:
-        if R1_idx < R2_idx:
-            return "R1"
-        else:
-            return "R2"
-    return "UNKNOWN"
-
-
-def convert_to_dict(runs):
-    run_dict = dict()
-    for run in runs:
-        if not run_dict.get(run["runId"]):
-            run_dict[run["runId"]] = run
-        else:
-            if run_dict[run["runId"]].get("fastqs"):
-                logger.error("Fastq empty")
-                if run_dict[run["runId"]]["fastqs"][0] != run["fastqs"][0]:
-                    logger.error(
-                        "File %s do not match with %s" % (run_dict[run["runId"]]["fastqs"][0], run["fastqs"][0])
-                    )
-                    raise FailedToFetchSampleException(
-                        "File %s do not match with %s" % (run_dict[run["runId"]]["fastqs"][0], run["fastqs"][0])
-                    )
-                if run_dict[run["runId"]]["fastqs"][1] != run["fastqs"][1]:
-                    logger.error(
-                        "File %s do not match with %s" % (run_dict[run["runId"]]["fastqs"][1], run["fastqs"][1])
-                    )
-                    raise FailedToFetchSampleException(
-                        "File %s do not match with %s" % (run_dict[run["runId"]]["fastqs"][1], run["fastqs"][1])
-                    )
-    return run_dict
-
-
-def create_or_update_file(
-    message, path, request_id, file_group_id, file_type, igocomplete, data, library, run, request_metadata, r
-):
-    try:
-        lims_metadata = copy.deepcopy(data)
-        library_copy = copy.deepcopy(library)
-        lims_metadata[settings.REQUEST_ID_METADATA_KEY] = request_id
-        lims_metadata[settings.IGO_COMPLETE_METADATA_KEY] = igocomplete
-        lims_metadata["R"] = r
-        for k, v in library_copy.items():
-            lims_metadata[k] = v
-        for k, v in run.items():
-            lims_metadata[k] = v
-        for k, v in request_metadata.items():
-            lims_metadata[k] = v
-        metadata = format_metadata(lims_metadata)
-        metadata = normalize_metadata(metadata)
-    except Exception as e:
-        logger.error("Failed to parse metadata for file %s path" % path)
-        raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
-    try:
-        logger.info(metadata)
-        # validator.validate(get_metadata_schema().schema)
-    except MetadataValidationException as e:
-        logger.error("Failed to create file %s. Error %s" % (path, str(e)))
-        raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(e)))
-    else:
-        recipe = metadata.get(settings.RECIPE_METADATA_KEY, "")
-        fastq_location = fix_path_iris(path)
-        new_path = CopyService.remap(recipe, fastq_location)  # Get copied file path
-        f = FileRepository.filter(path=new_path).first()
-        if not f:
-            file_object = create_file_object(new_path, file_group_id, metadata, file_type)
-        else:
-            file_object = f.file
-            update_file_object(file_object, f.file.path, metadata)
-
-        if path != new_path:
-            CopyService.create_copy_task(message, file_object, fastq_location, new_path)
-
-
-def format_metadata(original_metadata):
-    metadata = copy.deepcopy(original_metadata)
-    sample_name = original_metadata.get("cmoSampleName", None)
-    sample_class = original_metadata.get(settings.SAMPLE_CLASS_METADATA_KEY, None)
-    # ciTag is the new field which needs to be used for the operators
-    metadata["ciTag"] = format_sample_name(sample_name, sample_class)
-    metadata["sequencingCenter"] = "MSKCC"
-    metadata["platform"] = "Illumina"
-    return metadata
-
-
-def normalize_metadata(original_metadata):
-    metadata = copy.deepcopy(original_metadata)
-    normalizers = initialize_normalizer()
-    for n in normalizers:
-        metadata = n.normalize(metadata)
-    return metadata
+        return update_file_object(file_obj, path, metadata, job_group_id)
 
 
 def create_file_object(path, file_group, metadata, file_type):
@@ -1189,12 +582,16 @@ def create_file_object(path, file_group, metadata, file_type):
     serializer = CreateFileSerializer(data=data)
     if serializer.is_valid():
         file = serializer.save()
+        file.set_unavailable()
+        calculate_checksum.delay(str(file.id))
         return file
     else:
-        raise FailedToFetchSampleException("Failed to create file %s. Error %s" % (path, str(serializer.errors)))
+        raise FailedToRegisterFileException("Failed to create file %s. Error %s" % (path, str(serializer.errors)))
 
 
-def update_file_object(file_object, path, metadata):
+def update_file_object(file_object, path, metadata, job_group_notifier=None):
+    file_ = FileRepository.get(file_object.id)
+    ddiff = DeepDiff(file_.metadata, metadata, ignore_order=True)
     data = {
         "path": path,
         "metadata": metadata,
@@ -1209,7 +606,13 @@ def update_file_object(file_object, path, metadata):
         file = serializer.save()
     else:
         logger.error("Failed to update file %s: Error %s" % (path, serializer.errors))
-        raise FailedToFetchSampleException(
+        raise FailedToRegisterFileException(
             "Failed to update metadata for fastq files for %s : %s" % (path, serializer.errors)
         )
+    diff_file_name = "%s_metadata_update_%s.json" % (file_.file.file_name, file_.version + 1)
+    msg = "Updating file metadata: %s, details in file %s\n" % (file_.file.path, diff_file_name)
+    update = RedeliveryUpdateEvent(job_group_notifier, msg).to_dict()
+    diff_details_event = LocalStoreFileEvent(job_group_notifier, diff_file_name, str(ddiff)).to_dict()
+    send_notification.delay(update)
+    send_notification.delay(diff_details_event)
     return file
