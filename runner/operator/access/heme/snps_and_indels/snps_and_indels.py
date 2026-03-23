@@ -659,9 +659,7 @@ class AccessHemeLegacySNV(Operator):
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
         # If no request_id, get request id from run information
         # else request_id given directly
-        runs, self.request_id = get_request_id_runs(
-            ["access v2 nucleo", "access nucleo"], self.run_ids, self.request_id
-        )
+        runs, self.request_id = get_request_id_runs(["heme nucleo"], self.run_ids, self.request_id)
         # TUMOR AND NORMAL BAMS from the request access v2 nucleo run
         bams = []
         for run in runs:
