@@ -1,0 +1,226 @@
+from django.contrib import admin
+from django.shortcuts import render, redirect
+from django.urls import path
+from django.contrib import messages
+from django.conf import settings
+from celery import chord
+from .models import SampleProviderJob, FileProviderJob, CleanupFileJob, FileProviderStatus
+from file_manager.file_manager import FileManager
+
+
+@admin.register(SampleProviderJob)
+class SampleProviderJobAdmin(admin.ModelAdmin):
+    list_display = (
+        "sample_id",
+        "status",
+        "completed_files",
+        "total_files",
+        "progress_percentage",
+        "created_date",
+        "modified_date",
+    )
+    list_filter = ("status", "created_date", "modified_date")
+    search_fields = ("sample_id",)
+    readonly_fields = ("id", "created_date", "modified_date")
+
+    change_list_template = "admin/file_manager/sampleproviderjob_changelist.html"
+
+    def has_add_permission(self, request):
+        """Remove 'Add' button - users should use 'Stage Sample Files' instead"""
+        return False
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path("stage-sample/", self.admin_site.admin_view(self.stage_sample_view), name="file_manager_stage_sample"),
+        ]
+        return custom_urls + urls
+
+    def stage_sample_view(self, request):
+        """Admin view to manually stage files for multiple samples"""
+        if request.method == "POST":
+            sample_ids_input = request.POST.get("sample_ids", "").strip()
+            file_group = request.POST.get("file_group", settings.IMPORT_FILE_GROUP)
+
+            if not sample_ids_input:
+                messages.error(request, "At least one Sample ID is required")
+                return render(
+                    request,
+                    "admin/file_manager/stage_sample.html",
+                    {
+                        "default_file_group": settings.IMPORT_FILE_GROUP,
+                    },
+                )
+
+            # Parse sample IDs - support comma, space, or newline separated
+            sample_ids = [
+                s.strip() for s in sample_ids_input.replace("\n", ",").replace(" ", ",").split(",") if s.strip()
+            ]
+
+            if not sample_ids:
+                messages.error(request, "No valid Sample IDs provided")
+                return render(
+                    request,
+                    "admin/file_manager/stage_sample.html",
+                    {
+                        "default_file_group": settings.IMPORT_FILE_GROUP,
+                    },
+                )
+
+            try:
+                file_manager = FileManager(file_group=file_group)
+                staged_samples = []
+                total_files_staged = 0
+
+                for sample_id in sample_ids:
+                    try:
+                        sample_job, task_sigs = file_manager.stage_sample(sample_id)
+
+                        if sample_job.total_files > 0:
+                            if task_sigs:
+                                # Execute each task individually
+                                for task in task_sigs:
+                                    task.delay()
+                                staged_samples.append(f"{sample_id} ({len(task_sigs)} files)")
+                                total_files_staged += len(task_sigs)
+                            else:
+                                messages.warning(
+                                    request,
+                                    f"Sample {sample_id} has {sample_job.total_files} files to stage, "
+                                    f"but no tasks were created (files may already be staging)",
+                                )
+                        else:
+                            messages.info(request, f"No files need staging for sample {sample_id}")
+                    except Exception as e:
+                        messages.error(request, f"Error staging sample {sample_id}: {str(e)}")
+
+                if staged_samples:
+                    messages.success(
+                        request,
+                        f"Successfully staged {total_files_staged} files for {len(staged_samples)} sample(s): "
+                        f"{', '.join(staged_samples)}",
+                    )
+
+                # Redirect to the job list
+                return redirect("admin:file_manager_sampleproviderjob_changelist")
+
+            except Exception as e:
+                import traceback
+
+                messages.error(request, f"Error staging files: {str(e)}\n{traceback.format_exc()}")
+
+        return render(
+            request,
+            "admin/file_manager/stage_sample.html",
+            {
+                "default_file_group": settings.IMPORT_FILE_GROUP,
+            },
+        )
+
+    def progress_percentage(self, obj):
+        if obj.total_files == 0:
+            return "0%"
+        return f"{(obj.completed_files / obj.total_files * 100):.1f}%"
+
+    progress_percentage.short_description = "Progress"
+
+
+@admin.register(FileProviderJob)
+class FileProviderJobAdmin(admin.ModelAdmin):
+    list_display = (
+        "file_object",
+        "status",
+        "original_path_short",
+        "staged_path_short",
+        "created_date",
+        "modified_date",
+    )
+    list_filter = ("status", "created_date", "modified_date")
+    search_fields = ("original_path", "staged_path", "file_object__file_name")
+    readonly_fields = ("id", "created_date", "modified_date")
+    raw_id_fields = ("file_object",)
+
+    def original_path_short(self, obj):
+        return obj.original_path[-50:] if len(obj.original_path) > 50 else obj.original_path
+
+    original_path_short.short_description = "Original Path"
+
+    def staged_path_short(self, obj):
+        return obj.staged_path[-50:] if len(obj.staged_path) > 50 else obj.staged_path
+
+    staged_path_short.short_description = "Staged Path"
+
+
+@admin.register(CleanupFileJob)
+class CleanupFileJobAdmin(admin.ModelAdmin):
+    list_display = (
+        "file_object",
+        "status",
+        "cleanup_date",
+        "days_until_cleanup",
+        "original_path_short",
+        "created_date",
+    )
+    list_filter = ("status", "cleanup_date", "created_date")
+    search_fields = ("original_path", "file_object__file_name")
+    readonly_fields = ("id", "created_date", "modified_date")
+    raw_id_fields = ("file_object",)
+    date_hierarchy = "cleanup_date"
+    actions = ["cleanup_files_immediately"]
+
+    def original_path_short(self, obj):
+        return obj.original_path[-50:] if len(obj.original_path) > 50 else obj.original_path
+
+    original_path_short.short_description = "Original Path"
+
+    def days_until_cleanup(self, obj):
+        from datetime import date
+
+        delta = obj.cleanup_date - date.today()
+        days = delta.days
+        if days < 0:
+            return f"Overdue by {abs(days)} days"
+        elif days == 0:
+            return "Today"
+        else:
+            return f"In {days} days"
+
+    days_until_cleanup.short_description = "Cleanup In"
+
+    def cleanup_files_immediately(self, request, queryset):
+        """Clean up staged files immediately (requires confirmation)"""
+        from file_manager.tasks import clean_up_file
+
+        if "confirm" not in request.POST:
+            # Show confirmation page
+            pending_jobs = queryset.filter(status=FileProviderStatus.SCHEDULED)
+
+            context = {
+                "title": "Confirm File Cleanup",
+                "jobs": pending_jobs,
+                "action": "cleanup_files_immediately",
+                "queryset": queryset,
+            }
+            return render(request, "admin/file_manager/confirm_cleanup.html", context)
+
+        # User confirmed, proceed with cleanup
+        cleaned_count = 0
+        failed_count = 0
+
+        for job in queryset:
+            if job.status == FileProviderStatus.SCHEDULED:
+                try:
+                    clean_up_file.delay(str(job.id))
+                    cleaned_count += 1
+                except Exception as e:
+                    failed_count += 1
+                    messages.error(request, f"Failed to queue cleanup for {job.file_object.file_name}: {str(e)}")
+
+        if cleaned_count > 0:
+            messages.success(request, f"Queued cleanup for {cleaned_count} file(s)")
+        if failed_count > 0:
+            messages.warning(request, f"Failed to queue cleanup for {failed_count} file(s)")
+
+        return None
+
+    cleanup_files_immediately.short_description = "Clean up staged files immediately (DANGER)"

@@ -54,9 +54,9 @@ class ChronosOperatorV2(Operator):
             if not f.metadata[settings.BAITSET_METADATA_KEY] in self.ASSAYS:
                 valid = False
                 message += f" not supported baitSet:{settings.BAITSET_METADATA_KEY}"
-            if not f.metadata[settings.CMO_SAMPLE_TAG_METADATA_KEY]:
+            if not f.metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]:
                 valid = False
-                message += f" no {settings.CMO_SAMPLE_TAG_METADATA_KEY}"
+                message += f" no {settings.CMO_SAMPLE_NAME_METADATA_KEY}"
         if valid:
             message += " valid"
         return valid, message
@@ -82,7 +82,7 @@ class ChronosOperatorV2(Operator):
         }
         """
         name = "Tempo Run {sample_id}: {run_date}".format(sample_id=sample, run_date=run_date)
-        ci_tag = self.get_ci_tag(sample)
+        cmo_sample_name = self.get_cmo_sample_name(sample)
         bait_set = FileRepository.filter(
             metadata={settings.SAMPLE_ID_METADATA_KEY: sample},
             file_group=self.file_group,
@@ -94,7 +94,7 @@ class ChronosOperatorV2(Operator):
             self.OUTPUT_DIR,
             self.CHRONOS_NAME,
             self.request_id,
-            ci_tag,
+            cmo_sample_name,
             self.CHRONOS_VERSION,
             jg_created_date,
         )
@@ -104,7 +104,7 @@ class ChronosOperatorV2(Operator):
         for fq_pair in fastq_pairs:
             mapping.append(
                 {
-                    "sample": ci_tag,
+                    "sample": cmo_sample_name,
                     "target": target,
                     "fastq_pe1": {"class": "File", "location": f"iris://{fq_pair[0].file.path}"},
                     "fastq_pe2": {"class": "File", "location": f"iris://{fq_pair[1].file.path}"},
@@ -115,21 +115,20 @@ class ChronosOperatorV2(Operator):
             "mapping": mapping,
             "somatic": False,
             "aggregate": False,
-            "workflows": "qc",
             "assayType": "exome",
         }
         patient_id = FileRepository.filter(
-            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag},
+            metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: cmo_sample_name},
             file_group=self.file_group,
             values_metadata=settings.PATIENT_ID_METADATA_KEY,
         ).first()
         request_id = FileRepository.filter(
-            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag},
+            metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: cmo_sample_name},
             file_group=self.file_group,
             values_metadata=settings.REQUEST_ID_METADATA_KEY,
         ).first()
         gene_panel = FileRepository.filter(
-            metadata={settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag},
+            metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: cmo_sample_name},
             file_group=self.file_group,
             values_metadata=settings.RECIPE_METADATA_KEY,
         ).first()
@@ -140,7 +139,7 @@ class ChronosOperatorV2(Operator):
                 settings.SAMPLE_ID_METADATA_KEY: sample,
                 settings.REQUEST_ID_METADATA_KEY: request_id,
                 settings.RECIPE_METADATA_KEY: gene_panel,
-                settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag,
+                settings.CMO_SAMPLE_NAME_METADATA_KEY: cmo_sample_name,
             }
         )
         job_json = {
@@ -156,7 +155,7 @@ class ChronosOperatorV2(Operator):
                 settings.SAMPLE_ID_METADATA_KEY: sample,
                 settings.REQUEST_ID_METADATA_KEY: request_id,
                 settings.RECIPE_METADATA_KEY: gene_panel,
-                settings.CMO_SAMPLE_TAG_METADATA_KEY: ci_tag,
+                settings.CMO_SAMPLE_NAME_METADATA_KEY: cmo_sample_name,
             },
         }
         return job_json
@@ -266,7 +265,7 @@ class ChronosOperatorV2(Operator):
 
         samples_to_process = []
         for sample in samples:
-            ci_tag = self.get_ci_tag(sample)
+            ci_tag = self.get_cmo_sample_name(sample)
             check_bam_path = os.path.join(DESTINATION_DIRECTORY, f"{ci_tag}", f"{ci_tag}.bam")
             if os.path.exists(check_bam_path):
                 LOGGER.info(f"{sample} already generated, {check_bam_path} exist. Skip")
@@ -281,11 +280,11 @@ class ChronosOperatorV2(Operator):
         e = event.to_dict()
         send_notification.delay(e)
 
-    def get_ci_tag(self, primary_id):
+    def get_cmo_sample_name(self, primary_id):
         return FileRepository.filter(
             metadata={settings.SAMPLE_ID_METADATA_KEY: primary_id},
             file_group=self.file_group,
-            values_metadata=settings.CMO_SAMPLE_TAG_METADATA_KEY,
+            values_metadata=settings.CMO_SAMPLE_NAME_METADATA_KEY,
         ).first()
 
     def get_log_directory(self):
