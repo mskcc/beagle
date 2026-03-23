@@ -221,7 +221,6 @@ class SampleMetadata:
     def __post_init__(self):
         """Validate sample data after initialization."""
         self._validate_primary_id()
-        self._validate_libraries()
         self._validate_required_fields()
 
     def to_dict(self) -> Dict[str, Any]:
@@ -379,6 +378,8 @@ class SampleMetadata:
 
     def _validate_required_fields(self):
         """Validate that required fields are not empty."""
+        if self.igoComplete is False:
+            return
         required_fields = {
             "smileSampleId": self.smileSampleId,
             "smilePatientId": self.smilePatientId,
