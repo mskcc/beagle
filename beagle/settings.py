@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "runner.apps.RunnerConfig",
     "beagle_etl.apps.BeagleEtlConfig",
     "file_system.apps.FileSystemConfig",
+    "file_manager.apps.FileManagerConfig",
     "notifier.apps.NotifierConfig",
     "study.apps.StudyConfig",
     "django.contrib.admin",
@@ -62,8 +63,8 @@ INSTALLED_APPS = [
     "drf_yasg",
     "advanced_filters",
     "ddtrace.contrib.django",
-    "echo_client",
     "smile_client",
+    "django_celery_results",
 ]
 
 
@@ -251,6 +252,7 @@ RABBITMQ_PASSWORD = os.environ.get("BEAGLE_RABBITMQ_PASSWORD", "guest")
 RABBITMQ_URL = os.environ.get("BEAGLE_RABBITMQ_URL", "localhost")
 
 CELERY_BROKER_URL = "amqp://%s:%s@%s/" % (RABBITMQ_USERNAME, RABBITMQ_PASSWORD, RABBITMQ_URL)
+CELERY_RESULT_BACKEND = "django-db"  # Use Django database as result backend for chord support
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -297,17 +299,16 @@ SMILE_SETTINGS = {
     "CALLBACK": "beagle_etl.smile_service.smile_callback.persist_message",
 }
 
-IMPORT_FILE_GROUP = os.environ.get("BEAGLE_IMPORT_FILE_GROUP", "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
+IMPORT_FILE_GROUP = os.environ.get("BEAGLE_IMPORT_FILE_GROUP")
 
-POOLED_NORMAL_FILE_GROUP = os.environ.get("BEAGLE_POOLED_NORMAL_FILE_GROUP", "b6857a56-5d45-451f-b4f6-26148946080f")
+POOLED_NORMAL_FILE_GROUP = os.environ.get("BEAGLE_POOLED_NORMAL_FILE_GROUP")
 
-DMP_BAM_FILE_GROUP = os.environ.get("BEAGLE_DMP_BAM_FILE_GROUP", "9ace63bf-ed55-461c-9ac0-1c5ee710d957")
+DMP_BAM_FILE_GROUP = os.environ.get("BEAGLE_DMP_BAM_FILE_GROUP")
 
 RIDGEBACK_URL = os.environ.get("BEAGLE_RIDGEBACK_URL", "http://localhost:5003")
 
 LOG_PATH = os.environ.get("BEAGLE_LOG_PATH", "beagle-server.log")
 
-ECHO_LOG_PATH = os.environ.get("BEAGLE_ECHO_LOG_PATH", "echo_client.log")
 SMILE_LOG_PATH = os.environ.get("BEAGLE_SMILE_LOG_PATH", "smile_client.log")
 
 LOGGING = {
@@ -321,22 +322,14 @@ LOGGING = {
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
         "file": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": LOG_PATH,
-            "maxBytes": 209715200,
-            "backupCount": 10,
-            "formatter": "simple",
-        },
-        "echo_client_log": {
-            "level": "DEBUG",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": ECHO_LOG_PATH,
             "maxBytes": 209715200,
             "backupCount": 10,
             "formatter": "simple",
@@ -351,14 +344,17 @@ LOGGING = {
         },
     },
     "loggers": {
-        "django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]},
+        "django_auth_ldap": {"level": "INFO", "handlers": ["console"]},
         "django": {
             "handlers": ["file", "console"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": True,
         },
-        "echo_client": {"level": "DEBUG", "handlers": ["echo_client_log", "console"]},
-        "smile_client": {"level": "DEBUG", "handlers": ["echo_client_log", "console"]},
+        "smile_client": {"level": "INFO", "handlers": ["smile_client_log", "console"]},
+    },
+    "root": {
+        "handlers": ["file", "console"],
+        "level": "INFO",
     },
 }
 
@@ -387,10 +383,12 @@ BEAGLE_RUNNER_QUEUE = os.environ.get("BEAGLE_RUNNER_QUEUE", "beagle_runner_queue
 BEAGLE_DEFAULT_QUEUE = os.environ.get("BEAGLE_DEFAULT_QUEUE", "beagle_default_queue")
 BEAGLE_CHECK_FILES_QUEUE = os.environ.get("BEAGLE_CHECK_FILES_QUEUE", "beagle_check_files_queue")
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagle_job_scheduler_queue")
+BEAGLE_FILE_MANAGER_QUEUE = os.environ.get("BEAGLE_FILE_MANAGER_QUEUE", "beagle_file_manager_queue")
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
 BEAGLE_TMPDIR = os.environ.get("BEAGLE_TMPDIR", "/tmp")
 
-PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PERIOD", 900)
+PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PERIOD", 90)
+PROCESS_REQUEST_CALLBACK_PERIOD = os.environ.get("BEAGLE_PROCESS_REQUEST_CALLBACK_PERIOD", 900)
 CHECK_JOB_STATUS_PERIOD = os.environ.get("BEAGLE_CHECK_JOB_STATUS_PERIOD", 60)
 PROCESS_TRIGGERS_PERIOD = os.environ.get("BEAGLE_PROCESS_TRIGGERS_PERIOD", 120)
 CHECK_JOB_TIMEOUTS = os.environ.get("BEAGLE_CHECK_JOB_TIMEOUTS", 86400.0)
@@ -465,7 +463,7 @@ DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
 MAPPING = json.loads(os.environ.get("BEAGLE_FILE_MAPPING", "{}"))
 COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
-COPY_GROUP_OWNERSHIP = os.environ.get("BEAGLE_GROUP_OWNERSHIP", "cmoigo")
+STAGE_DAYS = int(os.environ.get("BEAGLE_STAGE_DAYS", 30))
 
 FASTQ_DEFAULT_LOCATION_PREFIX = os.environ.get("BEAGLE_FASTQ_DEFAULT_LOCATION_PREFIX")
 FASTQ_IRIS_LOCATION_PREFIX = os.environ.get("BEAGLE_FASTQ_IRIS_LOCATION_PREFIX")
@@ -549,15 +547,3 @@ GENE_PANEL_TABLE = {
     "HC_IMPACT": {None: "UNKNOWN", "null": "UNKNOWN", "IMPACT505_BAITS": "IMPACT505"},
 }
 SHELL_PLUS = "ipython"
-
-
-ECHO_SETTINGS = {
-    "USERNAME": os.getenv("ECHO_USERNAME"),
-    "PASSWORD": os.getenv("ECHO_PASSWORD"),
-    "HOST": os.getenv("ECHO_RABBITMQ_HOST"),
-    "PORT": os.getenv("ECHO_RABBITMQ_PORT"),
-    "VHOST": os.getenv("ECHO_VHOST", "/"),
-    "ECHO_TASK_QUEUE": os.getenv("ECHO_TASK_QUEUE"),
-    "ECHO_CONFIRMATION_QUEUE": os.getenv("ECHO_CONFIRMATION_QUEUE"),
-    "CALLBACK": os.getenv("ECHO_CALLBACK"),
-}

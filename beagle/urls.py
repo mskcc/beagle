@@ -41,6 +41,10 @@ schema_view = get_schema_view(
 router = routers.DefaultRouter()
 router.register("register", UserRequestViewSet)
 
+# Customize Django Admin
+admin.site.site_header = f"Voyager - Beagle v{__version__}"
+admin.site.site_title = "Voyager"
+admin.site.index_title = "Beagle Administration"
 
 urlpatterns = [
     url(r"^$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),

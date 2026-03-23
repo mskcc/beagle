@@ -7,8 +7,9 @@ from django.conf import settings
 from file_system.models import Request
 from file_system.models import FileGroup, FileType, File, FileMetadata
 from file_system.repository import FileRepository
-from beagle_etl.copy_service.copy_service import CopyService
-from beagle_etl.jobs.metadb_jobs import R1_or_R2, create_pooled_normal
+from file_manager.copy_service.copy_service import CopyService
+from beagle_etl.jobs.metadb_jobs import create_pooled_normal
+from beagle_etl.jobs.helper_jobs import R1_or_R2
 from file_system.helper.checksum import sha1
 from runner.operator.helper import format_sample_name
 

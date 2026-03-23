@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
                     models.IntegerField(
                         choices=[(0, "PENDING"), (1, "COMPLETED"), (2, "FAILED")],
                         db_index=True,
-                        default=beagle_etl.models.CopyFileStatus(0),
+                        default=0,
                     ),
                 ),
                 (
