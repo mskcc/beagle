@@ -1,0 +1,70 @@
+[
+    {
+        "model": "runner.run",
+        "pk": "fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+        "fields": {
+            "created_date": "2023-05-17T15:39:16.014Z",
+            "modified_date": "2023-05-17T20:48:58.892Z",
+            "run_type": 0,
+            "name": "CMO-CH Nucleo QC: 13843_C, 75 of 75 (05/17/2023, 11:39:16)",
+            "app": "0a7e5820-ea7f-11ed-b755-ac1f6bb4ad16",
+            "status": 4,
+            "execution_id": "ab19355d-85bb-4f64-8335-edd4ce0e9768",
+            "job_statuses": {},
+            "message": {},
+            "output_metadata": {
+                "sex": "F",
+                "ciTag": "C-100000-F001-d01",
+                "igoId": null,
+                "tubeId": null,
+                "baitSet": "null",
+                "species": null,
+                "barcodeId": "IDTdual195",
+                "primaryId": "13843_C_45",
+                "qcReports": [],
+                "dnaInputNg": 200.0,
+                "sampleType": null,
+                "captureName": "",
+                "sampleClass": null,
+                "barcodeIndex": "ACGTCGTA-GTTCATGG",
+                "cmoPatientId": "C-100000",
+                "igoRequestId": "13843_C",
+                "libraryIgoId": null,
+                "oncotreeCode": null,
+                "preservation": null,
+                "sampleOrigin": "Whole Blood",
+                "cmoSampleName": "C-100000-F001-d01",
+                "libraryVolume": 25.0,
+                "tumorOrNormal": "Tumor",
+                "captureInputNg": 350.0,
+                "cfDNA2dBarcode": null,
+                "collectionYear": null,
+                "tissueLocation": null,
+                "investigatorSampleId": "1583",
+                "captureConcentrationNm": 41.400000000000006,
+                "libraryConcentrationNgul": 41.400000000000006
+            },
+            "output_directory": "/work/cch/production/runs/voyager/production/qc/fb00b43e-f4c8-11ed-a5fd-ac1f6bb4ad16",
+            "tags": {
+                "cmoSampleId": [
+                    "C-100000-F001-d01"
+                ],
+                "igoRequestId": "13843_C"
+            },
+            "operator_run": 8,
+            "job_group": null,
+            "job_group_notifier": null,
+            "notify_for_outputs": "[]",
+            "started": "2023-05-17T15:41:31.118Z",
+            "submitted": "2023-05-17T15:40:55.195Z",
+            "finished_date": "2023-05-17T20:48:58.892Z",
+            "resume": null,
+            "resume_attempts": 2,
+            "restart_attempts": 3,
+            "samples": [
+                "d8e5403c-29ed-4742-851e-196a55b5d245"
+            ],
+            "requests": []
+        }
+    }
+]

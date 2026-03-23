@@ -1,0 +1,20 @@
+[
+  {
+    "igoRequestId": "10075_D",
+    "requestMetadataJson": "{\"ilabRequestId\":\"IGO-TEST001\",\"requestId\":\"10075_D\",\"requestName\":\"HybridCapture\",\"recipe\":\"IMPACT468\",\"projectManagerName\":\"\",\"piEmail\":\"\",\"labHeadName\":\"Test Researcher\",\"labHeadEmail\":\"researcher@example.org\",\"investigatorName\":\"Test Investigator\",\"investigatorEmail\":\"investigator@example.org\",\"dataAnalystName\":\"\",\"dataAnalystEmail\":\"\",\"otherContactEmails\":\"investigator@example.org\",\"dataAccessEmails\":\"investigator@example.org\",\"qcAccessEmails\":\"investigator@example.org\",\"isCmoRequest\":true,\"bicAnalysis\":true,\"neoAg\":false,\"deliveryPath\":\"/ifs/datadelivery/test/share\",\"pooledNormals\":[],\"projectId\":\"10075\",\"status\":{\"validationReport\":\"{\\\"samples (failed)\\\":\\\"Some request samples failed validation\\\"}\",\"validationStatus\":false}}",
+    "importDate": "2023-03-08",
+    "status": {
+      "validationStatus": false,
+      "validationReport": "{\"samples (failed)\":\"Some request samples failed validation\"}"
+    }
+  },
+  {
+    "igoRequestId": "10075_D",
+    "requestMetadataJson": "{\"ilabRequestId\":\"IGO-TEST001\",\"requestId\":\"10075_D\",\"requestName\":\"HybridCapture\",\"recipe\":\"IMPACT468\",\"projectManagerName\":\"\",\"piEmail\":\"\",\"labHeadName\":\"Test Researcher\",\"labHeadEmail\":\"researcher@example.org\",\"investigatorName\":\"Test Investigator\",\"investigatorEmail\":\"investigator@example.org\",\"dataAnalystName\":\"\",\"dataAnalystEmail\":\"\",\"otherContactEmails\":\"investigator@example.org\",\"dataAccessEmails\":\"investigator@example.org\",\"qcAccessEmails\":\"investigator@example.org\",\"isCmoRequest\":true,\"bicAnalysis\":true,\"neoAg\":false,\"deliveryDate\":1.704067200000E12,\"deliveryPath\":\"/ifs/datadelivery/test/share\",\"pooledNormals\":[],\"projectId\":\"10075\",\"status\":{\"validationReport\":\"{}\",\"validationStatus\":true}}",
+    "importDate": "2023-03-22",
+    "status": {
+      "validationStatus": true,
+      "validationReport": "{}"
+    }
+  }
+]

@@ -62,14 +62,12 @@ class TestCopyOutputs(TestCase):
         return True
 
     @patch("runner.operator.copy_outputs_operator.v2_2_0.copy_outputs_operator.CopyOutputsOperator.get_log_directory")
-    @patch("file_system.models.populate_job_group_notifier_metadata.delay")
-    def test_create_copy_output_jobs(self, populate_job_group_notifier_metadata, get_log_directory):
+    def test_create_copy_output_jobs(self, get_log_directory):
         """
         Test that copy output jobs are correctly created
         """
         print("Running test_create_copy_output_jobs ----")
         # Load fixtures
-        populate_job_group_notifier_metadata.return_value = None
         get_log_directory.return_value = "/path/to/log/dir"
         test_files_fixture = os.path.join(
             settings.TEST_FIXTURE_DIR, "ca18b090-03ad-4bef-acd3-52600f8e62eb.run.full.with_disambiguate.json"
@@ -77,7 +75,7 @@ class TestCopyOutputs(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
-            operator_model = Operator.objects.get(id=26)
+            operator_model = Operator.objects.get(id=32)
             operator = OperatorFactory.get_by_model(
                 operator_model, version="v2.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
             )
@@ -91,15 +89,11 @@ class TestCopyOutputs(TestCase):
             self.assertEqual(input_json_valid, True)
 
     @patch("runner.operator.copy_outputs_operator.v2_2_0.copy_outputs_operator.CopyOutputsOperator.get_log_directory")
-    @patch("file_system.models.populate_job_group_notifier_metadata.delay")
-    def test_create_copy_output_jobs_without_disambiguate(
-        self, populate_job_group_notifier_metadata, get_log_directory
-    ):
+    def test_create_copy_output_jobs_without_disambiguate(self, get_log_directory):
         """
         Test that copy output jobs are correctly created
         """
         print("Running test_create_copy_output_jobs ----")
-        populate_job_group_notifier_metadata.return_value = None
         get_log_directory.return_value = "/path/to/log/dir"
         # Load fixtures
         test_files_fixture = os.path.join(
@@ -108,7 +102,7 @@ class TestCopyOutputs(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
-            operator_model = Operator.objects.get(id=26)
+            operator_model = Operator.objects.get(id=32)
             operator = OperatorFactory.get_by_model(
                 operator_model, version="v2.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
             )
@@ -122,13 +116,11 @@ class TestCopyOutputs(TestCase):
             self.assertEqual(input_json_valid, True)
 
     @patch("runner.operator.copy_outputs_operator.v2_2_0.copy_outputs_operator.CopyOutputsOperator.get_log_directory")
-    @patch("file_system.models.populate_job_group_notifier_metadata.delay")
-    def test_create_copy_output_jobs_with_bed(self, populate_job_group_notifier_metadata, get_log_directory):
+    def test_create_copy_output_jobs_with_bed(self, get_log_directory):
         """
         Test that copy output jobs are correctly created
         """
         print("Running test_create_copy_output_jobs ----")
-        populate_job_group_notifier_metadata.return_value = None
         get_log_directory.return_value = "/path/to/log/dir"
         # Load fixtures
         test_files_fixture = os.path.join(
@@ -137,7 +129,7 @@ class TestCopyOutputs(TestCase):
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         with self.settings(BEAGLE_SHARED_TMPDIR=tempfile.gettempdir()):
-            operator_model = Operator.objects.get(id=26)
+            operator_model = Operator.objects.get(id=32)
             operator = OperatorFactory.get_by_model(
                 operator_model, version="v2.2.0", run_ids=["ca18b090-03ad-4bef-acd3-52600f8e62eb"]
             )

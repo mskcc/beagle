@@ -45,9 +45,22 @@ from runner.serializers import (
     TempoMPGenOperatorSerializer,
     TerminateRunSerializer,
 )
+from rest_framework.generics import GenericAPIView
+from runner.operator.operator_factory import OperatorFactory
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
+from notifier.models import JobGroup, JobGroupNotifier
+from notifier.tasks import notifier_start
+from notifier.tasks import send_notification
+from notifier.helper import generate_sample_data_content
+from drf_yasg.utils import swagger_auto_schema
+from beagle.common import fix_query_list
+from notifier.events import RunStartedEvent, AddPipelineToDescriptionEvent
+from file_system.models import FileGroup
 from runner.tasks import (
     create_aion_job,
-    create_jobs_from_operator,
+    create_operator_run_from_jobs,
     create_jobs_from_pairs,
     create_jobs_from_request,
     create_run_task,
@@ -363,6 +376,10 @@ class RequestOperatorViewSet(GenericAPIView):
             pipeline = get_object_or_404(Pipeline, name=pipeline_name, default=True)
 
         errors = []
+        if file_group_id and not FileGroup.objects.filter(id=file_group_id).exists():
+            errors.append("file group id does not exist, this field is optional")
+        if job_group_id and not JobGroup.objects.filter(id=job_group_id).exists():
+            errors.append("job group id does not exist, this field is optional")
         if not request_ids:
             errors.append("request_ids needs to be specified")
         if not pipeline:
@@ -452,15 +469,12 @@ class RunOperatorViewSet(GenericAPIView):
                 except JobGroupNotifier.DoesNotExist:
                     job_group_notifier_id = notifier_start(job_group, req, operator=pipeline.operator)
 
-                operator_model = Operator.objects.get(id=pipeline.operator_id)
-                operator = OperatorFactory.get_by_model(
-                    operator_model,
+                create_operator_run_from_jobs.delay(
+                    pipeline.operator_id,
                     run_ids=run_ids,
                     job_group_id=job_group_id,
                     job_group_notifier_id=job_group_notifier_id,
-                    pipeline=str(pipeline.id),
                 )
-                create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
         else:
             return Response({"details": "Not Implemented"}, status=status.HTTP_400_BAD_REQUEST)
 

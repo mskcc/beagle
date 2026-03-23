@@ -100,3 +100,11 @@ class IncorrectlyFormattedPrimaryId(ETLExceptions):
     """
 
     code = 112
+
+
+class FailedToFetchRequestMetadata(ETLExceptions):
+    """
+    Failed to fetch request metadata
+    """
+
+    code = 113

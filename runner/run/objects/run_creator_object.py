@@ -33,6 +33,8 @@ class RunCreator(object):
         )
         if self.output_directory:
             run.output_directory = self.output_directory
+        if pipeline.log_directory:
+            run.log_directory = pipeline.log_directory
         try:
             run.operator_run = OperatorRun.objects.get(id=self.operator_run_id)
         except OperatorRun.DoesNotExist:

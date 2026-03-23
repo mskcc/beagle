@@ -1,60 +1,20 @@
 import uuid
+import logging
 from enum import IntEnum
-from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from django.db import models
-from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import JSONField, ArrayField
-from django.utils.timezone import now
-from beagle_etl.metadata.normalizer import Normalizer
+from notifier.tasks import notifier_start
+from notifier.models import Notifier, JobGroup, JobGroupNotifier
+from beagle_etl.jobs.import_helper import generate_ticket_description
 
 
-class JobStatus(IntEnum):
-    CREATED = 0
-    IN_PROGRESS = 1
-    WAITING_FOR_CHILDREN = 2
-    COMPLETED = 3
-    FAILED = 4
+logger = logging.getLogger()
 
 
 class BaseModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_date = models.DateTimeField(auto_now_add=True, db_index=True)
     modified_date = models.DateTimeField(auto_now=True)
-
-
-class Job(BaseModel):
-    run = models.CharField(max_length=100, db_index=True)
-    args = JSONField(null=True, blank=True)
-    status = models.IntegerField(choices=[(status.value, status.name) for status in JobStatus], db_index=True)
-    children = JSONField(null=True, blank=True)
-    retry_count = models.IntegerField(default=0)
-    message = JSONField(null=True, blank=True)
-    max_retry = models.IntegerField(default=3)
-    callback = models.CharField(max_length=100, default=None, blank=True, null=True)
-    callback_args = JSONField(null=True, blank=True)
-    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
-    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
-    lock = models.BooleanField(default=False)
-    finished_date = models.DateTimeField(blank=True, null=True, db_index=True)
-
-    def save(self, *args, **kwargs):
-        if self.status == JobStatus.COMPLETED or self.status == JobStatus.FAILED:
-            if not self.finished_date:
-                self.finished_date = now()
-        super().save(*args, **kwargs)
-
-    @property
-    def is_locked(self):
-        self.refresh_from_db()
-        return self.lock
-
-    def lock_job(self):
-        self.lock = True
-        self.save()
-
-    def unlock_job(self):
-        self.lock = False
-        self.save()
 
 
 class Operator(models.Model):
@@ -77,26 +37,75 @@ class ETLConfiguration(models.Model):
     hold_recipes = ArrayField(models.CharField(max_length=100), null=True, blank=True)
 
 
-class SkipProject(models.Model):
-    skip_projects = ArrayField(models.CharField(max_length=100), null=True, blank=True)
-
-
 class SmileMessageStatus(IntEnum):
     PENDING = 0
-    COMPLETED = 1
-    NOT_SUPPORTED = 2
-    FAILED = 3
+    IN_PROGRESS = 1
+    COPY_FILES = 2
+    COMPLETED = 3
+    NOT_SUPPORTED = 4
+    FAILED = 5
 
 
 class SMILEMessage(BaseModel):
     topic = models.CharField(max_length=1000)
     request_id = models.CharField(max_length=100)
+    gene_panel = models.CharField(max_length=100, null=True, blank=True)
     message = models.TextField()
+    log = models.TextField(blank=True, null=True, default="")
+    sample_status = JSONField(blank=True, default=dict)
+    job_group = models.ForeignKey(JobGroup, null=True, blank=True, on_delete=models.SET_NULL)
+    job_group_notifier = models.ForeignKey(JobGroupNotifier, null=True, blank=True, on_delete=models.SET_NULL)
     status = models.IntegerField(
         choices=[(status.value, status.name) for status in SmileMessageStatus],
         default=SmileMessageStatus.PENDING,
         db_index=True,
     )
+
+    def in_progress(self):
+        self.status = SmileMessageStatus.IN_PROGRESS
+        job_group = JobGroup.objects.create()
+        self.job_group = job_group
+        job_group_notifier_id = notifier_start(job_group, self.request_id)
+        job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
+        self.job_group_notifier = job_group_notifier
+        self.save(update_fields=["job_group", "job_group_notifier", "status"])
+
+    def complete(self, request_metadata=None):
+        self.status = SmileMessageStatus.COMPLETED
+        self.save(update_fields=["status"])
+        if self.job_group_notifier and request_metadata:
+            self._generate_description(request_metadata)
+
+    def failed(self, request_metadata=None):
+        self.status = SmileMessageStatus.FAILED
+        self.save(update_fields=["status"])
+        if self.job_group_notifier and request_metadata:
+            self._generate_description(request_metadata)
+
+    def not_supported(self):
+        self.status = SmileMessageStatus.NOT_SUPPORTED
+        self.save(update_fields=["status"])
+
+    def add_log(self, message):
+        self.log += f"{message}\n"
+        self.save(update_fields=["log"])
+
+    def set_gene_panel(self, gene_panel):
+        self.gene_panel = gene_panel
+        self.save(update_fields=["gene_panel"])
+
+    def set_sample_status(self, samples):
+        self.sample_status = samples
+        self.save(update_fields=["sample_status"])
+
+    def _generate_description(self, request_metadata):
+        generate_ticket_description(
+            self.request_id,
+            str(self.job_group.id),
+            str(self.job_group_notifier.id),
+            self.sample_status,
+            request_metadata,
+        )
 
 
 class RequestCallbackJobStatus(IntEnum):
@@ -106,6 +115,7 @@ class RequestCallbackJobStatus(IntEnum):
 
 class RequestCallbackJob(BaseModel):
     request_id = models.CharField(max_length=100)
+    smile_message = models.ForeignKey(SMILEMessage, null=True, blank=True, on_delete=models.SET_NULL)
     recipe = models.CharField(max_length=100)
     fastq_metadata = JSONField(default=dict)
     samples = JSONField(null=True, blank=True)
@@ -117,29 +127,3 @@ class RequestCallbackJob(BaseModel):
         db_index=True,
     )
     delay = models.IntegerField(default=0)
-
-
-class NormalizerModel(BaseModel):
-    condition = JSONField(null=False, blank=False)
-    normalizer = JSONField(null=False, blank=False)
-
-
-def initialize_normalizer():
-    normalizers = []
-    for normalizer in NormalizerModel.objects.all():
-        normalizers.append(Normalizer(normalizer.condition, normalizer.normalizer))
-    return normalizers
-
-
-class ValidatorModel(BaseModel):
-    name = models.CharField(null=False, blank=False, max_length=30, default="Metadata Schema")
-    schema = JSONField(null=False, blank=False)
-
-    def save(self, *args, **kwargs):
-        if not self.pk and ValidatorModel.objects.exists():
-            raise ValidationError("There is can be only one ValidatorModel instance")
-        return super(ValidatorModel, self).save(*args, **kwargs)
-
-
-def get_metadata_schema():
-    return ValidatorModel.objects.first()

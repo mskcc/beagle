@@ -40,8 +40,13 @@ def notifier_start(job_group, request_id, operator=None, metadata={}):
             job_group=job_group, request_id=request_id, notifier_type=notifier
         )
         eh = event_handler(job_group_notifier.id)
-        notifier_id = eh.start(request_id)
+        try:
+            notifier_id = eh.start(request_id)
+        except Exception:
+            logger.error("Failed to Initialize Notifier")
+            return None
         job_group_notifier.jira_id = notifier_id
+        print
         if notifier_id.startswith(settings.JIRA_PREFIX):
             file_obj = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: request_id}).first()
             if file_obj:

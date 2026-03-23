@@ -1,0 +1,74 @@
+{
+  "input_bam_case": {{ input_bam_case }},
+  "output_vcf2mafName": {{ output_vcf2mafName }},
+  "output_mappability_filename": {{ output_mappability_filename }}, 
+  "output_complexity_filename": {{ output_complexity_filename }},
+  "concat_output_name": {{ concat_output_name }},
+  "sample_name": {{ sample_name }},
+  "vardict_output_vcf_name": {{ vardict_output_vcf_name }},
+  "snpsift_countOpName": {{ snpsift_countOpName }},
+  "snpsift_prevalOpName": {{ snpsift_prevalOpName }},
+  "opOncoKbMafName": {{ opOncoKbMafName }},
+  "output_maf_name_panmyeloid": {{ output_maf_name_panmyeloid }},
+  "output_47kchpd_maf_name": {{ output_47kchpd_maf_name }},
+  "output_hotspot_maf_name": {{ output_hotspot_maf_name }},
+  "output_maf_name_filter": {{ output_maf_name_filter }},
+  "output_maf_name_tag": {{ output_maf_name_tag }},
+  "bedfile": {
+    "class": "File",
+    "location": "iris:///data1/core005/assets/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/CH_target_3bp.bed"
+  }, 
+  "input_cosmicCountDB_vcf": { 
+    "class": "File",
+    "location": "iris:///data1/core005/assets/cch/cosmic/current/v96/CosmicCodingMuts.vcf.gz",
+    "secondaryFiles": [
+      { "class": "File", "location": "iris:///data1/core005/assets/cch/cosmic/current/v96/CosmicCodingMuts.vcf.gz.tbi" }
+      ]
+  },
+  "input_cosmicprevalenceDB_vcf": { 
+    "class": "File",
+    "location": "iris:///data1/core005/assets/cch/cosmic/current/v96/CosmicCodingMuts_GRCh37_processed.vcf.gz",
+    "secondaryFiles": [
+      { "class": "File", "location": "iris:///data1/core005/assets/cch/cosmic/current/v96/CosmicCodingMuts_GRCh37_processed.vcf.gz.tbi" }
+      ]
+  },
+  "reference_fasta": {
+      "class": "File",
+      "location": "iris:///data1/core005/assets/cch/hg19/Homo_sapiens_assembly19.fasta",
+      "secondaryFiles": [
+        {"class": "File", "location": "iris:///data1/core005/assets/cch/hg19/Homo_sapiens_assembly19.fasta.fai"}
+      ]
+  },
+  "oncoKbApiToken": {
+    "class": "File",
+    "location": "iris:///data1/core005/assets/cch/oncoKB/current/apiToken.txt"
+  },
+  "input_mappability_bed": {
+    "class": "File",
+    "location": "iris:///data1/core005/assets/cch/beds/current/wgEncodeDacMapabilityConsensusExcludable_4cols.bed"
+  },
+  "input_complexity_bed": {
+    "class": "File",
+    "location": "iris:///data1/core005/assets/cch/beds/current/rmsk_mod.bed"
+  },
+  "input_47kchpd_tsv_file": {
+    "class": "File",
+	  "location": "iris:///data1/core005/assets/cch/ch_47k_impact/versions/v1/chpd47k_prevalence.tsv"
+  },
+  "input_panmeloid_tsv_file": {
+    "class": "File",
+	  "location": "iris:///data1/core005/assets/cch/pan_myeloid/versions/v1/pan_myeloid_variant_count.tsv"
+  },
+  "input_hotspot_tsv_file": {
+    "class": "File",
+    "location": "iris:///data1/core005/assets/cch/ch_47k_impact/versions/v1/hotspots_47kchpd.tsv"
+  },
+  "retain_info": "CNT,TUMOR_TYPE",
+  "vardict_allele_frequency_threshold": 0,
+  "oncoKbAnnotateHotspots": true,
+  "column_name_mappability": "mappability",
+  "column_name_complexity": "complexity",
+  "output_column_name_panmyeloid": "panmyeloid",
+  "output_column_name_47kchpd": "47kchpd",
+  "output_column_name_hotpsot": "hotspot"
+}

@@ -5,11 +5,11 @@ import logging
 from pathlib import Path
 from jinja2 import Template
 from beagle import settings
+from runner.operator.access import create_cwl_file_object
 from runner.operator.operator import Operator
 from runner.models import RunStatus, Port, Run
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.models import File, FileGroup, FileType
-
 
 logger = logging.getLogger(__name__)
 
@@ -127,7 +127,7 @@ class HemeNucleoQcAggOperator(Operator):
             if not files:
                 raise Exception("Run {} does not have files matching {}".format(single_run.pk, file_regex))
             for single_file in files:
-                file_list.append(self.create_cwl_file_object(single_file.path))
+                file_list.append(create_cwl_file_object(single_file.path, "iris://"))
         return file_list
 
     def construct_sample_input(self, runs):
@@ -163,17 +163,17 @@ class HemeNucleoQcAggOperator(Operator):
         sample_input = json.loads(input_file)
         return sample_input
 
-    @staticmethod
-    def create_cwl_file_object(file_path):
-        return {"class": "File", "location": "juno://" + file_path}
+    # @staticmethod
+    # def create_cwl_file_object(file_path):
+    #     return {"class": "File", "location": "iris://" + file_path}
 
     @staticmethod
-    def create_cwl_file_object_no_juno(file_path):
+    def create_cwl_file_object_on_iris(file_path):
         """
         This creates a cwl file objects. Opting to use this method in find_biometric_files
         as it seems more consistent with what was in prior input.json(s) for this operator.
         """
-        return {"class": "File", "location": file_path.replace("file://", "juno://", 1)}
+        return {"class": "File", "location": file_path.replace("file://", "iris://", 1)}
 
     def find_biometric_files(self, job_dirs, ending):
         """
@@ -190,7 +190,7 @@ class HemeNucleoQcAggOperator(Operator):
             for file in sample_listing:
                 file_path = file["location"]
                 if file_path.endswith(ending):
-                    matching_files.append(self.create_cwl_file_object_no_juno(file_path))
+                    matching_files.append(self.create_cwl_file_object_no_iris(file_path))
         return matching_files
 
     def create_sample_json(self, runs):
@@ -218,4 +218,4 @@ class HemeNucleoQcAggOperator(Operator):
         f = File(file_name=fname, path=output, file_type=file_type, file_group=temp_file_group)
         f.save()
 
-        return self.create_cwl_file_object(f.path)
+        return create_cwl_file_object(f.path, "iris://")

@@ -46,12 +46,6 @@ def group_by_sample_id(samples):
     return sample_pairs
 
 
-def group_by_run(samples):
-    samples.sort(key=lambda s: s["path"].split("/")[-1])
-    fastqs = zip(samples[::2], samples[1::2])
-    return list(fastqs)
-
-
 def calc_avg(sample_files, field):
     samples_with_field = list(filter(lambda s: field in s["metadata"] and s["metadata"][field], sample_files))
     field_count = len(samples_with_field)
@@ -89,8 +83,8 @@ def construct_sample_inputs(samples, request_id):
         fgbio_fastq_to_bam_input = pair_samples(sample_group)
         fgbio_fastq_to_bam_input = [
             [
-                {"class": "File", "location": "juno://" + s[0]["path"]},
-                {"class": "File", "location": "juno://" + s[1]["path"]},
+                {"class": "File", "location": "iris://" + s[0]["path"]},
+                {"class": "File", "location": "iris://" + s[1]["path"]},
             ]
             for s in fgbio_fastq_to_bam_input
         ]

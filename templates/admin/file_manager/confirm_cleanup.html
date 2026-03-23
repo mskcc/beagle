@@ -1,0 +1,135 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="content-main">
+    <h1>{{ title }}</h1>
+
+    <div style="padding: 20px; margin: 20px 0; background: #fff3cd; border: 2px solid #ffc107; border-radius: 4px;">
+        <h2 style="color: #856404; margin-top: 0;">
+            ⚠️ WARNING: This action will permanently delete staged files!
+        </h2>
+        <p style="font-size: 16px; color: #856404;">
+            You are about to delete <strong>{{ jobs.count }}</strong> staged file(s) immediately,
+            before their scheduled cleanup date.
+        </p>
+        <p style="font-size: 14px; color: #856404;">
+            This action is <strong>irreversible</strong>. The files will be deleted from the staging
+            location and the file paths will be reverted to their original locations.
+        </p>
+    </div>
+
+    {% if jobs %}
+        <h3>Files to be cleaned up:</h3>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <thead>
+                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                    <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">File</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Original Path</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Scheduled Cleanup</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Days Until Cleanup</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr style="border-bottom: 1px solid #dee2e6;">
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">
+                        {{ job.file_object.file_name }}
+                    </td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6; font-size: 12px;">
+                        {{ job.original_path|truncatechars:60 }}
+                    </td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">
+                        {{ job.cleanup_date }}
+                    </td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">
+                        {% with delta=job.cleanup_date|timeuntil %}
+                            {% if delta %}
+                                {{ delta }}
+                            {% else %}
+                                Today
+                            {% endif %}
+                        {% endwith %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="{{ action }}">
+            <input type="hidden" name="confirm" value="yes">
+            {% for obj in queryset %}
+                <input type="hidden" name="_selected_action" value="{{ obj.pk }}">
+            {% endfor %}
+
+            <div style="margin-top: 30px; padding: 20px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox"
+                           id="confirm-checkbox"
+                           required
+                           style="margin-right: 10px; width: 20px; height: 20px;">
+                    <span style="font-size: 16px; color: #721c24; font-weight: bold;">
+                        I understand this will permanently delete {{ jobs.count }} file(s) and this action cannot be undone.
+                    </span>
+                </label>
+            </div>
+
+            <div class="submit-row" style="margin-top: 30px;">
+                <button type="submit"
+                        class="button"
+                        id="submit-button"
+                        disabled
+                        style="background-color: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: not-allowed; font-size: 14px;">
+                    Yes, Delete {{ jobs.count }} File(s) Immediately
+                </button>
+                <a href="{% url 'admin:file_manager_cleanupfilejob_changelist' %}"
+                   class="button cancel-link"
+                   style="padding: 10px 20px; margin-left: 10px;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    {% else %}
+        <p style="padding: 20px; background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px; color: #0c5460;">
+            No files selected for cleanup. All selected jobs may have already been processed.
+        </p>
+        <div style="margin-top: 20px;">
+            <a href="{% url 'admin:file_manager_cleanupfilejob_changelist' %}" class="button">
+                Back to Cleanup Jobs
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('confirm-checkbox');
+    const submitButton = document.getElementById('submit-button');
+
+    if (checkbox && submitButton) {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                submitButton.disabled = false;
+                submitButton.style.cursor = 'pointer';
+                submitButton.style.backgroundColor = '#dc3545';
+            } else {
+                submitButton.disabled = true;
+                submitButton.style.cursor = 'not-allowed';
+                submitButton.style.backgroundColor = '#6c757d';
+            }
+        });
+    }
+});
+</script>
+
+<style>
+.content-main {
+    padding: 20px;
+}
+h1 {
+    margin-bottom: 20px;
+}
+</style>
+{% endblock %}

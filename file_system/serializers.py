@@ -4,11 +4,8 @@ from rest_framework import serializers
 from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
-from beagle_etl.models import Job, JobStatus
-from beagle_etl.jobs import TYPES
 from notifier.models import JobGroupNotifier
-from beagle_etl.metadata.validator import MetadataValidator
-
+from beagle_etl.smile_message.metadata_validator import MetadataValidator
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File, Sample, Request, Patient, Storage, StorageType, FileGroup, FileMetadata, FileType
 from file_system.exceptions import MetadataValidationException
@@ -264,6 +261,7 @@ class CreateFileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get("request")
         user = request.user if request and hasattr(request, "user") else None
+        validated_data["original_path"] = validated_data.get("path")
         validated_data["file_name"] = os.path.basename(validated_data.get("path"))
         validated_data["file_type"] = validated_data["file_type"]
         metadata = validated_data.pop("metadata")
@@ -277,6 +275,18 @@ class CreateFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
         fields = ("path", "file_type", "size", "file_group", "metadata", "checksum")
+
+
+class CreateFileFormSerializer(CreateFileSerializer):
+    class Meta:
+        model = File
+        fields = ("path", "file_type", "file_group", "metadata")
+
+
+class CreateFileFormSerializer(CreateFileSerializer):
+    class Meta:
+        model = File
+        fields = ("path", "file_type", "file_group", "metadata")
 
 
 class UpdateFileSerializer(serializers.Serializer):
@@ -331,6 +341,7 @@ class UpdateFileSerializer(serializers.Serializer):
                 user = User.objects.get(id=validated_data.get("user"))
             except User.DoesNotExist:
                 user = User.objects.get(username=settings.ETL_USER)
+        instance.original_path = validated_data.get("path", instance.original_path)
         instance.path = validated_data.get("path", instance.path)
         instance.file_name = os.path.basename(instance.path)
         instance.size = validated_data.get("size", instance.size)

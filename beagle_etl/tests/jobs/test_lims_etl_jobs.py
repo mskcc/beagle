@@ -7,14 +7,12 @@ from mock import patch, call
 from datetime import date
 from django.test import TestCase
 from django.conf import settings
-from beagle_etl.models import ETLConfiguration
+from beagle_etl.models import ETLConfiguration, SMILEMessage, SmileMessageStatus
 from rest_framework.test import APITestCase
 from runner.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
 from beagle_etl.jobs.metadb_jobs import (
-    create_pooled_normal,
-    get_run_id_from_string,
     request_callback,
     fetch_operators_wfastq,
 )
@@ -80,115 +78,6 @@ class TestFetchSamples(TestCase):
     # self.assertTrue(len(import_files_metadata) == 10)
     # self.assertTrue(len(pooled_normal_files) == 12)
     # self.assertTrue(len(pooled_normal_files_metadata) == 12)
-
-
-class TestCreatePooledNormal(TestCase):
-    # load fixtures for the test case temp db
-    fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
-
-    def setUp(self):
-        self.storage = Storage.objects.create(name="LOCAL", type=StorageType.LOCAL)
-        self.file_group = FileGroup.objects.create(name=settings.POOLED_NORMAL_FILE_GROUP, storage=self.storage)
-        assay = ETLConfiguration.objects.first()
-        self.disabled_backup = assay.disabled_recipes
-        assay.all = ["IMPACT468", "HemePACT", "HemePACT_v4", "DisabledAssay"]
-        assay.disabled = ["DisabledAssay"]
-        assay.save()
-
-    def test_true(self):
-        self.assertTrue(True)
-
-    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    def test_create_pooled_normal1(self, populate_job_group_notifier_metadata):
-        """
-        Test the creation of a pooled normal entry in the database
-        """
-        # sanity check that starting db is empty
-        populate_job_group_notifier_metadata.return_value = True
-        files = File.objects.all()
-        files_metadata = FileMetadata.objects.all()
-        self.assertTrue(len(files) == 0)
-        self.assertTrue(len(files_metadata) == 0)
-
-        filepath = "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_POOLEDNORMALS/Sample_FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG/FFPEPOOLEDNORMAL_IGO_IMPACT468_GTGAAGTG_S5_R1_001.fastq.gz"
-
-        create_pooled_normal(filepath, self.file_group.id)
-
-        # check that files are now in the database
-        files = File.objects.all()
-        files_metadata = FileMetadata.objects.all()
-        self.assertTrue(len(files) == 1)
-        self.assertTrue(len(files_metadata) == 1)
-
-        imported_file = File.objects.get(path=filepath)
-        imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata["preservation"] == "FFPE")
-        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "IMPACT468")
-        self.assertTrue(imported_file_metadata.metadata["runId"] == "JAX_0397")
-        # TODO: add more metadata fields?
-
-    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    def test_create_pooled_normal2(self, populate_job_group_notifier_metadata):
-        """
-        Test the creation of a pooled normal entry in the database
-        """
-        populate_job_group_notifier_metadata.return_value = True
-        filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG/FROZENPOOLEDNORMAL_IGO_IMPACT468_CTAACTCG_S7_R2_001.fastq.gz"
-        create_pooled_normal(filepath, self.file_group.id)
-        imported_file = File.objects.get(path=filepath)
-        imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata["preservation"] == "FROZEN")
-        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "IMPACT468")
-        self.assertTrue(imported_file_metadata.metadata["runId"] == "PITT_0439")
-
-    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
-    def test_create_pooled_normal_recipe(self, populate_job_group_notifier_metadata):
-        """
-        Test the creation of a pooled normal entry in the database with the right recipe
-        """
-        populate_job_group_notifier_metadata.return_value = True
-        filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG/FROZENPOOLEDNORMAL_IGO_HemePACT_v4_CTAACTCG_S7_R2_001.fastq.gz"
-        create_pooled_normal(filepath, self.file_group.id)
-        imported_file = File.objects.get(path=filepath)
-        imported_file_metadata = FileMetadata.objects.get(file=imported_file)
-        self.assertTrue(imported_file_metadata.metadata[settings.RECIPE_METADATA_KEY] == "HemePACT_v4")
-
-    def test_create_pooled_normal_disabled_recipe(self):
-        """
-        Test the rejection of the creation of a pooled normal with a disabled recipe
-        """
-        filepath = "/ifs/archive/GCL/hiseq/FASTQ/PITT_0439_BHFTCNBBXY/Project_POOLEDNORMALS/Sample_FROZENPOOLEDNORMAL_IGO_DisabledAssay_CTAACTCG/FROZENPOOLEDNORMAL_IGO_DisabledAssay_CTAACTCG_S7_R2_001.fastq.gz"
-        imported_file = File.objects.filter(path=filepath)
-        self.assertEqual(imported_file.count(), 0)
-
-
-class TestGetRunID(TestCase):
-    def test_true(self):
-        self.assertTrue(True)
-
-    def test_get_run_id_from_string1(self):
-        string = "PITT_0439_BHFTCNBBXY"
-        runID = get_run_id_from_string(string)
-        self.assertTrue(runID == "PITT_0439")
-
-    def test_get_run_id_from_string2(self):
-        string = "foo_BHFTCNBBXY"
-        runID = get_run_id_from_string(string)
-        self.assertTrue(runID == "foo")
-
-    def test_get_run_id_from_string2(self):
-        string = "BHFTCNBBXY"
-        runID = get_run_id_from_string(string)
-        self.assertTrue(runID == "BHFTCNBBXY")
-
-
-class MockResponse:
-    def __init__(self, json_data, status_code):
-        self.json_data = json_data
-        self.status_code = status_code
-
-    def json(self):
-        return self.json_data
 
 
 class TestImportSample(APITestCase):

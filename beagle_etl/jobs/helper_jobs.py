@@ -1,6 +1,7 @@
 import os
 import logging
 from time import sleep
+from celery import shared_task
 from django.conf import settings
 from file_system.models import File
 from file_system.repository import FileRepository
@@ -16,55 +17,27 @@ from beagle_etl.exceptions import (
 logger = logging.getLogger(__name__)
 
 
-def populate_file_checksums():
-    logger.info("Calculating file checksum")
-    files = File.objects.all()
-    for f in files:
-        logger.info("Processing file:%s checksum" % str(f.id))
-        if not f.checksum:
-            logger.debug("Calculating file:%s checksum" % str(f.id))
-            try:
-                checksum = sha1(f.path)
-                f.checksum = checksum
-                f.save()
-            except FailedToCalculateChecksum as e:
-                logger.info("Failed to calculate checksum. Error:%s", f.path)
-            sleep(1)
-    return []
-
-
-def populate_file_size():
-    logger.info("Populating file size")
-    files = File.objects.all()
-    for f in files:
-        if not f.size or f.size == 0:
-            try:
-                f.size = os.path.getsize(f.path)
-            except Exception as e:
-                logger.error("Failed to get file size. Error:%s", f.path)
-            sleep(1)
-    return []
-
-
-def calculate_file_checksum(file_id):
-    logger.info("Calculate file checksum for file:%s", file_id)
-    try:
-        f = File.objects.get(id=file_id)
-    except File.DoesNotExist:
-        return None
-    else:
-        try:
-            checksum = sha1(f.path)
-            f.checksum = checksum
-            f.save(update_fields=["checksum"])
-        except FailedToCalculateChecksum as e:
-            logger.info("Failed to calculate checksum. Error:%s", f.path)
-    return []
-
-
 def check_file_permissions(path):
     if not os.access(path, os.R_OK):
         raise FailedToCopyFilePermissionDeniedException()
+
+
+def R1_or_R2(filename):
+    reversed_filename = "".join(reversed(filename))
+    R1_idx = reversed_filename.find("1R")
+    R2_idx = reversed_filename.find("2R")
+    if R1_idx == -1 and R2_idx == -1:
+        return "UNKNOWN"
+    elif R1_idx > 0 and R2_idx == -1:
+        return "R1"
+    elif R2_idx > 0 and R1_idx == -1:
+        return "R2"
+    elif R1_idx > 0 and R2_idx > 0:
+        if R1_idx < R2_idx:
+            return "R1"
+        else:
+            return "R2"
+    return "UNKNOWN"
 
 
 def check_file_exist(path):
@@ -78,13 +51,24 @@ def check_file_exist(path):
         raise DuplicatedFilesException("Duplicated file %s", path)
 
 
-def locate_file(path):
-    if os.path.exists(path):
-        return path
-    for k, v in settings.MAPPING.items():
-        if path.startswith(k):
-            for r in v:
-                check_path = path.replace(k, r)
-                if os.path.exists(check_path):
-                    return check_path
-    raise FailedToLocateTheFileException(f"Unable to locate file: {path} on file system")
+def fix_path_iris(path):
+    """
+    Helper function necessary only for IRIS because the SMILEMessage paths are not same as mount paths
+    """
+    return path.replace(settings.FASTQ_DEFAULT_LOCATION_PREFIX, settings.FASTQ_IRIS_LOCATION_PREFIX)
+
+
+@shared_task
+def calculate_checksum(file_id):
+    try:
+        f = File.objects.get(id=file_id)
+    except File.DoesNotExist:
+        logger.error("Failed to calculate checksum. Error: File %s not found", file_id)
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    try:
+        checksum = sha1(f.original_path)
+    except FailedToCalculateChecksum as e:
+        logger.error(f"Failed to calculate checksum for file: {file_id}: {f.original_path}")
+        raise FailedToCalculateChecksum("Failed to calculate checksum. Error: File %s not found", file_id)
+    f.checksum = checksum
+    f.save(update_fields=["checksum"])

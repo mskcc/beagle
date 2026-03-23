@@ -5,11 +5,11 @@ import logging
 from pathlib import Path
 from jinja2 import Template
 from beagle import settings
+from runner.operator.access import create_cwl_file_object
 from runner.operator.operator import Operator
 from runner.models import RunStatus, Port, Run
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.models import File, FileGroup, FileType
-
 
 logger = logging.getLogger(__name__)
 
@@ -108,9 +108,9 @@ class HemeNucleoQcOperator(Operator):
 
         bam = [b for b in bam_bai.files.all() if b.file_name.endswith(".bam")][0]
         bai = [b for b in bam_bai.files.all() if b.file_name.endswith(".bai")]
-        bam = self.create_cwl_file_object(bam.path)
+        bam = create_cwl_file_object(bam.path, "iris://")
         if len(bai):
-            bam["secondaryFiles"] = [self.create_cwl_file_object(bai[0].path)]
+            bam["secondaryFiles"] = [create_cwl_file_object(bai[0].path, "iris://")]
 
         return bam
 
@@ -154,9 +154,9 @@ class HemeNucleoQcOperator(Operator):
         sample_input = json.loads(input_file)
         return sample_input
 
-    @staticmethod
-    def create_cwl_file_object(file_path):
-        return {"class": "File", "location": "juno://" + file_path}
+    # @staticmethod
+    # def create_cwl_file_object(file_path):
+    #     return {"class": "File", "location": "iris://" + file_path}
 
     def create_sample_json(self, run):
         j = run.output_metadata
@@ -191,4 +191,4 @@ class HemeNucleoQcOperator(Operator):
         f = File(file_name=fname, path=output, file_type=file_type, file_group=temp_file_group)
         f.save()
 
-        return self.create_cwl_file_object(f.path)
+        return create_cwl_file_object(f.path, "iris://")

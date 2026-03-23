@@ -14,7 +14,6 @@ from .models import (
     FileGroup,
     FileGroupMetadata,
     FileRunMap,
-    ImportMetadata,
     Sample,
     Patient,
     Request,
@@ -63,11 +62,6 @@ class FileMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ("file", "version", "metadata", "created_date")
     autocomplete_fields = ["file"]
     search_fields = ("id", "file__id", "metadata__igoRequestId", "metadata__cmoSampleName")
-
-
-class ImportMetadataAdmin(ExportActionMixin, admin.ModelAdmin):
-    list_display = ("file",)
-    search_fields = ("file__id",)
 
 
 class MachineRunModeAdminForm(forms.ModelForm):
@@ -146,7 +140,6 @@ admin.site.register(FileGroup, FileGroupAdmin)
 admin.site.register(FileType)
 admin.site.register(FileExtension)
 admin.site.register(FileMetadata, FileMetadataAdmin)
-admin.site.register(ImportMetadata, ImportMetadataAdmin)
 admin.site.register(FileGroupMetadata)
 admin.site.register(FileRunMap, FileRunMapAdmin)
 admin.site.register(MachineRunMode, MachineRunModeAdmin)

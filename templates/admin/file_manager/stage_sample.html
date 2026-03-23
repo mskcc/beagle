@@ -1,0 +1,115 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="content-main">
+    <h1>Stage Sample Files</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" id="stage-sample-form">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <div>
+                <label for="sample_ids">Sample ID(s):</label>
+                <textarea name="sample_ids"
+                          id="sample_ids"
+                          required
+                          placeholder="Enter one or more sample IDs (comma, space, or newline separated)&#10;e.g., 12345_1_1, 12345_1_2&#10;or one per line"
+                          rows="5"
+                          style="width: 500px; font-family: monospace;"></textarea>
+                <p class="help">Enter one or more sample IDs (primaryId) separated by commas, spaces, or newlines</p>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div>
+                <label for="file_group">File Group:</label>
+                <input type="text"
+                       name="file_group"
+                       id="file_group"
+                       value="{{ default_file_group }}"
+                       style="width: 300px;">
+                <p class="help">The file group to search for files (default: IMPORT_FILE_GROUP)</p>
+            </div>
+        </div>
+
+        <div class="submit-row">
+            <input type="submit" value="Stage Files" class="default">
+            <a href="{% url 'admin:file_manager_sampleproviderjob_changelist' %}" class="button cancel-link">Cancel</a>
+        </div>
+    </form>
+
+    <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;">
+        <h3>How it works:</h3>
+        <ol>
+            <li>Searches for all files in the specified file group with the given sample ID</li>
+            <li>Creates a <strong>SampleProviderJob</strong> to track staging progress</li>
+            <li>For each file that needs staging:
+                <ul>
+                    <li>Creates a <strong>FileProviderJob</strong></li>
+                    <li>Queues a Celery task to copy the file to the staging location</li>
+                </ul>
+            </li>
+            <li>After staging is complete (files will be kept for {{ stage_days|default:"30" }} days)</li>
+            <li>You can monitor progress in the SampleProviderJob list</li>
+        </ol>
+    </div>
+</div>
+
+<style>
+.alert {
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+.alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+.alert-info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+.form-row {
+    margin-bottom: 20px;
+}
+.form-row label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.form-row input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.form-row .help {
+    margin-top: 5px;
+    color: #666;
+    font-size: 12px;
+}
+.submit-row {
+    margin-top: 30px;
+}
+</style>
+{% endblock %}

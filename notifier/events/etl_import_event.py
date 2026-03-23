@@ -22,7 +22,6 @@ class ETLImportEvent(Event):
         qc_access_emails,
         number_of_tumors,
         number_of_normals,
-        number_of_pool_normals,
         data_access_emails,
         other_contact_emails,
     ):
@@ -43,7 +42,6 @@ class ETLImportEvent(Event):
         self.qc_access_emails = qc_access_emails
         self.number_of_tumors = number_of_tumors
         self.number_of_normals = number_of_normals
-        self.number_of_pool_normals = number_of_pool_normals
         self.data_access_emails = data_access_emails
         self.other_contact_emails = other_contact_emails
 
@@ -77,7 +75,6 @@ class ETLImportEvent(Event):
 
         Number of tumor samples: {number_of_tumors}
         Number of normal samples: {number_of_normals}
-        Number of pooled normals: {number_of_pool_normals}
         Job Group ID: {job_group}
         """
 
@@ -98,7 +95,6 @@ class ETLImportEvent(Event):
             qc_access_emails=self.qc_access_emails,
             number_of_tumors=self.number_of_tumors,
             number_of_normals=self.number_of_normals,
-            number_of_pool_normals=self.number_of_pool_normals,
             job_group=self.job_group,
             data_access_emails=self.data_access_emails,
             other_contact_emails=self.other_contact_emails,

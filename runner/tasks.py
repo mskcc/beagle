@@ -5,7 +5,7 @@ import traceback
 from datetime import datetime, timedelta
 from lib.memcache_lock import memcache_lock
 from urllib.parse import urljoin
-from celery import shared_task
+from celery import shared_task, chord
 from django.conf import settings
 from django.db.models import Count
 from runner.run.objects.run_object_factory import RunObjectFactory
@@ -20,7 +20,6 @@ from notifier.events import (
     SetPipelineFieldEvent,
     OperatorStartEvent,
     SetLabelEvent,
-    SetRunTicketInImportEvent,
     SetDeliveryDateFieldEvent,
     VoyagerActionRequiredForRunningEvent,
     SendEmailEvent,
@@ -28,27 +27,85 @@ from notifier.events import (
 )
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
-from beagle_etl.jobs import TYPES
-from beagle_etl.models import Operator, Job
+from beagle_etl.models import Operator
 from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.helper import get_emails_to_notify, get_gene_panel, get_samples
-from file_system.models import Request, FileMetadata, File
+from file_system.models import Request
 from file_system.repository import FileRepository
+from file_manager.file_manager import FileManager
 from runner.cache.github_cache import GithubCache
 from lib.logger import format_log
 from lib.memcache_lock import memcache_task_lock
 from study.objects import StudyObject
 from study.models import JobGroupWatcher, JobGroupWatcherConfig
-from django.http import HttpResponse
 from ddtrace import tracer
 
 logger = logging.getLogger("django")
 
 
-def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False):
+def stage_files_for_operator(
+    operator, request_id=None, pairing=None, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False
+):
+    staging_tasks = []
     try:
-        jobs = operator.get_jobs()
+        staging_tasks, sample_jobs = stage_files(request_id, pairing, job_group_id)
+    except Exception as e:
+        logger.warning(format_log(f"Failed to stage files: {str(e)}", job_group_id=job_group_id))
+
+    if staging_tasks:
+        # Use chord: run all staging tasks, then create runs when all complete
+        logger.info(
+            format_log(f"Staging {len(staging_tasks)} files, waiting for completion", job_group_id=job_group_id)
+        )
+        callback = create_operator_run_from_jobs.si(
+            operator_id=operator,
+            request_id=request_id,
+            pairing=pairing,
+            job_group_id=job_group_id,
+            job_group_notifier_id=job_group_notifier_id,
+            parent=parent,
+            notify=notify,
+        )
+        chord(staging_tasks)(callback)
+    else:
+        # No staging needed, create runs immediately
+        logger.info(format_log("No staging required, creating runs immediately", job_group_id=job_group_id))
+        create_operator_run_from_jobs(
+            operator_id=operator,
+            request_id=request_id,
+            pairing=pairing,
+            job_group_id=job_group_id,
+            job_group_notifier_id=job_group_notifier_id,
+            parent=parent,
+            notify=notify,
+        )
+
+
+@shared_task
+def create_operator_run_from_jobs(
+    operator_id,
+    request_id=None,
+    pairing=None,
+    run_ids=None,
+    job_group_id=None,
+    job_group_notifier_id=None,
+    parent=None,
+    notify=False,
+    **kwargs,
+):
+    operator_model = Operator.objects.get(id=operator_id)
+    operator = OperatorFactory.get_by_model(
+        operator_model,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        request_id=request_id,
+        pairing=pairing,
+        run_ids=run_ids,
+    )
+    jobs = []
+    try:
+        jobs = operator.get_jobs(**kwargs)
         if operator.logger.message:
             event = OperatorErrorEvent(job_group_notifier_id, operator.logger.message)
             send_notification.delay(event.to_dict())
@@ -72,28 +129,27 @@ def create_jobs_from_operator(operator, job_group_id=None, job_group_notifier_id
         logger.info(
             format_log("Operator get_jobs failed %s", str(e), job_group_id=job_group_id, request_id=operator.request_id)
         )
-    else:
-        create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id, parent, notify=notify)
-
-
-def create_operator_run_from_jobs(
-    operator, jobs, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False
-):
-    jg = None
-    jgn = None
 
     if not jobs:
-        logger.info("Could not create operator run due to no jobs being passed")
+        logger.error(
+            format_log(
+                "Could not create operator run due to no jobs being passed",
+                job_group_id=job_group_id,
+                request_id=operator.request_id,
+            )
+        )
         return
 
     try:
         jg = JobGroup.objects.get(id=job_group_id)
     except JobGroup.DoesNotExist:
-        logger.info(format_log("Job group not set", job_group_id=job_group_id))
+        jg = None
+        logger.error(format_log("Job group not set", job_group_id=job_group_id))
     try:
         jgn = JobGroupNotifier.objects.get(id=job_group_notifier_id)
     except JobGroupNotifier.DoesNotExist:
-        logger.info(format_log("Job group notifier not set", job_group_id=job_group_id))
+        jgn = None
+        logger.error(format_log("Job group notifier not set", job_group_id=job_group_id))
     valid_jobs, invalid_jobs = [], []
 
     for job in jobs:
@@ -184,6 +240,47 @@ def create_operator_run_from_jobs(
     operator_run.save()
 
 
+def stage_files(request_id=None, pairing=None, job_group_id=None):
+    """
+    Stage files and return list of staging task signatures.
+    Returns (staging_tasks, sample_jobs) where:
+    - staging_tasks: list of Celery task signatures ready to be executed
+    - sample_jobs: dict mapping sample_id to SampleProviderJob
+    """
+    staging_tasks = []
+    sample_jobs = {}
+
+    if request_id:
+        logger.info(format_log("Staging files for request", request_id=request_id, job_group_id=job_group_id))
+        samples = get_samples(request_id)
+
+    elif pairing:
+        samples = set()
+        for pair in pairing.get("pairs"):
+            if pair["tumor"]:
+                samples.add(pair["tumor"])
+            if pair["normal"]:
+                samples.add(pair["normal"])
+        samples = list(samples)
+
+    else:
+        logger.info(format_log("No samples to stage", job_group_id=job_group_id))
+        return staging_tasks, sample_jobs
+
+    file_manager = FileManager()
+    for sample in samples:
+        logger.info(format_log(f"Staging files for sample {sample}", request_id=request_id, job_group_id=job_group_id))
+        sample_job, task_sigs = file_manager.stage_sample(sample)
+        if sample_job.total_files > 0:
+            sample_jobs[sample] = sample_job
+            staging_tasks.extend(task_sigs)
+            logger.info(
+                format_log(f"Sample {sample} requires staging of {sample_job.total_files} files", request_id=request_id)
+            )
+
+    return staging_tasks, sample_jobs
+
+
 @shared_task
 @tracer.wrap(service="beagle")
 def create_jobs_from_request(
@@ -232,12 +329,15 @@ def create_jobs_from_request(
         pipeline=pipeline,
         file_group=file_group,
     )
-
-    _set_link_to_run_ticket(request_id, job_group_notifier_id)
-
     generate_description(operator, job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
-    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, notify=notify)
+    stage_files_for_operator(
+        operator_id,
+        request_id=request_id,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        notify=notify,
+    )
 
 
 @shared_task
@@ -276,34 +376,14 @@ def create_jobs_from_pairs(
         output_directory_prefix=output_directory_prefix,
     )
 
-    _set_link_to_run_ticket(request_id, job_group_notifier_id)
     generate_description(operator, job_group_id, job_group_notifier_id, request_id)
     generate_label(job_group_notifier_id, request_id)
-    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id=job_group_notifier_id)
-
-
-def _set_link_to_run_ticket(request_id, job_group_notifier_id):
-    jira_id = None
-    import_job = Job.objects.filter(run=TYPES["REQUEST"], args__request_id=request_id).order_by("-created_date").first()
-    if not import_job:
-        logger.error("Could not find Import JIRA ticket")
-        return
-    try:
-        job_group_notifier_job = JobGroupNotifier.objects.get(
-            job_group=import_job.job_group.id, notifier_type__default=True
-        )
-    except JobGroupNotifier.DoesNotExist:
-        logger.error("Could not find Import JIRA ticket")
-        return
-    try:
-        new_jira = JobGroupNotifier.objects.get(id=job_group_notifier_id)
-    except JobGroupNotifier.DoesNotExist:
-        logger.error("Could not find Import JIRA ticket")
-        return
-    event = SetRunTicketInImportEvent(
-        job_notifier=str(job_group_notifier_job.id), run_jira_id=new_jira.jira_id
-    ).to_dict()
-    send_notification.delay(event)
+    stage_files_for_operator(
+        pipeline.operator_id,
+        pairing={"pairs": pairs},
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+    )
 
 
 def _generate_summary(req):
@@ -390,11 +470,13 @@ def create_jobs_from_chaining(
             "Creating operator id %s from chaining: %s" % (to_operator_id, from_operator_id), job_group_id=job_group_id
         )
     )
-    operator_model = Operator.objects.get(id=to_operator_id)
-    operator = OperatorFactory.get_by_model(
-        operator_model, job_group_id=job_group_id, job_group_notifier_id=job_group_notifier_id, run_ids=run_ids
+    create_operator_run_from_jobs(
+        to_operator_id,
+        run_ids=run_ids,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        parent=parent,
     )
-    create_jobs_from_operator(operator, job_group_id, job_group_notifier_id, parent)
 
 
 @shared_task
@@ -554,6 +636,7 @@ def submit_job(run_id, output_directory=None, execution_id=None):
     job["root_permission"] = root_permissions
     job["output_uid"] = output_uid
     job["output_gid"] = output_gid
+    job["user"] = run.app.user
     job["metadata"] = dict()
     job["metadata"]["run_id"] = str(run_id)
     job["metadata"]["pipeline_id"] = str(run.app.id)
@@ -1011,13 +1094,21 @@ def run_routine_operator_job(operator, job_group_id=None):
 
 
 def create_aion_job(operator, lab_head_email, job_group_id=None, job_group_notifier_id=None):
-    jobs = operator.get_jobs(lab_head_email)
-    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
+    create_operator_run_from_jobs.delay(
+        operator_id=operator.model.id,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        lab_head_email=lab_head_email,
+    )
 
 
 def create_tempo_mpgen_job(operator, pairing_override=None, job_group_id=None, job_group_notifier_id=None):
-    jobs = operator.get_jobs(pairing_override)
-    create_operator_run_from_jobs(operator, jobs, job_group_id, job_group_notifier_id)
+    create_operator_run_from_jobs.delay(
+        operator_id=operator.model.id,
+        job_group_id=job_group_id,
+        job_group_notifier_id=job_group_notifier_id,
+        pairing_override=pairing_override,
+    )
 
 
 @shared_task

@@ -40,11 +40,11 @@ SESSION_COOKIE_NAME = os.environ.get("BEAGLE_COOKIE_SESSION_NAME", "beagle_prod_
 # Application definition
 
 INSTALLED_APPS = [
-    "elasticapm.contrib.django",
     "core.apps.CoreConfig",
     "runner.apps.RunnerConfig",
     "beagle_etl.apps.BeagleEtlConfig",
     "file_system.apps.FileSystemConfig",
+    "file_manager.apps.FileManagerConfig",
     "notifier.apps.NotifierConfig",
     "study.apps.StudyConfig",
     "django.contrib.admin",
@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     "drf_yasg",
     "advanced_filters",
     "ddtrace.contrib.django",
+    "smile_client",
+    "django_celery_results",
 ]
 
 
@@ -87,22 +89,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME": datetime.timedelta(days=1),
 }
 
-ELASTIC_APM = {
-    # Set the required service name. Allowed characters:
-    # a-z, A-Z, 0-9, -, _, and space
-    "SERVICE_NAME": "beagle",
-    "TRANSACTION_SAMPLE_RATE": 0.3,
-    # Use if APM Server requires a secret token
-    # 'SECRET_TOKEN': '',
-    # Set the custom APM Server URL (default: http://localhost:8200)
-    "SERVER_URL": "http://bic-dockerapp01.mskcc.org:8200/",
-    # Set the service environment
-    "ENVIRONMENT": ENVIRONMENT,
-    "ENABLED": False,
-}
-
 MIDDLEWARE = [
-    "elasticapm.contrib.django.middleware.TracingMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -130,11 +117,6 @@ AUTH_LDAP_BIND_AS_AUTHENTICATING_USER = True
 
 AUTH_LDAP_NO_NEW_USERS = True
 
-# AUTH_LDAP_GROUP_TYPE = MemberDNGroupType()
-# AUTH_LDAP_GROUP_SEARCH = LDAPSearchUnion(
-#     LDAPSearch('DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG', ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)"),
-# )
-
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
     "DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG",
     ldap.SCOPE_SUBTREE,
@@ -142,39 +124,12 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
     ["sAMAccountName", "displayName", "memberOf", "title"],
 )
 
-# AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-#     'DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG',
-#     ldap.SCOPE_SUBTREE,
-#     '(sAMAccountName=%(user)s)',
-#     '(objectClass=posixGroup)',)
-
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
 
 AUTHENTICATION_BACKENDS = [
     "django_auth_ldap.backend.LDAPBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
-
-# AUTH_LDAP_USER_ATTR_MAP = {
-#     "first_name": "givenName",
-#     "last_name": "sn",
-#     "email": "mail",
-# }
-
-# AUTH_LDAP_FIND_GROUP_PERMS = True
-
-# AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn", "email": "mail"}
-
-# AUTH_LDAP_MIRROR_GROUPS = True
-
-# AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-#     "is_active": "DC=MSKCC,DC=ROOT,DC=MSKCC,DC=ORG",
-#     "is_staff": (
-#         LDAPGroupQuery("cn=active,ou=groups,dc=ROOT,dc=com")
-#         | LDAPGroupQuery("cn=active,ou=groups,dc=ROOT,dc=com")
-#     ),
-#     "is_superuser": "cn=active,ou=groups,dc=ROOT,dc=com",
-# }
 
 ROOT_URLCONF = "beagle.urls"
 
@@ -269,12 +224,10 @@ USE_TZ = True
 LOGIN_URL = "/admin/login/"
 LOGOUT_URL = "/admin/logout/"
 
-SWAGGER_SETTINGS = {"VALIDATOR_URL": None}
-
-RABIX_URL = os.environ.get("BEAGLE_RABIX_URL")
-RABIX_PATH = os.environ.get("BEAGLE_RABIX_PATH")
+SWAGGER_SETTINGS = {"VALIDATOR_URL": None, "LOGOUT_URL": LOGOUT_URL}
 
 MEMCACHED_PORT = os.environ.get("BEAGLE_MEMCACHED_PORT", 11211)
+MEMCACHED_HOST = os.environ.get("BEAGLE_MEMCACHED_HOST", "127.0.0.1")
 
 if ENVIRONMENT == "dev":
     CACHES = {
@@ -287,7 +240,7 @@ else:
     CACHES = {
         "default": {
             "BACKEND": "djpymemcache.backend.PyMemcacheCache",
-            "LOCATION": "127.0.0.1:%s" % MEMCACHED_PORT,
+            "LOCATION": "%s:%s" % (MEMCACHED_HOST, MEMCACHED_PORT),
             "OPTIONS": {  # see https://pymemcache.readthedocs.io/en/latest/apidoc/pymemcache.client.base.html#pymemcache.client.base.Client
                 "default_noreply": False
             },
@@ -299,6 +252,7 @@ RABBITMQ_PASSWORD = os.environ.get("BEAGLE_RABBITMQ_PASSWORD", "guest")
 RABBITMQ_URL = os.environ.get("BEAGLE_RABBITMQ_URL", "localhost")
 
 CELERY_BROKER_URL = "amqp://%s:%s@%s/" % (RABBITMQ_USERNAME, RABBITMQ_PASSWORD, RABBITMQ_URL)
+CELERY_RESULT_BACKEND = "django-db"  # Use Django database as result backend for chord support
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -310,11 +264,12 @@ LIMS_PASSWORD = os.environ.get("BEAGLE_LIMS_PASSWORD")
 ETL_USER = os.environ.get("BEAGLE_ETL_USER")
 
 # SSL
-NATS_SSL_CERTFILE = os.environ.get("BEAGLE_NATS_SSL_CERTFILE")
-NATS_SSL_KEYFILE = os.environ.get("BEAGLE_NATS_SSL_KEYFILE")
+# NATS_ROOT_CA = os.environ.get("BEAGLE_NATS_SSL_ROOT_CA")
+# NATS_SSL_CERTFILE = os.environ.get("BEAGLE_NATS_SSL_CERTFILE")
+# NATS_SSL_KEYFILE = os.environ.get("BEAGLE_NATS_SSL_KEYFILE")
 
-METADB_NATS_URL = os.environ.get("BEAGLE_METADB_NATS_URL")
-METADB_NATS_FILTER_SUBJECT = os.environ.get("BEAGLE_METADB_NATS_FILTER_SUBJECT")
+# METADB_NATS_URL = os.environ.get("BEAGLE_METADB_NATS_URL")
+# METADB_NATS_FILTER_SUBJECT = os.environ.get("BEAGLE_METADB_NATS_FILTER_SUBJECT")
 METADB_NATS_NEW_REQUEST = os.environ.get(
     "BEAGLE_METADB_NATS_NEW_REQUEST", "MDB_STREAM.server.cpt-gateway.cmo-new-request"
 )
@@ -324,23 +279,37 @@ METADB_NATS_REQUEST_UPDATE = os.environ.get(
 METADB_NATS_SAMPLE_UPDATE = os.environ.get(
     "BEAGLE_METADB_NATS_SAMPLE_UPDATE", "MDB_STREAM.server.cpt-gateway.cmo-sample-update"
 )
-METADB_CLIENT_TIMEOUT = 3600.0
-METADB_NATS_DURABLE = os.environ.get("BEAGLE_METADB_NATS_DURABLE", "")
+# METADB_CLIENT_TIMEOUT = 3600.0
+# METADB_NATS_DURABLE = os.environ.get("BEAGLE_METADB_NATS_DURABLE", "")
 
-METADB_USERNAME = os.environ.get("BEAGLE_METADB_USERNAME")
-METADB_PASSWORD = os.environ.get("BEAGLE_METADB_PASSWORD")
+# METADB_USERNAME = os.environ.get("BEAGLE_METADB_USERNAME")
+# METADB_PASSWORD = os.environ.get("BEAGLE_METADB_PASSWORD")
 
-LIMS_URL = os.environ.get("BEAGLE_LIMS_URL", "https://igolims.mskcc.org:8443")
 
-IMPORT_FILE_GROUP = os.environ.get("BEAGLE_IMPORT_FILE_GROUP", "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
+SMILE_SETTINGS = {
+    "NATS_URL": os.environ.get("BEAGLE_METADB_NATS_URL"),
+    "NATS_USERNAME": os.environ.get("BEAGLE_METADB_USERNAME"),
+    "NATS_PASSWORD": os.environ.get("BEAGLE_METADB_PASSWORD"),
+    "NATS_SSL_CERTFILE": os.environ.get("BEAGLE_NATS_SSL_CERTFILE"),
+    "NATS_SSL_KEYFILE": os.environ.get("BEAGLE_NATS_SSL_KEYFILE"),
+    "NATS_ROOT_CA": os.environ.get("BEAGLE_NATS_SSL_ROOT_CA"),
+    "NATS_FILTER_SUBJECT": os.environ.get("BEAGLE_METADB_NATS_FILTER_SUBJECT"),
+    "NATS_DURABLE": os.environ.get("BEAGLE_METADB_NATS_DURABLE", ""),
+    "CLIENT_TIMEOUT": 3600.0,
+    "CALLBACK": "beagle_etl.smile_service.smile_callback.persist_message",
+}
 
-POOLED_NORMAL_FILE_GROUP = os.environ.get("BEAGLE_POOLED_NORMAL_FILE_GROUP", "b6857a56-5d45-451f-b4f6-26148946080f")
+IMPORT_FILE_GROUP = os.environ.get("BEAGLE_IMPORT_FILE_GROUP")
 
-DMP_BAM_FILE_GROUP = os.environ.get("BEAGLE_DMP_BAM_FILE_GROUP", "9ace63bf-ed55-461c-9ac0-1c5ee710d957")
+POOLED_NORMAL_FILE_GROUP = os.environ.get("BEAGLE_POOLED_NORMAL_FILE_GROUP")
+
+DMP_BAM_FILE_GROUP = os.environ.get("BEAGLE_DMP_BAM_FILE_GROUP")
 
 RIDGEBACK_URL = os.environ.get("BEAGLE_RIDGEBACK_URL", "http://localhost:5003")
 
 LOG_PATH = os.environ.get("BEAGLE_LOG_PATH", "beagle-server.log")
+
+SMILE_LOG_PATH = os.environ.get("BEAGLE_SMILE_LOG_PATH", "smile_client.log")
 
 LOGGING = {
     "version": 1,
@@ -353,26 +322,39 @@ LOGGING = {
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
         "file": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": LOG_PATH,
             "maxBytes": 209715200,
             "backupCount": 10,
             "formatter": "simple",
         },
+        "smile_client_log": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": SMILE_LOG_PATH,
+            "maxBytes": 209715200,
+            "backupCount": 10,
+            "formatter": "simple",
+        },
     },
     "loggers": {
-        "django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]},
+        "django_auth_ldap": {"level": "INFO", "handlers": ["console"]},
         "django": {
             "handlers": ["file", "console"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": True,
         },
+        "smile_client": {"level": "INFO", "handlers": ["smile_client_log", "console"]},
+    },
+    "root": {
+        "handlers": ["file", "console"],
+        "level": "INFO",
     },
 }
 
@@ -396,18 +378,17 @@ JIRA_DELIVERY_DATE_FIELD_ID = os.environ.get("JIRA_DELIVERY_DATE_FIELD_ID", "cus
 
 BEAGLE_URL = os.environ.get("BEAGLE_URL", "http://silo:5001")
 
-BEAGLE_NATS_NEW_REQUEST_QUEUE = os.environ.get("BEAGLE_NATS_NEW_REQUEST_QUEUE", "beagle_nats_queue")
-BEAGLE_NATS_UPDATE_REQUEST_QUEUE = os.environ.get(
-    "BEAGLE_NATS_UPDATE_REQUEST_QUEUE", "beagle_nats_update_request_queue"
-)
-BEAGLE_NATS_UPDATE_SAMPLE_QUEUE = os.environ.get("BEAGLE_NATS_UPDATE_SAMPLE_QUEUE", "beagle_nats_update_sample_queue")
+BEAGLE_NATS_UPSERT_REQUEST_QUEUE = os.environ.get("BEAGLE_NATS_UPSERT_REQUEST_QUEUE", "beagle_nats_queue")
 BEAGLE_RUNNER_QUEUE = os.environ.get("BEAGLE_RUNNER_QUEUE", "beagle_runner_queue")
 BEAGLE_DEFAULT_QUEUE = os.environ.get("BEAGLE_DEFAULT_QUEUE", "beagle_default_queue")
 BEAGLE_CHECK_FILES_QUEUE = os.environ.get("BEAGLE_CHECK_FILES_QUEUE", "beagle_check_files_queue")
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagle_job_scheduler_queue")
+BEAGLE_FILE_MANAGER_QUEUE = os.environ.get("BEAGLE_FILE_MANAGER_QUEUE", "beagle_file_manager_queue")
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
+BEAGLE_TMPDIR = os.environ.get("BEAGLE_TMPDIR", "/tmp")
 
-PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PERIOD", 900)
+PROCESS_SMILE_MESSAGES_PERIOD = os.environ.get("BEAGLE_PROCESS_SMILE_MESSAGES_PERIOD", 90)
+PROCESS_REQUEST_CALLBACK_PERIOD = os.environ.get("BEAGLE_PROCESS_REQUEST_CALLBACK_PERIOD", 900)
 CHECK_JOB_STATUS_PERIOD = os.environ.get("BEAGLE_CHECK_JOB_STATUS_PERIOD", 60)
 PROCESS_TRIGGERS_PERIOD = os.environ.get("BEAGLE_PROCESS_TRIGGERS_PERIOD", 120)
 CHECK_JOB_TIMEOUTS = os.environ.get("BEAGLE_CHECK_JOB_TIMEOUTS", 86400.0)
@@ -482,7 +463,10 @@ DEFAULT_MAPPING = json.loads(os.environ.get("BEAGLE_COPY_MAPPING", "{}"))
 MAPPING = json.loads(os.environ.get("BEAGLE_FILE_MAPPING", "{}"))
 COPY_FILE_PERMISSION = 0o644
 COPY_DIR_PERMISSION = 0o750
-COPY_GROUP_OWNERSHIP = os.environ.get("BEAGLE_GROUP_OWNERSHIP", "cmoigo")
+STAGE_DAYS = int(os.environ.get("BEAGLE_STAGE_DAYS", 30))
+
+FASTQ_DEFAULT_LOCATION_PREFIX = os.environ.get("BEAGLE_FASTQ_DEFAULT_LOCATION_PREFIX")
+FASTQ_IRIS_LOCATION_PREFIX = os.environ.get("BEAGLE_FASTQ_IRIS_LOCATION_PREFIX")
 
 DEFAULT_LOG_PREFIX = os.environ.get("BEAGLE_DEFAULT_LOG_PREFIX", "")
 DEFAULT_LOG_PATH = os.environ.get("BEAGLE_DEFAULT_LOG_PATH", "/tmp")
@@ -562,3 +546,4 @@ GENE_PANEL_TABLE = {
     "IMPACT-Heme": {"IMPACT-Heme_v2_BAITS": "IMPACT-Heme_v2"},
     "HC_IMPACT": {None: "UNKNOWN", "null": "UNKNOWN", "IMPACT505_BAITS": "IMPACT505"},
 }
+SHELL_PLUS = "ipython"
