@@ -18,7 +18,7 @@ METADATA_SCHEMA = {
         "investigatorSampleId": {"type": "string"},
         "baitSet": {"type": ["null", "string"]},
         "cmoPatientId": {"type": "string"},
-        "collectionYear": {"type": "string"},
+        "collectionYear": {"type": ["null", "string"]},
         "gender": {"type": "string"},
         "igoId": {"type": "string"},
         "requestMetadata": {
