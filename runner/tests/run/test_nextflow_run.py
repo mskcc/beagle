@@ -24,7 +24,7 @@ class NextflowRunObjectTest(APITestCase):
         self.pipeline_nf = Pipeline.objects.create(
             name="nextflow_pipeline",
             github="https://github.com/nf-core/taxprofiler.git",
-            version="master",
+            version="main",
             entrypoint="pipeline.nf",
             output_file_group=self.nxf_file_group,
             output_directory="/output/directory/",
