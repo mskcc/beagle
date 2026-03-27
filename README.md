@@ -86,7 +86,7 @@ make install-m1
 and activate the conda environment:
 
 ```
-conda activate beagle
+source conda/bin/activate beagle
 ```
 
 - Initialize the PostgreSQL database:
