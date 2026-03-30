@@ -45,7 +45,6 @@ app.conf.task_routes = {
     "runner.tasks.fail_job": {"queue": settings.BEAGLE_RUNNER_QUEUE},
     "notifier.tasks.send_notification": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "file_system.tasks.populate_job_group_notifier_metadata": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
-    "file_system.tasks.check_fastq_files": {"queue": settings.BEAGLE_CHECK_FILES_QUEUE},
     "beagle_etl.tasks.job_processor": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.process_smile_events": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.tasks.process_job_with_lock": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
@@ -93,11 +92,6 @@ app.conf.beat_schedule = {
         "task": "study.tasks.check_job_group_watcher",
         "schedule": settings.CHECK_JOB_TIMEOUTS,
         "options": {"queue": settings.BEAGLE_RUNNER_QUEUE},
-    },
-    "check_missing_files": {
-        "task": "file_system.tasks.check_fastq_files",
-        "schedule": crontab(day_of_week=1, hour=0, minute=0),
-        "options": {"queue": settings.BEAGLE_CHECK_FILES_QUEUE},
     },
     "check_staged_file_cleanup": {
         "task": "file_manager.tasks.check_for_clean_up",

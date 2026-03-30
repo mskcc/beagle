@@ -390,27 +390,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-  beagle_celery_check_files_queue:
-    <<: *beagle_celery
-    command:
-      - |
-        PIDFILE=/beagle/celery/beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE}.pid
-        [ -e $$PIDFILE ] && rm $$PIDFILE
-        echo 'Running check files queue worker...'
-
-        celery --workdir ${BEAGLE_PATH} \
-          -A beagle_etl worker \
-          -l info \
-          -Q ${BEAGLE_CHECK_FILES_QUEUE} \
-          -f /beagle/celery/logs/${BEAGLE_CHECK_FILES_QUEUE}.log \
-          --pidfile $$PIDFILE \
-          --concurrency=1 \
-          -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE}
-    healthcheck:
-      test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_CHECK_FILES_QUEUE} || exit 1"
-      interval: 30s
-      timeout: 10s
-      retries: 3
   beagle_celery_job_scheduler_queue:
     <<: *beagle_celery
     command:
