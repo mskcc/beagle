@@ -158,9 +158,10 @@ class SampleMetadata:
     tubeId: Optional[str] = None
     cfDNA2dBarcode: Optional[str] = None
     cmoInfoIgoId: Optional[str] = None
+    _skip_validation: bool = False  # Internal flag to skip validation
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "SampleMetadata":
+    def from_dict(cls, data: Dict[str, Any], skip_validation: bool = False) -> "SampleMetadata":
         """Deserialize SampleMetadata from dictionary."""
         # Handle nested status
         status_data = data.get("status", {})
@@ -216,10 +217,13 @@ class SampleMetadata:
             sampleAliases=sample_aliases,
             patientAliases=patient_aliases,
             additionalProperties=data.get("additionalProperties", {}),
+            _skip_validation=skip_validation,
         )
 
     def __post_init__(self):
         """Validate sample data after initialization."""
+        if self._skip_validation:
+            return
         self._validate_primary_id()
         self._validate_required_fields()
 

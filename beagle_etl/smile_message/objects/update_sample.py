@@ -74,6 +74,7 @@ class UpdateSample:
         smile_patient_id = patient_data.get("smilePatientId")
 
         # Handle sample metadata list - inject IDs if missing
+        # Skip validation for historical sample metadata in the list
         sample_metadata_list_data = data.get("sampleMetadataList", [])
         sample_metadata_list = []
         for sample_data in sample_metadata_list_data:
@@ -82,7 +83,7 @@ class UpdateSample:
                 sample_data["smileSampleId"] = smile_sample_id
             if "smilePatientId" not in sample_data and smile_patient_id:
                 sample_data["smilePatientId"] = smile_patient_id
-            sample_metadata_list.append(SampleMetadata.from_dict(sample_data))
+            sample_metadata_list.append(SampleMetadata.from_dict(sample_data, skip_validation=True))
 
         # Handle latest sample metadata - inject IDs if missing
         latest_sample_metadata_data = data.get("latestSampleMetadata", {})
