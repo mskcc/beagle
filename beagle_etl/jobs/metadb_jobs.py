@@ -467,7 +467,7 @@ def update_request_job(message_id):
         new_metadata = copy.deepcopy(f.metadata)
         new_metadata.update(request_update.request_metadata())
         try:
-            update_file_object(f.file, f.file.path, new_metadata, jgn_id)
+            update_file_object(f.file, f.file.original_path, new_metadata, jgn_id)
         except FailedToRegisterFileException as e:
             failed_samples.append(f.metadata[settings.SAMPLE_ID_METADATA_KEY])
 
@@ -563,7 +563,7 @@ def update_sample_job(message_id):
         file_removed_message = f"File {fi} removed from the Sample"
         message.add_log(file_removed_message)
         logger.warning(file_removed_message)
-        File.objects.filter(path=fi, file_group_id=settings.IMPORT_FILE_GROUP).delete()
+        File.objects.filter(original_path=fi, file_group_id=settings.IMPORT_FILE_GROUP).delete()
     message.complete(request_metadata) if update_completed else message.failed(request_metadata)
 
 
@@ -593,7 +593,7 @@ def update_file_object(file_object, path, metadata, job_group_notifier=None):
     file_ = FileRepository.get(file_object.id)
     ddiff = DeepDiff(file_.metadata, metadata, ignore_order=True)
     data = {
-        "path": path,
+        "path": file_.file.path,
         "metadata": metadata,
     }
     try:
