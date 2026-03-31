@@ -22,10 +22,10 @@ class ChronosCopyOutputOperatorV2(Operator):
             run = Run.objects.get(id=run_id)
             output_file_group = str(pipeline.output_file_group.id)
             metadata = self.construct_metadata(run)
-            name = f"Tempo Copy Output ({run.tags['ciTag']})"
+            name = f"Tempo Copy Output ({run.tags['cmoSampleName']})"
             input_json = {
                 "input": {
-                    "cmo_sample_name": run.tags["ciTag"],
+                    "cmo_sample_name": run.tags["cmoSampleName"],
                     "src": run.output_directory,
                     "dst": destination_directory,
                     "result_dir": destination_directory,
