@@ -169,6 +169,7 @@ DATABASES = {
         "HOST": DB_HOST,
         "PORT": DB_PORT,
         "DISABLE_SERVER_SIDE_CURSORS": True,
+        "CONN_MAX_AGE": 0,  # Close connections at the end of each request/task
     }
 }
 
