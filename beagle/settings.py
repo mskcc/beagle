@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import sys
 import ldap
 import json
 import datetime
@@ -18,6 +19,9 @@ from django_auth_ldap.config import LDAPSearch
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Detect if we're running tests
+TESTING = 'test' in sys.argv or 'pytest' in sys.modules
 
 
 # Quick-start development settings - unsuitable for production
