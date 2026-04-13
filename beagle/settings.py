@@ -21,7 +21,7 @@ from django_auth_ldap.config import LDAPSearch
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Detect if we're running tests
-TESTING = 'test' in sys.argv or 'pytest' in sys.modules
+TESTING = "test" in sys.argv or "pytest" in sys.modules
 
 
 # Quick-start development settings - unsuitable for production
