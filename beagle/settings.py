@@ -40,7 +40,6 @@ SESSION_COOKIE_NAME = os.environ.get("BEAGLE_COOKIE_SESSION_NAME", "beagle_prod_
 # Application definition
 
 INSTALLED_APPS = [
-    "elasticapm.contrib.django",
     "core.apps.CoreConfig",
     "runner.apps.RunnerConfig",
     "beagle_etl.apps.BeagleEtlConfig",
@@ -102,7 +101,6 @@ ELASTIC_APM = {
 }
 
 MIDDLEWARE = [
-    "elasticapm.contrib.django.middleware.TracingMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
