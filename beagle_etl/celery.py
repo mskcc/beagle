@@ -4,7 +4,8 @@ from celery import Celery
 from celery.schedules import crontab
 from django.conf import settings
 from celery.app.log import TaskFormatter
-from celery.signals import after_setup_task_logger, worker_ready
+from celery.signals import after_setup_task_logger, worker_ready, task_prerun, task_postrun
+from django.db import connection
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beagle.settings")
@@ -105,3 +106,19 @@ app.conf.beat_schedule = {
         "options": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
     },
 }
+
+
+# Close database connections before and after each task to prevent stale connections
+# Only do this in Celery workers, not during tests or regular Django operations
+@task_prerun.connect
+def close_db_connection_before_task(**kwargs):
+    """Close database connection before task starts"""
+    if not settings.TESTING:
+        connection.close()
+
+
+@task_postrun.connect
+def close_db_connection_after_task(**kwargs):
+    """Close database connection after task completes"""
+    if not settings.TESTING:
+        connection.close()
