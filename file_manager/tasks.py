@@ -57,7 +57,7 @@ def clean_up_file(clean_up_file_job_id):
     file_path = clean_up_file_job.file_object.path
     try:
         if file_path == clean_up_file_job.original_path:
-            logger.error(f"Shouldn't happen if file is staged {file_path}")
+            logger.error(f"File is not staged {file_path}. Skip cleanup to avoid deleting original file!")
             return
         elif os.path.exists(file_path):
             os.remove(file_path)
