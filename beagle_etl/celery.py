@@ -108,17 +108,10 @@ app.conf.beat_schedule = {
 }
 
 
-# Close database connections before and after each task to prevent stale connections
+# Close database connections after each task to prevent stale connections
 # Only do this in Celery workers, not during tests or regular Django operations
-@task_prerun.connect
-def close_db_connection_before_task(**kwargs):
-    """Close database connection before task starts"""
-    if not settings.TESTING:
-        connection.close()
-
-
 @task_postrun.connect
 def close_db_connection_after_task(**kwargs):
-    """Close database connection after task completes"""
+    """Close database connection after task completes to prevent connection leaks"""
     if not settings.TESTING:
         connection.close()
