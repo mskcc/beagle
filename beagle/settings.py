@@ -174,6 +174,7 @@ DATABASES = {
         "PORT": DB_PORT,
         "DISABLE_SERVER_SIDE_CURSORS": True,
         "CONN_MAX_AGE": 0,  # Close connections at the end of each request/task
+        "CONN_HEALTH_CHECKS": True,  # Check connection health before using it
     }
 }
 
