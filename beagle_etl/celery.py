@@ -4,7 +4,8 @@ from celery import Celery
 from celery.schedules import crontab
 from django.conf import settings
 from celery.app.log import TaskFormatter
-from celery.signals import after_setup_task_logger
+from celery.signals import after_setup_task_logger, task_prerun, task_postrun
+from django.db import close_old_connections
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beagle.settings")
@@ -105,3 +106,24 @@ app.conf.beat_schedule = {
         "options": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
     },
 }
+
+
+# For Django 2.2: Handle stale database connections in Celery workers
+# close_old_connections() checks if connections are usable and closes stale ones
+# Django will automatically reconnect on next database access
+@task_prerun.connect
+def close_stale_connections_before_task(**kwargs):
+    """
+    Close stale database connections before each task runs.
+    This prevents 'connection already closed' errors.
+    """
+    close_old_connections()
+
+
+@task_postrun.connect
+def close_stale_connections_after_task(**kwargs):
+    """
+    Close stale database connections after each task completes.
+    This ensures connections don't stay open too long between tasks.
+    """
+    close_old_connections()
