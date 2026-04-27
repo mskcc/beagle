@@ -144,7 +144,7 @@ def build_sample(data, ignore_sample_formatting=False):
         bait_set = meta["baitSet"]
         tumor_type = meta["tumorOrNormal"]
         specimen_type = meta[settings.SAMPLE_CLASS_METADATA_KEY]
-        sample_origin = meta["sampleOrigin"]
+        sample_origin = meta.get("sampleOrigin", "")
         species = meta["species"]
         cmo_sample_name = format_sample_name(
             meta[settings.CMO_SAMPLE_NAME_METADATA_KEY], specimen_type, ignore_sample_formatting
