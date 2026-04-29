@@ -66,7 +66,6 @@ INSTALLED_APPS = [
     "drf_multiple_model",
     "drf_yasg",
     "advanced_filters",
-    "ddtrace.contrib.django",
     "smile_client",
     "django_celery_results",
 ]
@@ -166,7 +165,7 @@ DB_PORT = os.environ.get("BEAGLE_DB_PORT", 5432)
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": DB_NAME,
         "USER": DB_USERNAME,
         "PASSWORD": DB_PASSWORD,

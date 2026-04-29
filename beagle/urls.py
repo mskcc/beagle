@@ -15,8 +15,7 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.conf.urls import url
-from django.urls import path, include
+from django.urls import path, include, re_path
 from beagle import __version__
 from core.views import (
     BeagleTokenObtainPairView,
@@ -47,9 +46,9 @@ admin.site.site_title = "Voyager"
 admin.site.index_title = "Beagle Administration"
 
 urlpatterns = [
-    url(r"^$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
-    url(r"^swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json"),
-    url(r"^advanced_filters/", include("advanced_filters.urls")),
+    re_path(r"^$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+    re_path(r"^swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json"),
+    re_path(r"^advanced_filters/", include("advanced_filters.urls")),
     path("", include(router.urls)),
     path("v0/fs/", include("file_system.urls")),
     path("v0/run/", include("runner.urls")),

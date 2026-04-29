@@ -27,11 +27,11 @@ from runner.views.pipeline_view import PipelineViewSet, PipelineResolveViewSet, 
 router = routers.DefaultRouter()
 router.register("pipelines", PipelineViewSet)
 router.register("runs", RunViewSet)
-router.register("samples", RunSamplesViewSet)
+router.register("samples", RunSamplesViewSet, basename="run-samples")
 router.register("port", PortViewSet)
-router.register("api", RunApiViewSet)
+router.register("api", RunApiViewSet, basename="run-api")
 router.register("operator/latest", OperatorSamplesLatestViewSet)
-router.register("operator/all", OperatorSamplesAllViewSet)
+router.register("operator/all", OperatorSamplesAllViewSet, "operator-samples-all")
 router.register("operator-errors", OperatorErrorViewSet)
 
 
