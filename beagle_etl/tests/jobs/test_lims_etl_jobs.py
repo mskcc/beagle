@@ -526,7 +526,7 @@ class TestImportSample(APITestCase):
         # Test finding single operator in request_callback via fastq_metadata
         operators = fetch_operators_wfastq(file_metadata.metadata)
         self.assertEqual(operators[0].id, 11)
-        self.assertEquals(operators[0].slug, "Operator1")
+        self.assertEqual(operators[0].slug, "Operator1")
 
         #  Test finding multiple operator in request_callback via fastq_metadata
         operator2 = Operator.objects.create(
