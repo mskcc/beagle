@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.13-slim
 
 LABEL org.opencontainers.image.vendor="MSKCC" \
       org.opencontainers.image.authors="Nikhil Kumar (kumarn1@mskcc.org)" \
