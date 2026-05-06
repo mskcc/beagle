@@ -29,7 +29,7 @@ asyncio-nats-client==0.11.5
 nats-py==2.10.0
 django-advanced-filters==2.0.0
 sbpack==2022.3.16
-ddtrace==4.7.1
+ddtrace==3.13.0
 python-dateutil==2.9.0
 ipython==8.37.0
 smile_client @ git+https://github.com/mskcc/smile-client.git@feature/django_upgrade

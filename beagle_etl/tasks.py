@@ -11,7 +11,7 @@ from beagle_etl.jobs.metadb_jobs import (
     request_callback,
 )
 from lib.memcache_lock import memcache_task_lock
-from ddtrace import tracer
+from ddtrace.trace import tracer
 from django.db.models import Case, When, IntegerField
 
 
