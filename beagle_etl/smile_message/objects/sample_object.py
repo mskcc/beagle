@@ -137,9 +137,7 @@ class SampleMetadata:
     species: str
     sex: str
     tumorOrNormal: str
-    preservation: str
     sampleClass: str
-    sampleOrigin: str
     tissueLocation: str
     genePanel: str
     baitSet: str
@@ -152,6 +150,8 @@ class SampleMetadata:
     sampleAliases: List[SampleAlias]
     patientAliases: List[PatientAlias]
     additionalProperties: Dict[str, str]
+    preservation: Optional[str] = None
+    sampleOrigin: Optional[str] = None
     igoRequestId: Optional[str] = None
     oncotreeCode: Optional[str] = None
     collectionYear: Optional[str] = None
@@ -389,7 +389,6 @@ class SampleMetadata:
             "cmoSampleName": self.cmoSampleName,
             "sampleType": self.sampleType,
             "tumorOrNormal": self.tumorOrNormal,
-            "preservation": self.preservation,
             "sampleClass": self.sampleClass,
             "genePanel": self.genePanel,
             "baitSet": self.baitSet,
@@ -400,6 +399,15 @@ class SampleMetadata:
                 raise MissingDataException(
                     f"Required field '{field_name}' is missing or empty for sample {self.primaryId}"
                 )
+
+        # At least one of preservation or sampleOrigin must be present
+        preservation_empty = not self.preservation or self.preservation.strip() == ""
+        sample_origin_empty = not self.sampleOrigin or self.sampleOrigin.strip() == ""
+
+        if preservation_empty and sample_origin_empty:
+            raise MissingDataException(
+                f"At least one of 'preservation' or 'sampleOrigin' must be provided for sample {self.primaryId}"
+            )
 
     def is_cmo_sample(self) -> bool:
         """
