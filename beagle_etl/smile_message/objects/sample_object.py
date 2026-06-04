@@ -166,6 +166,19 @@ PANEL_REQUIRED_FIELDS = {
             "genePanel",
         }
     ),
+    "HC_ACCESS-Heme": set(
+        {
+            "smileSampleId",
+            "smilePatientId",
+            "primaryId",
+            "cmoPatientId",
+            "sampleName",
+            "cmoSampleName",
+            "sampleType",
+            "tumorOrNormal",
+            "genePanel",
+        }
+    ),
 }
 
 
