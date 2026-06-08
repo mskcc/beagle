@@ -113,10 +113,26 @@ class HemeNucleoQcAggOperator(Operator):
         directory_list = []
         for single_run in run_list:
             port = Port.objects.get(name=port_input, run=single_run.pk)
-            directory_folder = self.process_listing(port.value["listing"], directory_name)["listing"][0]
-            if not directory_folder:
+            category_dir = self.process_listing(port.value["listing"], directory_name)
+            if not category_dir:
                 raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
-            directory_list.append(directory_folder)
+
+            if directory_name == "athena_coverage_report_dir":
+                # Athena is not guaranteed to produce output for every sample (e.g. when coverage
+                # is too low). When it does not run, the category directory is created but only
+                # contains a .config/matplotlib side-effect directory. Identify the expected
+                # per-sample subdirectory by name; also treat an empty sample directory as missing
+                # output. Emit None so the CWL put_in_dir tool skips it.
+                sample_name = single_run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
+                directory_folder = self.process_listing(category_dir.get("listing", []), sample_name)
+                if not directory_folder or not directory_folder.get("listing"):
+                    directory_folder = None
+                directory_list.append(directory_folder)
+            else:
+                directory_folder = category_dir["listing"][0]
+                if not directory_folder:
+                    raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
+                directory_list.append(directory_folder)
         return directory_list
 
     def get_file_ports(self, run_list, port_input, file_regex):
@@ -159,7 +175,7 @@ class HemeNucleoQcAggOperator(Operator):
         job["samples_json"] = samples_json_content
 
         input_file = template.render(**job)
-        input_file = input_file.replace("'", '"')
+        input_file = input_file.replace("'", '"').replace("None", "null")
         sample_input = json.loads(input_file)
         return sample_input
 
