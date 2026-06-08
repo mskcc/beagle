@@ -3,9 +3,8 @@ from django.shortcuts import render, redirect
 from django.urls import path
 from django.contrib import messages
 from django.conf import settings
-from celery import chord
 from .models import SampleProviderJob, FileProviderJob, CleanupFileJob, FileProviderStatus
-from file_manager.file_manager import FileManager
+from file_manager.tasks import stage_samples_job
 
 
 @admin.register(SampleProviderJob)
@@ -68,38 +67,15 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
                 )
 
             try:
-                file_manager = FileManager(file_group=file_group)
-                staged_samples = []
-                total_files_staged = 0
+                # Offload the staging work to a Celery worker so the request
+                # returns immediately instead of blocking the UI.
+                stage_samples_job.delay(sample_ids, file_group)
 
-                for sample_id in sample_ids:
-                    try:
-                        sample_job, task_sigs = file_manager.stage_sample(sample_id)
-
-                        if sample_job.total_files > 0:
-                            if task_sigs:
-                                # Execute each task individually
-                                for task in task_sigs:
-                                    task.delay()
-                                staged_samples.append(f"{sample_id} ({len(task_sigs)} files)")
-                                total_files_staged += len(task_sigs)
-                            else:
-                                messages.warning(
-                                    request,
-                                    f"Sample {sample_id} has {sample_job.total_files} files to stage, "
-                                    f"but no tasks were created (files may already be staging)",
-                                )
-                        else:
-                            messages.info(request, f"No files need staging for sample {sample_id}")
-                    except Exception as e:
-                        messages.error(request, f"Error staging sample {sample_id}: {str(e)}")
-
-                if staged_samples:
-                    messages.success(
-                        request,
-                        f"Successfully staged {total_files_staged} files for {len(staged_samples)} sample(s): "
-                        f"{', '.join(staged_samples)}",
-                    )
+                messages.success(
+                    request,
+                    f"Staging started in the background for {len(sample_ids)} sample(s): "
+                    f"{', '.join(sample_ids)}. Refresh this page to track progress.",
+                )
 
                 # Redirect to the job list
                 return redirect("admin:file_manager_sampleproviderjob_changelist")
@@ -107,7 +83,7 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
             except Exception as e:
                 import traceback
 
-                messages.error(request, f"Error staging files: {str(e)}\n{traceback.format_exc()}")
+                messages.error(request, f"Error starting staging: {str(e)}\n{traceback.format_exc()}")
 
         return render(
             request,

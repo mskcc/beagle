@@ -54,6 +54,7 @@ app.conf.task_routes = {
     "beagle_etl.jobs.metadb_jobs.not_supported": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.request_callback": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
     "beagle_etl.jobs.metadb_jobs.calculate_checksum": {"queue": settings.BEAGLE_DEFAULT_QUEUE},
+    "file_manager.tasks.stage_samples_job": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
     "file_manager.tasks.stage_file_job": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
     "file_manager.tasks.check_for_clean_up": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
     "file_manager.tasks.clean_up_file": {"queue": settings.BEAGLE_FILE_MANAGER_QUEUE},
