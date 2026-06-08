@@ -121,9 +121,12 @@ class HemeNucleoQcAggOperator(Operator):
                 # Athena is not guaranteed to produce output for every sample (e.g. when coverage
                 # is too low). When it does not run, the category directory is created but only
                 # contains a .config/matplotlib side-effect directory. Identify the expected
-                # per-sample subdirectory by name; emit None so the CWL put_in_dir tool skips it.
+                # per-sample subdirectory by name; also treat an empty sample directory as missing
+                # output. Emit None so the CWL put_in_dir tool skips it.
                 sample_name = single_run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
                 directory_folder = self.process_listing(category_dir.get("listing", []), sample_name)
+                if not directory_folder or not directory_folder.get("listing"):
+                    directory_folder = None
                 directory_list.append(directory_folder)
             else:
                 directory_folder = category_dir["listing"][0]

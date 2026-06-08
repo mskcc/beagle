@@ -128,9 +128,12 @@ class CMOCHNucleoOperatorQcAgg(Operator):
                 # Athena is not guaranteed to produce output for every sample. When it does not
                 # run, the category directory exists but only contains a .config/matplotlib
                 # side-effect directory. Look up the per-sample subdirectory by name so we
-                # never pick up the side-effect dir; emit None so the CWL put_in_dir tool skips it.
+                # never pick up the side-effect dir; also treat an empty sample directory as
+                # missing output. Emit None so the CWL put_in_dir tool skips it.
                 sample_name = single_run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
                 directory_folder = self.process_listing(directory_port.get("listing", []), sample_name)
+                if not directory_folder or not directory_folder.get("listing"):
+                    directory_folder = None
                 directory_list.append(directory_folder)
             else:
                 if directory_port["listing"]:
