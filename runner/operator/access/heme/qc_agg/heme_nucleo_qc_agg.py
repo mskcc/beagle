@@ -190,7 +190,7 @@ class HemeNucleoQcAggOperator(Operator):
             for file in sample_listing:
                 file_path = file["location"]
                 if file_path.endswith(ending):
-                    matching_files.append(self.create_cwl_file_object_no_iris(file_path))
+                    matching_files.append(self.create_cwl_file_object_on_iris(file_path))
         return matching_files
 
     def create_sample_json(self, runs):
