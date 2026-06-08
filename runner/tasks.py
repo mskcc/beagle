@@ -45,7 +45,14 @@ logger = logging.getLogger("django")
 
 
 def stage_files_for_operator(
-    operator, request_id=None, pairing=None, job_group_id=None, job_group_notifier_id=None, parent=None, notify=False
+    operator,
+    request_id=None,
+    pairing=None,
+    file_group_id=None,
+    job_group_id=None,
+    job_group_notifier_id=None,
+    parent=None,
+    notify=False,
 ):
     staging_tasks = []
     try:
@@ -62,6 +69,7 @@ def stage_files_for_operator(
             operator_id=operator,
             request_id=request_id,
             pairing=pairing,
+            file_group_id=file_group_id,
             job_group_id=job_group_id,
             job_group_notifier_id=job_group_notifier_id,
             parent=parent,
@@ -75,6 +83,7 @@ def stage_files_for_operator(
             operator_id=operator,
             request_id=request_id,
             pairing=pairing,
+            file_group_id=file_group_id,
             job_group_id=job_group_id,
             job_group_notifier_id=job_group_notifier_id,
             parent=parent,
@@ -88,6 +97,7 @@ def create_operator_run_from_jobs(
     request_id=None,
     pairing=None,
     run_ids=None,
+    file_group_id=None,
     job_group_id=None,
     job_group_notifier_id=None,
     parent=None,
@@ -97,6 +107,7 @@ def create_operator_run_from_jobs(
     operator_model = Operator.objects.get(id=operator_id)
     operator = OperatorFactory.get_by_model(
         operator_model,
+        file_group=file_group_id,
         job_group_id=job_group_id,
         job_group_notifier_id=job_group_notifier_id,
         request_id=request_id,
@@ -284,7 +295,7 @@ def stage_files(request_id=None, pairing=None, job_group_id=None):
 @shared_task
 @tracer.wrap(service="beagle")
 def create_jobs_from_request(
-    request_id, operator_id, job_group_id, job_group_notifier_id=None, pipeline=None, file_group=None, notify=False
+    request_id, operator_id, job_group_id, job_group_notifier_id=None, file_group=None, pipeline=None, notify=False
 ):
     current_span = tracer.current_span()
     current_span.set_tag("request.id", request_id)
@@ -337,6 +348,7 @@ def create_jobs_from_request(
         job_group_id=job_group_id,
         job_group_notifier_id=job_group_notifier_id,
         notify=notify,
+        file_group_id=file_group,
     )
 
 
@@ -369,10 +381,10 @@ def create_jobs_from_pairs(
     operator = OperatorFactory.get_by_model(
         operator_model,
         pairing={"pairs": pairs},
+        file_group=file_group_id,
         job_group_id=job_group_id,
         job_group_notifier_id=job_group_notifier_id,
         request_id=request_id,
-        file_group=file_group_id,
         output_directory_prefix=output_directory_prefix,
     )
 
@@ -383,6 +395,7 @@ def create_jobs_from_pairs(
         pairing={"pairs": pairs},
         job_group_id=job_group_id,
         job_group_notifier_id=job_group_notifier_id,
+        file_group_id=file_group_id,
     )
 
 
