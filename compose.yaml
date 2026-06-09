@@ -24,6 +24,7 @@ x-beagle_celery: &beagle_celery
     - BEAGLE_RABBITMQ_PORT=5672
     - BEAGLE_LOG_PATH=/beagle/celery/logs/django_server.log
     - BEAGLE_URL=http://$BEAGLE_HOST:$BEAGLE_PORT
+    - BEAGLE_FILE_MANAGER_CONCURRENCY=${BEAGLE_FILE_MANAGER_CONCURRENCY:-20}
   volumes:
     - /ifs:/ifs
     - logs_path:/beagle/celery/logs/
@@ -457,7 +458,7 @@ services:
           -Q ${BEAGLE_FILE_MANAGER_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_FILE_MANAGER_QUEUE}.log \
           --pidfile $$PIDFILE \
-          --concurrency=30 \
+          --concurrency=${BEAGLE_FILE_MANAGER_CONCURRENCY} \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE}
     healthcheck:
       test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE} || exit 1"
