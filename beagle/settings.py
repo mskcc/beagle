@@ -265,6 +265,17 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERYD_CONCURRENCY = 1
 CELERY_EVENT_QUEUE_PREFIX = os.environ.get("BEAGLE_CELERY_QUEUE_PREFIX", "beagle.production")
 
+# Long-running tasks (e.g. large file copies) can run for hours. To keep them from
+# being interrupted, and to avoid tripping RabbitMQ's consumer acknowledgement
+# timeout (raised to 24h in conf/rabbitmq.conf):
+#   - prefetch one message at a time so a worker never holds unacked, prefetched
+#     messages while it is busy with a long task;
+#   - acknowledge late so a copy is redelivered (not lost) if a worker dies, and
+#     reject-on-worker-lost so an abruptly killed worker's task is requeued.
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_ACKS_LATE = True
+CELERY_TASK_REJECT_ON_WORKER_LOST = True
+
 LIMS_USERNAME = os.environ.get("BEAGLE_LIMS_USERNAME")
 LIMS_PASSWORD = os.environ.get("BEAGLE_LIMS_PASSWORD")
 ETL_USER = os.environ.get("BEAGLE_ETL_USER")

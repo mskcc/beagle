@@ -3,7 +3,9 @@ from django.shortcuts import render, redirect
 from django.urls import path
 from django.contrib import messages
 from django.conf import settings
+from django.http import JsonResponse
 from .models import SampleProviderJob, FileProviderJob, CleanupFileJob, FileProviderStatus
+from .dashboard import build_dashboard_payload
 from file_manager.tasks import stage_samples_job
 
 
@@ -32,8 +34,27 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         custom_urls = [
             path("stage-sample/", self.admin_site.admin_view(self.stage_sample_view), name="file_manager_stage_sample"),
+            path("dashboard/", self.admin_site.admin_view(self.dashboard_view), name="file_manager_dashboard"),
+            path(
+                "dashboard/status/",
+                self.admin_site.admin_view(self.dashboard_status_view),
+                name="file_manager_dashboard_status",
+            ),
         ]
         return custom_urls + urls
+
+    def dashboard_view(self, request):
+        """Render the live staging dashboard page."""
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Live Staging Dashboard",
+            "status_url": "status/",
+        }
+        return render(request, "admin/file_manager/staging_dashboard.html", context)
+
+    def dashboard_status_view(self, request):
+        """Return the current staging status as JSON for the dashboard to poll."""
+        return JsonResponse(build_dashboard_payload())
 
     def stage_sample_view(self, request):
         """Admin view to manually stage files for multiple samples"""
@@ -105,6 +126,7 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
 class FileProviderJobAdmin(admin.ModelAdmin):
     list_display = (
         "file_object",
+        "sample_job",
         "status",
         "original_path_short",
         "staged_path_short",
@@ -112,9 +134,9 @@ class FileProviderJobAdmin(admin.ModelAdmin):
         "modified_date",
     )
     list_filter = ("status", "created_date", "modified_date")
-    search_fields = ("original_path", "staged_path", "file_object__file_name")
+    search_fields = ("original_path", "staged_path", "file_object__file_name", "sample_job__sample_id")
     readonly_fields = ("id", "created_date", "modified_date")
-    raw_id_fields = ("file_object",)
+    raw_id_fields = ("file_object", "sample_job")
 
     def original_path_short(self, obj):
         return obj.original_path[-50:] if len(obj.original_path) > 50 else obj.original_path

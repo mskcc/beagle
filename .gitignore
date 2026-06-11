@@ -20,3 +20,6 @@ Miniconda3*
 *.db
 static/
 .env
+
+# Brainstorm visual companion artifacts
+.superpowers/

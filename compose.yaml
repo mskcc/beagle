@@ -233,6 +233,10 @@ services:
     volumes:
       - rabbitmq_path:/var/lib/rabbitmq/
       - logs_path:/var/log/rabbitmq/
+      # Drop-in conf (consumer_timeout, logging) from the host config directory
+      # (BEAGLE_RABBITMQ_CONF_DIR). conf.d is merged on top of the image's
+      # generated config, so RABBITMQ_DEFAULT_USER/PASS still apply.
+      - ${BEAGLE_RABBITMQ_CONF_DIR:-./conf}/rabbitmq.conf:/etc/rabbitmq/conf.d/20-beagle.conf:ro
     ports:
       - ${BEAGLE_RABBITMQ_MANAGEMENT_PORT}:15672
       - ${BEAGLE_RABBITMQ_PORT}:5672

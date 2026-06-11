@@ -75,9 +75,11 @@ class SampleProviderJob(BaseModel):
 
 
 class FileProviderManager(models.Manager):
-    def provide_file(self, file_object, original_path, staged_path):
+    def provide_file(self, file_object, original_path, staged_path, sample_job=None):
         """
         Create a FileProviderJob for the given file, preventing duplicates.
+        ``sample_job`` may be a SampleProviderJob instance or its id; it links the
+        file job to the sample so the staging dashboard can group files by sample.
         Returns (job, created) tuple.
         """
         with transaction.atomic():
@@ -96,16 +98,29 @@ class FileProviderManager(models.Manager):
             if existing:
                 return existing, False
 
-            job = FileProviderJob.objects.create(
-                file_object=file_object,
-                original_path=original_path,
-                staged_path=staged_path,
-            )
+            create_kwargs = {
+                "file_object": file_object,
+                "original_path": original_path,
+                "staged_path": staged_path,
+            }
+            if isinstance(sample_job, SampleProviderJob):
+                create_kwargs["sample_job"] = sample_job
+            elif sample_job is not None:
+                create_kwargs["sample_job_id"] = sample_job
+
+            job = FileProviderJob.objects.create(**create_kwargs)
             return job, True
 
 
 class FileProviderJob(BaseModel):
     file_object = models.ForeignKey(File, null=True, on_delete=models.CASCADE)
+    sample_job = models.ForeignKey(
+        SampleProviderJob,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="file_jobs",
+    )
     original_path = models.CharField(max_length=1500, db_index=True)
     staged_path = models.CharField(max_length=1500, db_index=True)
     status = models.IntegerField(
