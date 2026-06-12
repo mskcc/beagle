@@ -31,7 +31,7 @@ router.register("samples", RunSamplesViewSet, basename="run-samples")
 router.register("port", PortViewSet)
 router.register("api", RunApiViewSet, basename="run-api")
 router.register("operator/latest", OperatorSamplesLatestViewSet)
-router.register("operator/all", OperatorSamplesAllViewSet, "operator-samples-all")
+router.register("operator/all", OperatorSamplesAllViewSet, basename="operator-samples-all")
 router.register("operator-errors", OperatorErrorViewSet)
 
 
