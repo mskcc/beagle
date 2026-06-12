@@ -3,9 +3,10 @@ from django.shortcuts import render, redirect
 from django.urls import path
 from django.contrib import messages
 from django.conf import settings
-from celery import chord
+from django.http import JsonResponse
 from .models import SampleProviderJob, FileProviderJob, CleanupFileJob, FileProviderStatus
-from file_manager.file_manager import FileManager
+from .dashboard import build_dashboard_payload
+from file_manager.tasks import stage_samples_job
 
 
 @admin.register(SampleProviderJob)
@@ -33,8 +34,27 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         custom_urls = [
             path("stage-sample/", self.admin_site.admin_view(self.stage_sample_view), name="file_manager_stage_sample"),
+            path("dashboard/", self.admin_site.admin_view(self.dashboard_view), name="file_manager_dashboard"),
+            path(
+                "dashboard/status/",
+                self.admin_site.admin_view(self.dashboard_status_view),
+                name="file_manager_dashboard_status",
+            ),
         ]
         return custom_urls + urls
+
+    def dashboard_view(self, request):
+        """Render the live staging dashboard page."""
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Live Staging Dashboard",
+            "status_url": "status/",
+        }
+        return render(request, "admin/file_manager/staging_dashboard.html", context)
+
+    def dashboard_status_view(self, request):
+        """Return the current staging status as JSON for the dashboard to poll."""
+        return JsonResponse(build_dashboard_payload())
 
     def stage_sample_view(self, request):
         """Admin view to manually stage files for multiple samples"""
@@ -68,38 +88,15 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
                 )
 
             try:
-                file_manager = FileManager(file_group=file_group)
-                staged_samples = []
-                total_files_staged = 0
+                # Offload the staging work to a Celery worker so the request
+                # returns immediately instead of blocking the UI.
+                stage_samples_job.delay(sample_ids, file_group)
 
-                for sample_id in sample_ids:
-                    try:
-                        sample_job, task_sigs = file_manager.stage_sample(sample_id)
-
-                        if sample_job.total_files > 0:
-                            if task_sigs:
-                                # Execute each task individually
-                                for task in task_sigs:
-                                    task.delay()
-                                staged_samples.append(f"{sample_id} ({len(task_sigs)} files)")
-                                total_files_staged += len(task_sigs)
-                            else:
-                                messages.warning(
-                                    request,
-                                    f"Sample {sample_id} has {sample_job.total_files} files to stage, "
-                                    f"but no tasks were created (files may already be staging)",
-                                )
-                        else:
-                            messages.info(request, f"No files need staging for sample {sample_id}")
-                    except Exception as e:
-                        messages.error(request, f"Error staging sample {sample_id}: {str(e)}")
-
-                if staged_samples:
-                    messages.success(
-                        request,
-                        f"Successfully staged {total_files_staged} files for {len(staged_samples)} sample(s): "
-                        f"{', '.join(staged_samples)}",
-                    )
+                messages.success(
+                    request,
+                    f"Staging started in the background for {len(sample_ids)} sample(s): "
+                    f"{', '.join(sample_ids)}. Refresh this page to track progress.",
+                )
 
                 # Redirect to the job list
                 return redirect("admin:file_manager_sampleproviderjob_changelist")
@@ -107,7 +104,7 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
             except Exception as e:
                 import traceback
 
-                messages.error(request, f"Error staging files: {str(e)}\n{traceback.format_exc()}")
+                messages.error(request, f"Error starting staging: {str(e)}\n{traceback.format_exc()}")
 
         return render(
             request,
@@ -129,6 +126,7 @@ class SampleProviderJobAdmin(admin.ModelAdmin):
 class FileProviderJobAdmin(admin.ModelAdmin):
     list_display = (
         "file_object",
+        "sample_job",
         "status",
         "original_path_short",
         "staged_path_short",
@@ -136,9 +134,9 @@ class FileProviderJobAdmin(admin.ModelAdmin):
         "modified_date",
     )
     list_filter = ("status", "created_date", "modified_date")
-    search_fields = ("original_path", "staged_path", "file_object__file_name")
+    search_fields = ("original_path", "staged_path", "file_object__file_name", "sample_job__sample_id")
     readonly_fields = ("id", "created_date", "modified_date")
-    raw_id_fields = ("file_object",)
+    raw_id_fields = ("file_object", "sample_job")
 
     def original_path_short(self, obj):
         return obj.original_path[-50:] if len(obj.original_path) > 50 else obj.original_path

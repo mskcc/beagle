@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.postgres",
     "django_extensions",
     "import_export",
     "rangefilter",
@@ -66,7 +67,6 @@ INSTALLED_APPS = [
     "drf_multiple_model",
     "drf_yasg",
     "advanced_filters",
-    "ddtrace.contrib.django",
     "smile_client",
     "django_celery_results",
 ]
@@ -95,6 +95,7 @@ SIMPLE_JWT = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -166,7 +167,7 @@ DB_PORT = os.environ.get("BEAGLE_DB_PORT", 5432)
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": DB_NAME,
         "USER": DB_USERNAME,
         "PASSWORD": DB_PASSWORD,
@@ -263,6 +264,17 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERYD_CONCURRENCY = 1
 CELERY_EVENT_QUEUE_PREFIX = os.environ.get("BEAGLE_CELERY_QUEUE_PREFIX", "beagle.production")
+
+# Long-running tasks (e.g. large file copies) can run for hours. To keep them from
+# being interrupted, and to avoid tripping RabbitMQ's consumer acknowledgement
+# timeout (raised to 24h in conf/rabbitmq.conf):
+#   - prefetch one message at a time so a worker never holds unacked, prefetched
+#     messages while it is busy with a long task;
+#   - acknowledge late so a copy is redelivered (not lost) if a worker dies, and
+#     reject-on-worker-lost so an abruptly killed worker's task is requeued.
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_ACKS_LATE = True
+CELERY_TASK_REJECT_ON_WORKER_LOST = True
 
 LIMS_USERNAME = os.environ.get("BEAGLE_LIMS_USERNAME")
 LIMS_PASSWORD = os.environ.get("BEAGLE_LIMS_PASSWORD")

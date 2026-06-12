@@ -57,7 +57,9 @@ class FileManager(object):
         if not file_obj.is_available:
             new_path = CopyService.remap(gene_panel, file_obj.path)
             if new_path != file_obj.path:
-                fp_job, created = FileProviderJob.objects.provide_file(file_obj, file_obj.path, new_path)
+                fp_job, created = FileProviderJob.objects.provide_file(
+                    file_obj, file_obj.path, new_path, sample_job=sample_job
+                )
                 if created:
                     # Return signature for chord
                     return stage_file_job.si(str(fp_job.id), sample_job)
