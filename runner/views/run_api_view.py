@@ -293,8 +293,8 @@ class RunApiRestartViewSet(GenericAPIView):
         o.save()
 
         for r in runs_to_copy_over:
-            ports = r.port_set.all()
-            samples = r.samples.all()
+            ports = list(r.port_set.all())
+            samples = list(r.samples.all())
             r.pk = None
             r.operator_run_id = o.pk
             r.save()
@@ -309,8 +309,8 @@ class RunApiRestartViewSet(GenericAPIView):
 
         for r in runs_to_restart:
             original_run_id = r.id
-            ports = r.port_set.all()
-            samples = r.samples.all()
+            ports = list(r.port_set.all())
+            samples = list(r.samples.all())
             r.pk = None
             r.operator_run_id = o.pk
             r.reset_counters()

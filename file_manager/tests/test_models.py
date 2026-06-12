@@ -107,6 +107,39 @@ class FileProviderJobTest(TestCase):
                 staged_path="/staged/path2/test.fastq",
             )
 
+    def test_provide_file_links_sample_job(self):
+        """provide_file persists the owning SampleProviderJob on the FileProviderJob"""
+        sample_job = SampleProviderJob.objects.create(sample_id="Sample_001")
+        job, created = FileProviderJob.objects.provide_file(
+            self.file,
+            "/original/path/test.fastq",
+            "/staged/path/test.fastq",
+            sample_job=sample_job,
+        )
+        self.assertTrue(created)
+        self.assertEqual(job.sample_job, sample_job)
+        self.assertIn(job, sample_job.file_jobs.all())
+
+    def test_provide_file_accepts_sample_job_id(self):
+        """provide_file accepts a sample job id (as passed from the Celery flow)"""
+        sample_job = SampleProviderJob.objects.create(sample_id="Sample_002")
+        job, created = FileProviderJob.objects.provide_file(
+            self.file,
+            "/original/path/test.fastq",
+            "/staged/path/test.fastq",
+            sample_job=str(sample_job.id),
+        )
+        self.assertEqual(job.sample_job, sample_job)
+
+    def test_provide_file_without_sample_job(self):
+        """sample_job is optional; legacy callers still work"""
+        job, created = FileProviderJob.objects.provide_file(
+            self.file,
+            "/original/path/test.fastq",
+            "/staged/path/test.fastq",
+        )
+        self.assertIsNone(job.sample_job)
+
 
 class CleanupFileJobTest(TestCase):
     def setUp(self):

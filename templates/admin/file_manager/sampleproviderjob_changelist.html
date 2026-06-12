@@ -4,6 +4,11 @@
 {% block object-tools-items %}
     {{ block.super }}
     <li>
+        <a href="{% url 'admin:file_manager_dashboard' %}">
+            Live Dashboard
+        </a>
+    </li>
+    <li>
         <a href="{% url 'admin:file_manager_stage_sample' %}" class="addlink">
             Stage Sample Files
         </a>

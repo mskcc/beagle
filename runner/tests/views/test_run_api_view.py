@@ -41,7 +41,7 @@ class TestRunAPIList(APITestCase):
     ]
 
     def setUp(self):
-        self.api_root = reverse("run-list")
+        self.api_root = reverse("run-api-list")
         admin_user = User.objects.create_superuser("admin", "sample_email", "password")
         self.client.force_authenticate(user=admin_user)
 
