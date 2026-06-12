@@ -123,11 +123,24 @@ class AccessV2NucleoQcAggOperator(Operator):
             directory_port = self.process_listing(port.value["listing"], directory_name)
             if not directory_port:
                 raise Exception("Run {} does not have the folder {}".format(single_run.pk, directory_name))
-            if directory_port["listing"]:
-                directory_folder = directory_port["listing"][0]
-                if "listing" in directory_folder and not directory_folder["listing"]:
-                    continue
+
+            if directory_name == "athena_coverage_report_dir":
+                # Athena is not guaranteed to produce output for every sample. When it does not
+                # run, the category directory exists but only contains a .config/matplotlib
+                # side-effect directory. Look up the per-sample subdirectory by name so we
+                # never pick up the side-effect dir; also treat an empty sample directory as
+                # missing output. Emit None so the CWL put_in_dir tool skips it.
+                sample_name = single_run.output_metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY]
+                directory_folder = self.process_listing(directory_port.get("listing", []), sample_name)
+                if not directory_folder or not directory_folder.get("listing"):
+                    directory_folder = None
                 directory_list.append(directory_folder)
+            else:
+                if directory_port["listing"]:
+                    directory_folder = directory_port["listing"][0]
+                    if "listing" in directory_folder and not directory_folder["listing"]:
+                        continue
+                    directory_list.append(directory_folder)
         return directory_list
 
     def get_file_ports(self, run_list, port_input, file_regex):
@@ -170,7 +183,7 @@ class AccessV2NucleoQcAggOperator(Operator):
         job["samples_json"] = samples_json_content
 
         input_file = template.render(**job)
-        input_file = input_file.replace("'", '"')
+        input_file = input_file.replace("'", '"').replace("None", "null")
         sample_input = json.loads(input_file)
         return sample_input
 

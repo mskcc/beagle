@@ -328,6 +328,11 @@ LOG_PATH = os.environ.get("BEAGLE_LOG_PATH", "beagle-server.log")
 
 SMILE_LOG_PATH = os.environ.get("BEAGLE_SMILE_LOG_PATH", "smile_client.log")
 
+if ENVIRONMENT == "prod":
+    handlers = ["file"]
+else:
+    handlers = ["file", "console"]
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -361,16 +366,16 @@ LOGGING = {
         },
     },
     "loggers": {
-        "django_auth_ldap": {"level": "INFO", "handlers": ["console"]},
+        "django_auth_ldap": {"level": "INFO", "handlers": handlers},
         "django": {
-            "handlers": ["file", "console"],
+            "handlers": handlers,
             "level": "INFO",
             "propagate": True,
         },
-        "smile_client": {"level": "INFO", "handlers": ["smile_client_log", "console"]},
+        "smile_client": {"level": "INFO", "handlers": ["smile_client_log"]},
     },
     "root": {
-        "handlers": ["file", "console"],
+        "handlers": handlers,
         "level": "INFO",
     },
 }
