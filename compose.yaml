@@ -227,6 +227,11 @@ services:
   beagle_rabbitmq:
     image: rabbitmq:4.0.6-management-alpine
     restart: always
+    # Pin the hostname so the RabbitMQ node name (rabbitmq_beagle@<hostname>) and
+    # therefore its on-disk mnesia data directory stay stable across container
+    # recreation. Without this, Docker assigns a random hostname on every
+    # recreate and the broker comes up with an empty database (messages lost).
+    hostname: beagle_rabbitmq
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
       - voyager_net
