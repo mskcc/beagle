@@ -123,6 +123,65 @@ class Library:
         }
 
 
+DEFAULT_REQUIRED_FIELDS = set(
+    {
+        "smileSampleId",
+        "smilePatientId",
+        "primaryId",
+        "cmoPatientId",
+        "sampleName",
+        "cmoSampleName",
+        "sampleType",
+        "tumorOrNormal",
+        "sampleClass",
+        "genePanel",
+        "baitSet",
+    }
+)
+
+PANEL_REQUIRED_FIELDS = {
+    "HC_CMOCH": set(
+        {
+            "smileSampleId",
+            "smilePatientId",
+            "primaryId",
+            "cmoPatientId",
+            "sampleName",
+            "cmoSampleName",
+            "sampleType",
+            "tumorOrNormal",
+            "genePanel",
+        }
+    ),
+    "HC_ACCESS": set(
+        {
+            "smileSampleId",
+            "smilePatientId",
+            "primaryId",
+            "cmoPatientId",
+            "sampleName",
+            "cmoSampleName",
+            "sampleType",
+            "tumorOrNormal",
+            "genePanel",
+        }
+    ),
+    "HC_ACCESS-Heme": set(
+        {
+            "smileSampleId",
+            "smilePatientId",
+            "primaryId",
+            "cmoPatientId",
+            "sampleName",
+            "cmoSampleName",
+            "sampleType",
+            "tumorOrNormal",
+            "genePanel",
+        }
+    ),
+}
+
+
 @dataclass
 class SampleMetadata:
     smileSampleId: str
@@ -219,9 +278,11 @@ class SampleMetadata:
         )
 
     def __post_init__(self):
-        """Validate sample data after initialization."""
         self._validate_primary_id()
-        self._validate_required_fields()
+        required = PANEL_REQUIRED_FIELDS.get(self.genePanel, DEFAULT_REQUIRED_FIELDS)
+        self._validate_required_fields(required)
+        if self.genePanel not in PANEL_REQUIRED_FIELDS:
+            self._validate_preservation_or_origin()
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert SampleMetadata object to dictionary with nested structure."""
@@ -376,38 +437,26 @@ class SampleMetadata:
                 else:
                     raise MissingDataException(f"Sample {self.primaryId} library {library.libraryIgoId} has no runs")
 
-    def _validate_required_fields(self):
-        """Validate that required fields are not empty."""
+    def _validate_preservation_or_origin(self):
         if self.igoComplete is False:
             return
-        required_fields = {
-            "smileSampleId": self.smileSampleId,
-            "smilePatientId": self.smilePatientId,
-            "primaryId": self.primaryId,
-            "cmoPatientId": self.cmoPatientId,
-            "sampleName": self.sampleName,
-            "cmoSampleName": self.cmoSampleName,
-            "sampleType": self.sampleType,
-            "tumorOrNormal": self.tumorOrNormal,
-            "sampleClass": self.sampleClass,
-            "genePanel": self.genePanel,
-            "baitSet": self.baitSet,
-        }
-
-        for field_name, field_value in required_fields.items():
-            if not field_value or field_value.strip() == "":
-                raise MissingDataException(
-                    f"Required field '{field_name}' is missing or empty for sample {self.primaryId}"
-                )
-
-        # At least one of preservation or sampleOrigin must be present
         preservation_empty = not self.preservation or self.preservation.strip() == ""
         sample_origin_empty = not self.sampleOrigin or self.sampleOrigin.strip() == ""
-
         if preservation_empty and sample_origin_empty:
             raise MissingDataException(
                 f"At least one of 'preservation' or 'sampleOrigin' must be provided for sample {self.primaryId}"
             )
+
+    def _validate_required_fields(self, required: set):
+        """Validate that required fields are not empty."""
+        if self.igoComplete is False:
+            return
+        for field_name in required:
+            field_value = getattr(self, field_name)
+            if not field_value or field_value.strip() == "":
+                raise MissingDataException(
+                    f"Required field '{field_name}' is missing or empty for sample {self.primaryId}"
+                )
 
     def is_cmo_sample(self) -> bool:
         """
