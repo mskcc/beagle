@@ -1,0 +1,188 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="content-main">
+    <div class="dash-toolbar">
+        <h1>Live Staging Dashboard</h1>
+        <div class="dash-status">
+            <span id="dash-indicator" class="dash-indicator">Loading…</span>
+            <a href="{% url 'admin:file_manager_sampleproviderjob_changelist' %}" class="button">Back to list</a>
+        </div>
+    </div>
+
+    <p class="help">
+        Showing samples that are still scheduled or in progress. Updates automatically every 5 seconds.
+    </p>
+
+    <div id="dash-error" class="dash-error" style="display:none;"></div>
+    <div id="dash-empty" class="dash-empty" style="display:none;">No samples are currently staging.</div>
+    <div id="dash-samples"></div>
+</div>
+
+<style>
+.dash-toolbar { display:flex; justify-content:space-between; align-items:center; }
+.dash-status { display:flex; align-items:center; gap:12px; }
+.dash-indicator { font-size:12px; color:#666; }
+.dash-error {
+    padding:10px 14px; margin:10px 0; border-radius:4px;
+    background:#fff3cd; border:1px solid #ffeaa7; color:#856404;
+}
+.dash-empty { padding:24px; color:#666; font-style:italic; }
+.smp { border:1px solid #ddd; border-radius:8px; margin-bottom:16px; overflow:hidden; background:#fff; }
+.smp-hd { background:#f6f6f6; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+.smp-hd b { font-size:15px; }
+.smp-meta { display:flex; align-items:center; gap:10px; }
+.bar { height:8px; background:#e8e8e8; border-radius:4px; width:160px; overflow:hidden; }
+.bar > i { display:block; height:100%; background:#1d7a1d; transition:width .4s ease; }
+.badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.b-sched { background:#e0e0e0; color:#444; }
+.b-copy  { background:#cfe8ff; color:#0b5cad; }
+.b-done  { background:#d6f5d6; color:#1d7a1d; }
+.b-fail  { background:#ffd6d6; color:#a11; }
+.cols { display:flex; flex-wrap:wrap; }
+.col { flex:1; min-width:160px; padding:10px 14px; border-left:1px solid #f0f0f0; }
+.col:first-child { border-left:none; }
+.col h5 { margin:0 0 8px; font-size:11px; text-transform:uppercase; color:#777; border-bottom:1px solid #eee; padding-bottom:4px; }
+.chip { font-family:monospace; font-size:11px; padding:3px 6px; margin:3px 0; border-radius:4px; background:#fafafa; border:1px solid #eee; word-break:break-all; }
+.chip-copy { background:#eef6ff; border-color:#cfe8ff; }
+.chip-fail { background:#fff0f0; border-color:#ffd6d6; color:#a11; }
+.col-empty { color:#bbb; font-size:11px; }
+</style>
+
+<script>
+(function () {
+    var STATUS_URL = "{{ status_url }}";
+    var POLL_MS = 5000;
+    var lastUpdate = null;
+    var timer = null;
+
+    function el(tag, cls, text) {
+        var e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (text !== undefined && text !== null) e.textContent = text;
+        return e;
+    }
+
+    function statusBadgeClass(status) {
+        if (status === "IN_PROGRESS") return "b-copy";
+        if (status === "COMPLETED") return "b-done";
+        if (status === "FAILED") return "b-fail";
+        return "b-sched";
+    }
+
+    function buildColumn(title, names, chipCls) {
+        var col = el("div", "col");
+        col.appendChild(el("h5", null, title + " (" + names.length + ")"));
+        if (names.length === 0) {
+            col.appendChild(el("div", "col-empty", "—"));
+        } else {
+            names.forEach(function (n) {
+                col.appendChild(el("div", "chip" + (chipCls ? " " + chipCls : ""), n));
+            });
+        }
+        return col;
+    }
+
+    function buildDoneColumn(count) {
+        var col = el("div", "col");
+        col.appendChild(el("h5", null, "Done (" + count + ")"));
+        col.appendChild(el("div", count ? "chip" : "col-empty", count ? count + " file(s) completed" : "—"));
+        return col;
+    }
+
+    function buildSampleCard(sample) {
+        var card = el("div", "smp");
+
+        var hd = el("div", "smp-hd");
+        hd.appendChild(el("b", null, sample.sample_id));
+
+        var meta = el("div", "smp-meta");
+        var bar = el("div", "bar");
+        var fill = el("i");
+        var pct = sample.total > 0 ? Math.round((sample.completed / sample.total) * 100) : 0;
+        fill.style.width = pct + "%";
+        bar.appendChild(fill);
+        meta.appendChild(bar);
+        meta.appendChild(el("span", null, sample.completed + "/" + sample.total));
+        meta.appendChild(el("span", "badge " + statusBadgeClass(sample.status), sample.status.replace("_", " ")));
+        hd.appendChild(meta);
+        card.appendChild(hd);
+
+        var cols = el("div", "cols");
+        cols.appendChild(buildColumn("Scheduled", sample.files.scheduled, null));
+        cols.appendChild(buildColumn("Copying", sample.files.copying, "chip-copy"));
+        cols.appendChild(buildDoneColumn(sample.files.done_count));
+        cols.appendChild(buildColumn("Failed", sample.files.failed, "chip-fail"));
+        card.appendChild(cols);
+
+        return card;
+    }
+
+    function render(payload) {
+        var container = document.getElementById("dash-samples");
+        var empty = document.getElementById("dash-empty");
+        container.innerHTML = "";
+
+        if (!payload.samples || payload.samples.length === 0) {
+            empty.style.display = "block";
+        } else {
+            empty.style.display = "none";
+            payload.samples.forEach(function (s) {
+                container.appendChild(buildSampleCard(s));
+            });
+        }
+        lastUpdate = new Date();
+    }
+
+    function showError(msg) {
+        var e = document.getElementById("dash-error");
+        e.textContent = msg;
+        e.style.display = "block";
+    }
+
+    function clearError() {
+        document.getElementById("dash-error").style.display = "none";
+    }
+
+    function poll() {
+        fetch(STATUS_URL, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+            .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+            })
+            .then(function (data) {
+                clearError();
+                render(data);
+            })
+            .catch(function () {
+                showError("Could not reach the server — reconnecting…");
+            });
+    }
+
+    function tickIndicator() {
+        var ind = document.getElementById("dash-indicator");
+        if (!lastUpdate) { ind.textContent = "Loading…"; return; }
+        var secs = Math.round((new Date() - lastUpdate) / 1000);
+        ind.textContent = "Updated " + secs + "s ago";
+    }
+
+    function start() {
+        if (timer) return;
+        poll();
+        timer = setInterval(poll, POLL_MS);
+    }
+
+    function stop() {
+        if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) { stop(); } else { start(); }
+    });
+
+    setInterval(tickIndicator, 1000);
+    start();
+})();
+</script>
+{% endblock %}
