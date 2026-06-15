@@ -16,7 +16,7 @@ PDX_SPECIMEN_TYPES = ["pdx", "xenograft", "xenograftderivedcellline"]
 NON_PDX_SPECIMEN_TYPES = [
     "biopsy",
     "blood",
-    "cellLine",
+    "cellline",
     "cfdna",
     "fingernails",
     "nonpdx",
@@ -114,7 +114,15 @@ def construct_argos_jobs(samples, pairs=None, logger=None):
         pi_email = tumor["pi_email"]
         job = dict()
         tumor_specimen_type = normalize_igo_text_field(pairs["tumor"][i]["specimen_type"])
-        normal_sample = format_sample(normal, tumor_specimen_type)
+        normal_specimen_type = normalize_igo_text_field(pairs["normal"][i]["specimen_type"])
+        if normal_specimen_type not in PDX_SPECIMEN_TYPES and normal_specimen_type not in NON_PDX_SPECIMEN_TYPES:
+            LOGGER.warning(
+                "Unrecognized normal specimen_type '%s' for sample %s; defaulting to non-PDX routing.",
+                pairs["normal"][i]["specimen_type"],
+                normal["SM"],
+            )
+            normal_specimen_type = "normal"
+        normal_sample = format_sample(normal, normal_specimen_type)
         tumor_sample = format_sample(tumor, tumor_specimen_type)
         job["tumor"] = tumor_sample
         job["normal"] = normal_sample
