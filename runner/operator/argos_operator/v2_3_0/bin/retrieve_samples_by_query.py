@@ -5,15 +5,18 @@ that wasn't in the operator
 For example, get all samples by a patient ID or pooled normals based on the bait set
 and preservation type
 """
+
 import logging
-from file_system.models import MachineRunMode, File
-from file_system.models import FileGroup, PooledNormal
-from file_system.repository.file_repository import FileRepository
-from django.db.models import Q
-from django.conf import settings
 from datetime import datetime
-from .make_sample import build_sample, remove_with_caveats, format_sample_name
-from runner.operator.helper import get_r_orientation, spoof_barcode, init_metadata
+
+from django.conf import settings
+from django.db.models import Q
+
+from file_system.models import File, FileGroup, MachineRunMode, PooledNormal
+from file_system.repository.file_repository import FileRepository
+from runner.operator.helper import get_r_orientation, init_metadata, spoof_barcode
+
+from .make_sample import build_sample, format_sample_name, remove_with_caveats
 
 LOGGER = logging.getLogger(__name__)
 
@@ -92,7 +95,7 @@ def get_descriptor(bait_set, pooled_normals, preservation_types, run_ids, sample
 
         # sample_name is FROZENPOOLEDNORMAL unless FFPE is in any of the preservation types
         # in preservation_types; plc = preservations lower case
-        plc = set([x.lower() for x in preservation_types])
+        plc = set([x.lower() for x in preservation_types if x])  # filter out None/empty values
         run_ids_suffix_list = [i for i in run_ids if i]  # remove empty or false string values
         run_ids_suffix = "_".join(set(run_ids_suffix_list))
         sample_name = "FROZENPOOLEDNORMAL_" + run_ids_suffix
@@ -156,8 +159,9 @@ def get_preservation_type(preservation_types, sample_origin):
         - if preservation_type is not empty:
             - return 'ffpe' if is_ffpe(); otherwise 'frozen'
     """
-    plc = set([x.lower() for x in preservation_types])  # preservation lower case
-    solc = set([x.lower() for x in sample_origin])  # sample origin lower case
+    # Filter out None/empty values, then convert to lowercase
+    plc = set([x.lower() for x in preservation_types if x])  # preservation lower case
+    solc = set([x.lower() for x in sample_origin if x])  # sample origin lower case
     preservation = ""
 
     if not is_list_empty(plc) and not is_list_empty(solc):
@@ -233,7 +237,7 @@ def build_preservation_query(data):
 
     Main logic: if FFPE in data, return FFPE query; else, return FROZEN query
     """
-    plc = set([x.lower() for x in data])
+    plc = set([x.lower() for x in data if x])  # filter out None/empty values
     value = "FROZEN"
     if "ffpe" in plc:
         value = "FFPE"
@@ -336,7 +340,6 @@ def get_dmp_bam(patient_id, bait_set, tumor_type):
 def build_dmp_sample(
     dmp_bam, patient_id, bait_set, tumor_type, request_id=None, pi=None, pi_email=None, sample_origin=None
 ):
-
     dmp_metadata = dmp_bam.metadata
     specimen_type = "DMP"
     sample_name = dmp_metadata["external_id"]
