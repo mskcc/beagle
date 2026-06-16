@@ -21,12 +21,12 @@ router.register("storage", StorageViewSet)
 router.register("file-groups", FileGroupViewSet)
 router.register("file-types", FileTypeView)
 router.register("files", FileView)
-router.register("metadata", FileMetadataView)
+router.register("metadata", FileMetadataView, basename="metadata")
 router.register("sample", SampleViewSet)
 router.register("request", RequestViewSet)
 router.register("patient", PatientViewSet)
-router.register("distribution", DistributionView)
-router.register("project-details", SampleFullViewSet)
+router.register("distribution", DistributionView, basename="distribution")
+router.register("project-details", SampleFullViewSet, basename="project-details")
 
 urlpatterns = [
     path("", include(router.urls)),

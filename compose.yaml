@@ -24,6 +24,7 @@ x-beagle_celery: &beagle_celery
     - BEAGLE_RABBITMQ_PORT=5672
     - BEAGLE_LOG_PATH=/beagle/celery/logs/django_server.log
     - BEAGLE_URL=http://$BEAGLE_HOST:$BEAGLE_PORT
+    - BEAGLE_FILE_MANAGER_CONCURRENCY=${BEAGLE_FILE_MANAGER_CONCURRENCY:-20}
   volumes:
     - /ifs:/ifs
     - logs_path:/beagle/celery/logs/
@@ -226,12 +227,21 @@ services:
   beagle_rabbitmq:
     image: rabbitmq:4.0.6-management-alpine
     restart: always
+    # Pin the hostname so the RabbitMQ node name (rabbitmq_beagle@<hostname>) and
+    # therefore its on-disk mnesia data directory stay stable across container
+    # recreation. Without this, Docker assigns a random hostname on every
+    # recreate and the broker comes up with an empty database (messages lost).
+    hostname: beagle_rabbitmq
     user: "${DOCKER_UID}:${DOCKER_GID}"
     networks:
       - voyager_net
     volumes:
       - rabbitmq_path:/var/lib/rabbitmq/
       - logs_path:/var/log/rabbitmq/
+      # Drop-in conf (consumer_timeout, logging) from the host config directory
+      # (BEAGLE_RABBITMQ_CONF_DIR). conf.d is merged on top of the image's
+      # generated config, so RABBITMQ_DEFAULT_USER/PASS still apply.
+      - ${BEAGLE_RABBITMQ_CONF_DIR:-./conf}/rabbitmq.conf:/etc/rabbitmq/conf.d/20-beagle.conf:ro
     ports:
       - ${BEAGLE_RABBITMQ_MANAGEMENT_PORT}:15672
       - ${BEAGLE_RABBITMQ_PORT}:5672
@@ -311,7 +321,7 @@ services:
         python3 ${BEAGLE_PATH}/manage.py migrate --noinput
         echo "User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin','voyager@mskcc.org',settings.DB_PASSWORD)" | python3 ${BEAGLE_PATH}/manage.py shell_plus
         mkdir -p ${BEAGLE_PATH}/static
-        python3 ${BEAGLE_PATH}/manage.py collectstatic --noinput
+        python3 ${BEAGLE_PATH}/manage.py collectstatic --noinput --clear
         #ddtrace-run gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
         gunicorn beagle.wsgi --log-file $$BEAGLE_LOG_PATH --bind 0.0.0.0:${BEAGLE_PORT} --threads 10 --pythonpath ${BEAGLE_PATH} >> /beagle/server/web_server.log 2>&1
     healthcheck:
@@ -457,7 +467,7 @@ services:
           -Q ${BEAGLE_FILE_MANAGER_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_FILE_MANAGER_QUEUE}.log \
           --pidfile $$PIDFILE \
-          --concurrency=30 \
+          --concurrency=${BEAGLE_FILE_MANAGER_CONCURRENCY} \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE}
     healthcheck:
       test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_FILE_MANAGER_QUEUE} || exit 1"

@@ -40,6 +40,42 @@ def stage_file_job(file_provide_job_id, sample_job=None):
 
 
 @shared_task
+def stage_samples_job(sample_ids, file_group=None):
+    """
+    Stage files for a list of samples in the background.
+
+    For each sample, creates the SampleProviderJob and FileProviderJob records
+    and dispatches a stage_file_job task per file that needs staging.
+    """
+    from file_manager.file_manager.file_manager import FileManager
+
+    if file_group is None:
+        file_group = settings.IMPORT_FILE_GROUP
+
+    file_manager = FileManager(file_group=file_group)
+
+    for sample_id in sample_ids:
+        try:
+            sample_job, task_sigs = file_manager.stage_sample(sample_id)
+        except Exception as e:
+            logger.error(f"Error staging sample {sample_id}: {str(e)}")
+            continue
+
+        if sample_job.total_files > 0:
+            if task_sigs:
+                for task in task_sigs:
+                    task.delay()
+                logger.info(f"Staged {len(task_sigs)} files for sample {sample_id}")
+            else:
+                logger.warning(
+                    f"Sample {sample_id} has {sample_job.total_files} files to stage, "
+                    f"but no tasks were created (files may already be staging)"
+                )
+        else:
+            logger.info(f"No files need staging for sample {sample_id}")
+
+
+@shared_task
 def check_for_clean_up():
     clean_up_jobs = CleanupFileJob.objects.filter(cleanup_date=date.today())
     for job in clean_up_jobs:

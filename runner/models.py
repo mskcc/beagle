@@ -2,9 +2,9 @@ import os
 import uuid
 from enum import IntEnum
 from django.db import models, transaction
+from django.db.models import JSONField
 from file_system.models import File, FileGroup, Sample, Request
 from beagle_etl.models import Operator, JobGroup, JobGroupNotifier
-from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.utils.timezone import now
 from django.conf import settings

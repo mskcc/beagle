@@ -2,7 +2,8 @@ import uuid
 import logging
 from enum import IntEnum
 from django.db import models
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.db.models import JSONField
+from django.contrib.postgres.fields import ArrayField
 from notifier.tasks import notifier_start
 from notifier.models import Notifier, JobGroup, JobGroupNotifier
 from beagle_etl.jobs.import_helper import generate_ticket_description
