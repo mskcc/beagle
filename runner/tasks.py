@@ -39,7 +39,7 @@ from lib.logger import format_log
 from lib.memcache_lock import memcache_task_lock
 from study.objects import StudyObject
 from study.models import JobGroupWatcher, JobGroupWatcherConfig
-from ddtrace import tracer
+from ddtrace.trace import tracer
 
 logger = logging.getLogger("django")
 

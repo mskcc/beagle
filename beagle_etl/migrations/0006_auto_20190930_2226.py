@@ -11,10 +11,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name="jobbasemodel",
-            name="basemodel_ptr",
-        ),
-        migrations.RemoveField(
             model_name="requestfetchjob",
             name="jobbasemodel_ptr",
         ),
@@ -22,16 +18,20 @@ class Migration(migrations.Migration):
             model_name="samplesfetchjob",
             name="jobbasemodel_ptr",
         ),
-        migrations.DeleteModel(
-            name="ETLError",
+        migrations.RemoveField(
+            model_name="jobbasemodel",
+            name="basemodel_ptr",
         ),
         migrations.DeleteModel(
-            name="JobBaseModel",
+            name="ETLError",
         ),
         migrations.DeleteModel(
             name="RequestFetchJob",
         ),
         migrations.DeleteModel(
             name="SamplesFetchJob",
+        ),
+        migrations.DeleteModel(
+            name="JobBaseModel",
         ),
     ]

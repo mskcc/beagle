@@ -76,7 +76,7 @@ class BeagleTokenVerifyView(TokenVerifyView):
 
 class UserRequestViewSet(mixins.CreateModelMixin, GenericViewSet):
     serializer_class = UserRegistrationRequestSerializer
-    queryset = UserRegistrationRequest.objects.order_by("created_date").all()
+    queryset = UserRegistrationRequest.objects.order_by("id").all()
     permission_classes = (AllowAny,)
 
 

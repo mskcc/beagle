@@ -1,5 +1,5 @@
 import logging
-from ddtrace import tracer
+from ddtrace.trace import tracer
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
 from runner.serializers import OperatorErrorSerializer
