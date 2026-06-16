@@ -337,8 +337,9 @@ def get_dmp_bam(patient_id, bait_set, tumor_type):
     return None
 
 
-def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, request_id=None, pi=None, pi_email=None):
-
+def build_dmp_sample(
+    dmp_bam, patient_id, bait_set, tumor_type, request_id=None, pi=None, pi_email=None, sample_origin=None
+):
     dmp_metadata = dmp_bam.metadata
     specimen_type = "DMP"
     sample_name = dmp_metadata["external_id"]
@@ -362,6 +363,7 @@ def build_dmp_sample(dmp_bam, patient_id, bait_set, tumor_type, request_id=None,
     metadata[settings.RECIPE_METADATA_KEY] = bait_set
     metadata["run_id"] = ""
     metadata["preservation"] = ""
+    metadata["sampleOrigin"] = sample_origin
     metadata[settings.LIBRARY_ID_METADATA_KEY] = sample_name + "_1"
     metadata["R"] = "Not applicable"
     # because rgid depends on flowCellId and barcodeIndex, we will
@@ -416,5 +418,9 @@ def build_dmp_query(patient_id, bait_set):
     return query
 
 
+# Return True if every element in `lst` is falsy (e.g., 0, False, None, '', [], {}, etc.).
+# Equivalent to “is the list empty or does it contain only empty/falsey items?”.
+#
+# This handles messy metadata cases, where metadata values could be any of the falsy elements
 def is_list_empty(lst):
     return all(not bool(item) for item in lst)
