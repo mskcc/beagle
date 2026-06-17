@@ -1,0 +1,107 @@
+services:
+  api:
+    init: true
+    image: mskcc/beagle:2.2.0
+    networks:
+      - beagle_net
+    build:
+      context: .
+    working_dir: /app
+    command: python manage.py runserver 0:5007 --noreload
+    volumes:
+      - .:/app:z
+    environment:
+      BEAGLE_DB_URL: db
+      BEAGLE_DB_NAME: beagle
+      BEAGLE_DB_USERNAME: beagle
+      BEAGLE_DB_PASSWORD: beagle
+      DJANGO_SETTINGS_MODULE: beagle.settings
+      BEAGLE_RABBITMQ_USERNAME: BEAGLE
+      BEAGLE_RABBITMQ_PASSWORD: beagle
+      BEAGLE_RABBITMQ_URL: rabbitmq:5672
+    ports:
+      - "5007:5007"
+    depends_on:
+      - db
+      - rabbitmq
+      - memcached
+
+  worker:
+    build:
+      context: .
+    working_dir: /app
+    networks:
+      - beagle_net
+    command: celery -A beagle_etl worker -l info
+    volumes:
+      - .:/app:z
+    environment:
+      DJANGO_SETTINGS_MODULE: beagle.settings
+      BEAGLE_DB_NAME: beagle
+      BEAGLE_DB_USERNAME: beagle
+      BEAGLE_DB_PASSWORD: beagle
+      CELERY_BROKER_URL: amqp://BEAGLE:beagle@rabbitmq:5672//  
+    depends_on:
+      - rabbitmq
+      - db
+
+  beat:
+    build:
+      context: .
+    working_dir: /app
+    networks:
+      - beagle_net
+    command: celery -A beagle_etl beat -l info
+    volumes:
+      - .:/app:z
+    environment:
+      DJANGO_SETTINGS_MODULE: beagle.settings 
+      BEAGLE_DB_NAME: beagle
+      BEAGLE_DB_USERNAME: beagle
+      BEAGLE_DB_PASSWORD: beagle
+      CELERY_BROKER_URL: amqp://BEAGLE:beagle@rabbitmq:5672//
+    depends_on:
+      - rabbitmq
+      - db
+
+  db:
+    image: postgres:16
+    working_dir: /app
+    networks:
+      - beagle_net
+    environment:
+      POSTGRES_DB: beagle
+      POSTGRES_USER: beagle
+      POSTGRES_PASSWORD: beagle
+      BEAGLE_DB_NAME: beagle
+      BEAGLE_DB_USERNAME: beagle
+      BEAGLE_DB_PASSWORD: beagle
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data:z
+      - .:/app:z
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    networks:
+      - beagle_net
+    environment:
+      RABBITMQ_DEFAULT_USER: BEAGLE
+      RABBITMQ_DEFAULT_PASS: beagle
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # management UI
+
+  memcached:
+    image: memcached:1.6
+    networks:
+      - beagle_net
+    ports:
+      - "11211:11211"
+
+volumes:
+  pgdata:
+
+networks:
+  beagle_net:
