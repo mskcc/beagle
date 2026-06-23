@@ -26,7 +26,7 @@ class RequestViewSet(
 class ForceImportRequestView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request_id):
+    def post(self, _request, request_id):
         message = (
             SMILEMessage.objects.filter(request_id=request_id, topic=settings.METADB_NATS_NEW_REQUEST)
             .order_by("-created_date")
