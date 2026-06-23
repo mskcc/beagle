@@ -190,7 +190,7 @@ def new_request(message_id, force_import=False):
         message.failed()
         return
 
-    if not data.isCmoRequest:
+    if not data.isCmoRequest and not force_import:
         # Non CmoRequests not supported
         logger.info(f"Request {data.igoRequestId} is not CMO Request")
         message.add_log(f"Request {data.igoRequestId} is not CMO Request")
