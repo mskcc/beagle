@@ -220,7 +220,7 @@ class SampleMetadata:
     skip_validation: bool = field(default=False, compare=False, repr=False)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any], force: bool = False) -> "SampleMetadata":
+    def from_dict(cls, data: Dict[str, Any], force_import: bool = False) -> "SampleMetadata":
         """Deserialize SampleMetadata from dictionary."""
         # Handle nested status
         status_data = data.get("status", {})
@@ -276,7 +276,7 @@ class SampleMetadata:
             sampleAliases=sample_aliases,
             patientAliases=patient_aliases,
             additionalProperties=data.get("additionalProperties", {}),
-            skip_validation=force,
+            skip_validation=force_import,
         )
 
     def __post_init__(self):

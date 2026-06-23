@@ -33,5 +33,5 @@ urlpatterns = [
     path("batch-patch-files", BatchPatchFiles.as_view()),
     path("copy-files", CopyFilesView.as_view()),
     path("manifest/", Manifest.as_view()),
-    path("request/force-import/<str:request_id>/", ForceImportRequestView.as_view()),
+    path("request/force-import/<str:id>/", ForceImportRequestView.as_view()),
 ]

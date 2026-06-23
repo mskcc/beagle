@@ -41,7 +41,7 @@ class RequestMetadata:
     pooledNormals: Optional[List[str]] = None
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any], force: bool = False) -> "RequestMetadata":
+    def from_dict(cls, data: Dict[str, Any], force_import: bool = False) -> "RequestMetadata":
         """Deserialize from dictionary."""
         # Handle nested status
         status_data = data.get("status", {})
@@ -49,7 +49,7 @@ class RequestMetadata:
 
         # Handle nested samples
         samples_data = data.get("samples", [])
-        samples = [SampleMetadata.from_dict(sample, force=force) for sample in samples_data]
+        samples = [SampleMetadata.from_dict(sample, force_import=force_import) for sample in samples_data]
 
         # Handle delivery date conversion
         delivery_date = None
