@@ -180,11 +180,11 @@ def request_update_notification(request_id):
 
 
 @shared_task
-def new_request(message_id):
+def new_request(message_id, force=False):
     message = SMILEMessage.objects.get(id=message_id)
 
     try:
-        data = RequestMetadata.from_dict(json.loads(message.message))
+        data = RequestMetadata.from_dict(json.loads(message.message), force=force)
     except Exception as e:
         message.add_log(str(e))
         message.failed()

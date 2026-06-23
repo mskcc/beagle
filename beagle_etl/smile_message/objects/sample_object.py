@@ -1,6 +1,6 @@
 import re
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 from django.conf import settings
 from beagle_etl.exceptions import (
@@ -217,9 +217,10 @@ class SampleMetadata:
     tubeId: Optional[str] = None
     cfDNA2dBarcode: Optional[str] = None
     cmoInfoIgoId: Optional[str] = None
+    skip_validation: bool = field(default=False, compare=False, repr=False)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "SampleMetadata":
+    def from_dict(cls, data: Dict[str, Any], force: bool = False) -> "SampleMetadata":
         """Deserialize SampleMetadata from dictionary."""
         # Handle nested status
         status_data = data.get("status", {})
@@ -275,9 +276,12 @@ class SampleMetadata:
             sampleAliases=sample_aliases,
             patientAliases=patient_aliases,
             additionalProperties=data.get("additionalProperties", {}),
+            skip_validation=force,
         )
 
     def __post_init__(self):
+        if self.skip_validation:
+            return
         self._validate_primary_id()
         required = PANEL_REQUIRED_FIELDS.get(self.genePanel, DEFAULT_REQUIRED_FIELDS)
         self._validate_required_fields(required)
