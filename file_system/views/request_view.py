@@ -37,7 +37,7 @@ class ForceImportRequestView(APIView):
                 {"detail": f"No new-request SMILEMessage found for request_id {request_id}."},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        new_request.delay(str(message.id), force=True)
+        new_request.apply_async(args=[str(message.id)], kwargs={"force": True}, queue=settings.BEAGLE_DEFAULT_QUEUE)
         return Response(
             {"detail": f"Force import triggered for request {request_id} (message {message.id})."},
             status=status.HTTP_202_ACCEPTED,
