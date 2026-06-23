@@ -37,8 +37,8 @@ class ForceImportRequestView(APIView):
                 {"detail": f"No new-request SMILEMessage found for request_id {request_id}."},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        new_request.delay(str(message.id), force_import=True)
+        new_request(str(message.id), force_import=True)
         return Response(
-            {"detail": f"Force import triggered for request {request_id} (message {message.id})."},
-            status=status.HTTP_202_ACCEPTED,
+            {"detail": f"Force import complete for request {request_id} (message {message.id})."},
+            status=status.HTTP_200_OK,
         )
