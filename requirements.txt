@@ -1,4 +1,4 @@
-Django==6.0.4
+Django==6.0.5
 psycopg[binary]==3.2.3
 djangorestframework==3.17.1
 markdown==3.1.1
