@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+from django.conf import settings
 from lib.admin import link_relation
 from .models import (
     Operator,
@@ -7,6 +8,7 @@ from .models import (
     SMILEMessage,
     RequestCallbackJob,
 )
+from .jobs.metadb_jobs import new_request
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 
 
@@ -31,6 +33,13 @@ class SMILEMessagesAdmin(AdminAdvancedFiltersMixin, ModelAdmin):
     advanced_filter_fields = ("request_id", "topic", "status")
     ordering = ("-created_date",)
     list_display = ("created_date", "request_id", "topic", "status")
+    actions = ["force_import"]
+
+    @admin.action(description="Force import selected SMILE messages (skip validation)")
+    def force_import(self, request, queryset):
+        for message in queryset.filter(topic=settings.METADB_NATS_NEW_REQUEST):
+            new_request.delay(str(message.id), force_import=True)
+        self.message_user(request, f"Force import triggered for {queryset.count()} message(s).")
 
 
 class RequestCallbackJobAdmin(ModelAdmin):

@@ -11,7 +11,7 @@ from file_system.views.file_metadata_view import FileMetadataView
 from file_system.views.file_type_view import FileTypeView
 from file_system.views.sample_view import SampleViewSet
 from file_system.views.patient_view import PatientViewSet
-from file_system.views.request_view import RequestViewSet, ForceImportRequestView
+from file_system.views.request_view import RequestViewSet
 from file_system.views.distribution_view import DistributionView
 from file_system.views.sample_view import SampleFullViewSet
 
@@ -33,5 +33,4 @@ urlpatterns = [
     path("batch-patch-files", BatchPatchFiles.as_view()),
     path("copy-files", CopyFilesView.as_view()),
     path("manifest/", Manifest.as_view()),
-    path("request/force-import/<str:request_id>/", ForceImportRequestView.as_view()),
 ]

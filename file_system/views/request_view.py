@@ -1,14 +1,9 @@
-from django.conf import settings
-from rest_framework import mixins, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import mixins
 from file_system.models import Request
 from file_system.serializers import RequestSerializer
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter
-from beagle_etl.models import SMILEMessage
-from beagle_etl.jobs.metadb_jobs import new_request
 
 
 class RequestViewSet(
@@ -21,24 +16,3 @@ class RequestViewSet(
 
     def get_serializer_class(self):
         return RequestSerializer
-
-
-class ForceImportRequestView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def post(self, _request, request_id):
-        message = (
-            SMILEMessage.objects.filter(request_id=request_id, topic=settings.METADB_NATS_NEW_REQUEST)
-            .order_by("-created_date")
-            .first()
-        )
-        if not message:
-            return Response(
-                {"detail": f"No new-request SMILEMessage found for request_id {request_id}."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        new_request(str(message.id), force_import=True)
-        return Response(
-            {"detail": f"Force import complete for request {request_id} (message {message.id})."},
-            status=status.HTTP_200_OK,
-        )
