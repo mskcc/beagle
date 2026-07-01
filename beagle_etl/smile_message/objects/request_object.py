@@ -48,7 +48,7 @@ class RequestMetadata:
         status = RequestStatus(**status_data) if status_data else RequestStatus(False, "{}")
 
         # Handle nested samples
-        samples_data = data.get("samples", [])
+        samples_data = data.get("samples") or []
         samples = [SampleMetadata.from_dict(sample, force_import=force_import) for sample in samples_data]
 
         # Handle delivery date conversion

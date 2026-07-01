@@ -236,15 +236,15 @@ class SampleMetadata:
         )
 
         # Handle libraries
-        libraries_data = data.get("libraries", [])
+        libraries_data = data.get("libraries") or []
         libraries = [Library.from_dict(lib) for lib in libraries_data]
 
         # Handle sample aliases
-        sample_aliases_data = data.get("sampleAliases", [])
+        sample_aliases_data = data.get("sampleAliases") or []
         sample_aliases = [SampleAlias(**alias) for alias in sample_aliases_data]
 
         # Handle patient aliases
-        patient_aliases_data = data.get("patientAliases", [])
+        patient_aliases_data = data.get("patientAliases") or []
         patient_aliases = [PatientAlias(**alias) for alias in patient_aliases_data]
 
         return cls(
@@ -276,7 +276,7 @@ class SampleMetadata:
             igoComplete=data.get("igoComplete"),
             status=status,
             cmoSampleIdFields=cmo_fields,
-            qcReports=data.get("qcReports", []),
+            qcReports=data.get("qcReports") or [],
             libraries=libraries,
             sampleAliases=sample_aliases,
             patientAliases=patient_aliases,
