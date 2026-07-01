@@ -228,7 +228,12 @@ class SampleMetadata:
 
         # Handle nested cmoSampleIdFields
         cmo_fields_data = data.get("cmoSampleIdFields", {})
-        cmo_fields = CmoSampleIdFields(**cmo_fields_data) if cmo_fields_data else CmoSampleIdFields("", "", "", "")
+        cmo_fields = CmoSampleIdFields(
+            naToExtract=cmo_fields_data.get("naToExtract", ""),
+            normalizedPatientId=cmo_fields_data.get("normalizedPatientId", ""),
+            sampleType=cmo_fields_data.get("sampleType", ""),
+            recipe=cmo_fields_data.get("recipe", ""),
+        )
 
         # Handle libraries
         libraries_data = data.get("libraries", [])
