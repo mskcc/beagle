@@ -1,6 +1,6 @@
 import re
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 from django.conf import settings
 from beagle_etl.exceptions import (
@@ -217,9 +217,10 @@ class SampleMetadata:
     tubeId: Optional[str] = None
     cfDNA2dBarcode: Optional[str] = None
     cmoInfoIgoId: Optional[str] = None
+    skip_validation: bool = field(default=False, compare=False, repr=False)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "SampleMetadata":
+    def from_dict(cls, data: Dict[str, Any], force_import: bool = False) -> "SampleMetadata":
         """Deserialize SampleMetadata from dictionary."""
         # Handle nested status
         status_data = data.get("status", {})
@@ -227,18 +228,23 @@ class SampleMetadata:
 
         # Handle nested cmoSampleIdFields
         cmo_fields_data = data.get("cmoSampleIdFields", {})
-        cmo_fields = CmoSampleIdFields(**cmo_fields_data) if cmo_fields_data else CmoSampleIdFields("", "", "", "")
+        cmo_fields = CmoSampleIdFields(
+            naToExtract=cmo_fields_data.get("naToExtract", ""),
+            normalizedPatientId=cmo_fields_data.get("normalizedPatientId", ""),
+            sampleType=cmo_fields_data.get("sampleType", ""),
+            recipe=cmo_fields_data.get("recipe", ""),
+        )
 
         # Handle libraries
-        libraries_data = data.get("libraries", [])
+        libraries_data = data.get("libraries") or []
         libraries = [Library.from_dict(lib) for lib in libraries_data]
 
         # Handle sample aliases
-        sample_aliases_data = data.get("sampleAliases", [])
+        sample_aliases_data = data.get("sampleAliases") or []
         sample_aliases = [SampleAlias(**alias) for alias in sample_aliases_data]
 
         # Handle patient aliases
-        patient_aliases_data = data.get("patientAliases", [])
+        patient_aliases_data = data.get("patientAliases") or []
         patient_aliases = [PatientAlias(**alias) for alias in patient_aliases_data]
 
         return cls(
@@ -270,14 +276,17 @@ class SampleMetadata:
             igoComplete=data.get("igoComplete"),
             status=status,
             cmoSampleIdFields=cmo_fields,
-            qcReports=data.get("qcReports", []),
+            qcReports=data.get("qcReports") or [],
             libraries=libraries,
             sampleAliases=sample_aliases,
             patientAliases=patient_aliases,
             additionalProperties=data.get("additionalProperties", {}),
+            skip_validation=force_import,
         )
 
     def __post_init__(self):
+        if self.skip_validation:
+            return
         self._validate_primary_id()
         required = PANEL_REQUIRED_FIELDS.get(self.genePanel, DEFAULT_REQUIRED_FIELDS)
         self._validate_required_fields(required)

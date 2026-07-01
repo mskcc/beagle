@@ -180,17 +180,17 @@ def request_update_notification(request_id):
 
 
 @shared_task
-def new_request(message_id):
+def new_request(message_id, force_import=False):
     message = SMILEMessage.objects.get(id=message_id)
 
     try:
-        data = RequestMetadata.from_dict(json.loads(message.message))
+        data = RequestMetadata.from_dict(json.loads(message.message), force_import=force_import)
     except Exception as e:
         message.add_log(str(e))
         message.failed()
         return
 
-    if not data.isCmoRequest:
+    if not data.isCmoRequest and not force_import:
         # Non CmoRequests not supported
         logger.info(f"Request {data.igoRequestId} is not CMO Request")
         message.add_log(f"Request {data.igoRequestId} is not CMO Request")
