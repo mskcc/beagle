@@ -65,12 +65,13 @@ def get_pending_smile_messages():
 
     # Get all pending messages with priority
     pending_messages = SMILEMessage.objects.filter(
-        status=SmileMessageStatus.PENDING,
+        status__in=(SmileMessageStatus.PENDING, SmileMessageStatus.RETRY),
         topic__in=[
             settings.METADB_NATS_NEW_REQUEST,
             settings.METADB_NATS_SAMPLE_UPDATE,
             settings.METADB_NATS_REQUEST_UPDATE,
         ],
+        scheduled__lte=datetime.datetime.now(tz=pytz.UTC),
     ).annotate(
         topic_priority=Case(
             When(topic=settings.METADB_NATS_NEW_REQUEST, then=0),

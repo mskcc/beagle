@@ -1,8 +1,10 @@
 import uuid
 import logging
 from enum import IntEnum
+from datetime import timedelta
 from django.db import models
 from django.db.models import JSONField
+from django.utils import timezone
 from django.contrib.postgres.fields import ArrayField
 from notifier.tasks import notifier_start
 from notifier.models import Notifier, JobGroup, JobGroupNotifier
@@ -45,6 +47,7 @@ class SmileMessageStatus(IntEnum):
     COMPLETED = 3
     NOT_SUPPORTED = 4
     FAILED = 5
+    RETRY = 6
 
 
 class SMILEMessage(BaseModel):
@@ -61,6 +64,8 @@ class SMILEMessage(BaseModel):
         default=SmileMessageStatus.PENDING,
         db_index=True,
     )
+    scheduled = models.DateTimeField(default=timezone.now, editable=True)
+    retry_count = models.IntegerField(default=0)
 
     def in_progress(self):
         self.status = SmileMessageStatus.IN_PROGRESS
@@ -82,6 +87,15 @@ class SMILEMessage(BaseModel):
         self.save(update_fields=["status"])
         if self.job_group_notifier and request_metadata:
             self._generate_description(request_metadata)
+
+    def retry(self):
+        self.status = SmileMessageStatus.RETRY
+        if self.retry_count == 0:
+            self.scheduled = self.scheduled + timedelta(hours=24)
+        elif self.retry_count == 1:
+            self.scheduled = self.scheduled + timedelta(hours=24)
+        self.retry_count += 1
+        self.save(update_fields=["scheduled", "status", "retry_count"])
 
     def not_supported(self):
         self.status = SmileMessageStatus.NOT_SUPPORTED

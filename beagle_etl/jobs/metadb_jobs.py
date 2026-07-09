@@ -214,6 +214,13 @@ def new_request(message_id):
     study, _ = Study.objects.get_or_create(study_id=StudyObject.generate_study_id(data.labHeadName))
 
     valid_samples = {k for k, v in status.items() if v.status == "COMPLETED"}
+
+    retry_samples = {k for k, v in status.items() if v.status == "RETRY"}
+
+    if retry_samples:
+        message.retry()
+        return
+
     request_metadata = data.request_metadata()
 
     import_status = True
