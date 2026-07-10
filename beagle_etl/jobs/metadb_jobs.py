@@ -221,13 +221,14 @@ def new_request(message_id):
     if retry_samples:
         message.retry()
         for email in settings.PERMISSION_DENIED_EMAILS:
-            e = ErrorImportingFilesEvent(job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
-                                         email_to=email,
-                                         subject=f"VOYAGER: Permission Denied error during import for igoRequestId:{message.request_id} id:{message_id}",
-                                         email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
-                                         request_id=message.request_id,
-                                         msg=f"Samples {', '.join(sorted(retry_samples))} failed to import because fastqs don't have correct permissions"
-                                         )
+            e = ErrorImportingFilesEvent(
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+                email_to=email,
+                subject=f"VOYAGER: Permission Denied error during import for igoRequestId:{message.request_id} id:{message_id}",
+                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                request_id=message.request_id,
+                msg=f"Samples {', '.join(sorted(retry_samples))} failed to import because fastqs don't have correct permissions",
+            )
             send_notification.delay(e.to_dict())
         return
 
