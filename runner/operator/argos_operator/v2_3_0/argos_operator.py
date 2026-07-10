@@ -250,7 +250,7 @@ class ArgosOperator(Operator):
                 tumor_current = tumor.first()
                 bait_set = tumor_current.metadata["baitSet"]
                 preservation_types = tumor_current.metadata["preservation"]
-                sample_origin = tumor_current.metadata["sampleOrigin"]
+                sample_origin = tumor_current.metadata.get("sampleOrigin") or ""
                 pooled_normal_files, bait_set_reformatted, sample_name = get_pooled_normal_files(
                     run_ids, preservation_types, bait_set, sample_origin
                 )
