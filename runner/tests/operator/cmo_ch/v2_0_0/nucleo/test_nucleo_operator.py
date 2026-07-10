@@ -12,8 +12,8 @@ from django.core.management import call_command
 
 
 FIXTURES = [
-    "fixtures/tests/merge_fastqs/10151_F_13.file.json",
-    "fixtures/tests/merge_fastqs/10151_F_13.filemetadata.json",
+    "fixtures/tests/merge_fastqs/99996_F_13.file.json",
+    "fixtures/tests/merge_fastqs/99996_F_13.filemetadata.json",
 ]
 
 COMMON_FIXTURES = [
@@ -40,7 +40,7 @@ class TestCMOCHNucleoOperator(TestCase):
         self.assertEqual(len(File.objects.all()), operator_files_count)
         self.assertEqual(len(FileMetadata.objects.all()), operator_files_count)
 
-        request_id = "10151_F"
+        request_id = "99996_F"
 
         operator_model = Operator.objects.get(id=14)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)
@@ -73,13 +73,13 @@ class TestCMOCHNucleoOperator(TestCase):
         """
         Test that CMO-CH jobs are correctly created
         """
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.file.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99900_H.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.filemetadata.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99900_H.filemetadata.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         files = File.objects.filter(
-            filemetadata__metadata__requestId="05500_HJ", filemetadata__metadata__igoComplete=True
+            filemetadata__metadata__requestId="99900_H", filemetadata__metadata__igoComplete=True
         ).all()
         data = list()
         for file in files:
@@ -89,9 +89,9 @@ class TestCMOCHNucleoOperator(TestCase):
             sample["file_name"] = file.file_name
             sample["metadata"] = file.filemetadata_set.first().metadata
             data.append(sample)
-        cmo_ch_inputs = construct_sample_inputs(data, "05500_HJ")
+        cmo_ch_inputs = construct_sample_inputs(data, "99900_H")
         self.assertTrue(len(cmo_ch_inputs) == 18)
-        expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.input.json")))
+        expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "99900_H.input.json")))
         cmo_ch_inputs_str = json.dumps(cmo_ch_inputs)
         expected_inputs_str = json.dumps(expected_inputs)
         self.assertTrue(cmo_ch_inputs_str == expected_inputs_str)
@@ -101,10 +101,10 @@ class TestCMOCHNucleoOperator(TestCase):
         Test getting the CMO-CH jobs
         """
         operator_model = Operator.objects.get(id=14)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.file.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99900_H.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "05500_HJ.filemetadata.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99900_H.filemetadata.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        jobs = CMOCHNucleoOperator(operator_model, request_id="05500_HJ").get_jobs()
+        jobs = CMOCHNucleoOperator(operator_model, request_id="99900_H").get_jobs()
         self.assertTrue((len(jobs) == 18))
-        self.assertTrue(jobs[0].name == "CMO-CH Nucleo: 05500_HJ, 1 of 18")
+        self.assertTrue(jobs[0].name == "CMO-CH Nucleo: 99900_H, 1 of 18")

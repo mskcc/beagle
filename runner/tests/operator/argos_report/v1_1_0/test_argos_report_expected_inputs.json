@@ -10,11 +10,11 @@
     ],
     "portal_dir": {
       "class": "Directory",
-      "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.6.1/20230504_16_00_772883/portal"
+      "location": "/data/output/voyager/argos/BALTO_REQID/1.6.1/20230504_16_00_772883/portal"
     },
     "analysis_dir": {
       "class": "Directory",
-      "location": "/juno/res/ci/voyager/argos/BALTO_REQID/1.6.1/20230504_16_00_772883/analysis"
+      "location": "/data/output/voyager/argos/BALTO_REQID/1.6.1/20230504_16_00_772883/analysis"
     },
     "oncokb_file": {
       "class": "File",

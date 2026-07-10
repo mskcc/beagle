@@ -193,7 +193,7 @@ def construct_sample_inputs(samples, request_id, group_id):
                 {
                     "class": "File",
                     "location": "juno://"
-                    + "/juno/work/access/production/resources/tools/voyager_resources/SampleSheet.csv",
+                    + "/data/access/resources/tools/voyager_resources/SampleSheet.csv",
                 }
             )
 

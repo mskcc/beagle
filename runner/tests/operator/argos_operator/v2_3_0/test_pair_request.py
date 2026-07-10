@@ -82,9 +82,9 @@ class TestPairRequest(TestCase):
         """
         samples = [
             {
-                "patient_id": "C-W86LMR",
+                "patient_id": "C-PPPP21",
                 "bait_set": "IMPACT468_BAITS",
-                "run_id": ["JAX_0397"],
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "sample_origin": [""],
                 "tumor_type": "Normal",
@@ -93,9 +93,9 @@ class TestPairRequest(TestCase):
                 "run_mode": "HiSeq High Output",
             },
             {
-                "patient_id": "C-W86LMR",
+                "patient_id": "C-PPPP21",
                 "bait_set": "IMPACT468_BAITS",
-                "run_id": ["JAX_0397"],
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "sample_origin": [""],
                 "tumor_type": "Tumor",
@@ -108,10 +108,10 @@ class TestPairRequest(TestCase):
         expected_pairs = {
             "tumor": [
                 {
-                    "patient_id": "C-W86LMR",
+                    "patient_id": "C-PPPP21",
                     "bait_set": "IMPACT468_BAITS",
                     "tumor_type": "Tumor",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "sample_id": "my_sample_id1",
@@ -121,10 +121,10 @@ class TestPairRequest(TestCase):
             ],
             "normal": [
                 {
-                    "patient_id": "C-W86LMR",
+                    "patient_id": "C-PPPP21",
                     "bait_set": "IMPACT468_BAITS",
                     "tumor_type": "Normal",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "sample_id": "my_sample_id2",
@@ -142,8 +142,8 @@ class TestPairRequest(TestCase):
         samples = [
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-DRKHP7",
-                "run_id": ["JAX_0397"],
+                "patient_id": "C-PPPPP7",
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "sample_origin": [""],
                 "tumor_type": "Normal",
@@ -153,8 +153,8 @@ class TestPairRequest(TestCase):
             },
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-8VK0V7",
-                "run_id": ["JAX_0397"],
+                "patient_id": "C-PPPPP3",
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "sample_origin": [""],
                 "tumor_type": "Normal",
@@ -164,8 +164,8 @@ class TestPairRequest(TestCase):
             },
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-DRKHP7",
-                "run_id": ["JAX_0397"],
+                "patient_id": "C-PPPPP7",
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "sample_origin": [""],
                 "tumor_type": "Tumor",
@@ -175,8 +175,8 @@ class TestPairRequest(TestCase):
             },
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-8VK0V7",
-                "run_id": ["JAX_0397"],
+                "patient_id": "C-PPPPP3",
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "sample_origin": [""],
                 "tumor_type": "Tumor",
@@ -186,8 +186,8 @@ class TestPairRequest(TestCase):
             },
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-DRKHP7",
-                "run_id": ["JAX_0397"],
+                "patient_id": "C-PPPPP7",
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "sample_origin": [""],
                 "tumor_type": "Tumor",
@@ -201,9 +201,9 @@ class TestPairRequest(TestCase):
             "tumor": [
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "patient_id": "C-DRKHP7",
+                    "patient_id": "C-PPPPP7",
                     "tumor_type": "Tumor",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "sample_id": "my_sample_id3",
@@ -212,9 +212,9 @@ class TestPairRequest(TestCase):
                 },
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "patient_id": "C-8VK0V7",
+                    "patient_id": "C-PPPPP3",
                     "tumor_type": "Tumor",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "sample_id": "my_sample_id4",
@@ -223,9 +223,9 @@ class TestPairRequest(TestCase):
                 },
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "patient_id": "C-DRKHP7",
+                    "patient_id": "C-PPPPP7",
                     "tumor_type": "Tumor",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "sample_id": "my_sample_id5",
@@ -236,9 +236,9 @@ class TestPairRequest(TestCase):
             "normal": [
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "patient_id": "C-DRKHP7",
+                    "patient_id": "C-PPPPP7",
                     "tumor_type": "Normal",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "sample_id": "my_sample_id1",
@@ -247,9 +247,9 @@ class TestPairRequest(TestCase):
                 },
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "patient_id": "C-8VK0V7",
+                    "patient_id": "C-PPPPP3",
                     "tumor_type": "Normal",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "sample_id": "my_sample_id2",
@@ -258,9 +258,9 @@ class TestPairRequest(TestCase):
                 },
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "patient_id": "C-DRKHP7",
+                    "patient_id": "C-PPPPP7",
                     "tumor_type": "Normal",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "sample_id": "my_sample_id1",
@@ -283,8 +283,8 @@ class TestPairRequest(TestCase):
         samples = [
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-DRKHP7",
-                "run_id": ["JAX_0397"],
+                "patient_id": "C-PPPPP7",
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "tumor_type": "Normal",
                 "run_mode": "HiSeq High Output",
@@ -298,24 +298,24 @@ class TestPairRequest(TestCase):
         """
         Test pairing with only a single unpaired Tumor sample
         Test that the appropriate Normal sample is found from the other samples in the same request
-        missing normal for sample 10075_D_1; querying patient C-DRKHP7
+        missing normal for sample 99990_D_1; querying patient C-PPPPP7
         """
         # Load fixtures:
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D.file.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D.filemetadata.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D.filemetadata.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         samples = [
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-DRKHP7",
-                "run_id": ["JAX_0397"],
+                "patient_id": "C-PPPPP7",
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "sample_origin": [""],
                 "tumor_type": "Tumor",
-                "SM": "10075_D_1",
-                "sample_id": "10075_D_1",
+                "SM": "99990_D_1",
+                "sample_id": "99990_D_1",
                 "run_mode": "hiseq",
             }
         ]
@@ -324,26 +324,26 @@ class TestPairRequest(TestCase):
             "normal": [
                 {
                     "CN": "MSKCC",
-                    "ID": ["s_C_DRKHP7_N001_d_HCYYWBBXY"],
-                    "LB": "10075_D_2",
+                    "ID": ["s_C_PPPPP7_N001_d_FCELLAAAA4"],
+                    "LB": "99990_D_2",
                     "PL": "Illumina",
-                    "PU": ["HCYYWBBXY"],
+                    "PU": ["FCELLAAAA4"],
                     "R1": [
-                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_31-N_IGO_10075_D_2/31-N_IGO_10075_D_2_S14_R1_001.fastq.gz"
+                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R1_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("aef306b4-7d85-4c9f-b9a4-a115154f73bf")],
                     "R2": [
-                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_31-N_IGO_10075_D_2/31-N_IGO_10075_D_2_S14_R2_001.fastq.gz"
+                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R2_001.fastq.gz"
                     ],
                     "R2_bid": [UUID("9e47ba2f-093a-4233-8339-fed03e159b3f")],
                     "bam": [],
                     "bam_bid": [],
-                    "SM": "s_C_DRKHP7_N001_d",
+                    "SM": "s_C_PPPPP7_N001_d",
                     "bait_set": "IMPACT468_BAITS",
-                    "sample_id": "10075_D_2",
-                    "patient_id": "C-DRKHP7",
-                    "request_id": "10075_D",
-                    "run_id": ["JAX_0397"],
+                    "sample_id": "99990_D_2",
+                    "patient_id": "C-PPPPP7",
+                    "request_id": "99990_D",
+                    "run_id": ["SEQRUN_0004"],
                     "run_mode": "hiseq",
                     "preservation_type": ["Frozen"],
                     "sample_origin": ["Whole Blood"],
@@ -351,17 +351,17 @@ class TestPairRequest(TestCase):
                     "species": "Human",
                     "specimen_type": "Blood",
                     "tumor_type": "Normal",
-                    "pi": "John Smith",
+                    "pi": "Test Investigator",
                     "pi_email": "email@internet.com",
                 }
             ],
             "tumor": [
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "sample_id": "10075_D_1",
-                    "SM": "10075_D_1",
-                    "patient_id": "C-DRKHP7",
-                    "run_id": ["JAX_0397"],
+                    "sample_id": "99990_D_1",
+                    "SM": "99990_D_1",
+                    "patient_id": "C-PPPPP7",
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "tumor_type": "Tumor",
@@ -380,10 +380,10 @@ class TestPairRequest(TestCase):
         This time also load File entries from another request to make sure they do not confound the pairing
         """
         # Load fixtures
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D.file.json"), verbosity=0)
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D.filemetadata.json"), verbosity=0)
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "05257_CB.file.json"), verbosity=0)
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "05257_CB.filemetadata.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D.file.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D.filemetadata.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99992_C.file.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99992_C.filemetadata.json"), verbosity=0)
 
         # check the total number of db entries now
         self.assertTrue(len(File.objects.all()) == 14)
@@ -392,13 +392,13 @@ class TestPairRequest(TestCase):
         samples = [
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-DRKHP7",
+                "patient_id": "C-PPPPP7",
                 "tumor_type": "Tumor",
-                "run_id": ["JAX_0397"],
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["Frozen"],
                 "sample_origin": [""],
-                "SM": "10075_D_1",
-                "sample_id": "10075_D_1",
+                "SM": "99990_D_1",
+                "sample_id": "99990_D_1",
                 "run_mode": "hiseq",
             }
         ]
@@ -407,26 +407,26 @@ class TestPairRequest(TestCase):
             "normal": [
                 {
                     "CN": "MSKCC",
-                    "ID": ["s_C_DRKHP7_N001_d_HCYYWBBXY"],
-                    "LB": "10075_D_2",
+                    "ID": ["s_C_PPPPP7_N001_d_FCELLAAAA4"],
+                    "LB": "99990_D_2",
                     "PL": "Illumina",
-                    "PU": ["HCYYWBBXY"],
+                    "PU": ["FCELLAAAA4"],
                     "R1": [
-                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_31-N_IGO_10075_D_2/31-N_IGO_10075_D_2_S14_R1_001.fastq.gz"
+                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R1_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("aef306b47d854c9fb9a4a115154f73bf")],
                     "R2": [
-                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D/Sample_31-N_IGO_10075_D_2/31-N_IGO_10075_D_2_S14_R2_001.fastq.gz"
+                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R2_001.fastq.gz"
                     ],
                     "R2_bid": [UUID("9e47ba2f093a42338339fed03e159b3f")],
                     "bam": [],
                     "bam_bid": [],
-                    "SM": "s_C_DRKHP7_N001_d",
+                    "SM": "s_C_PPPPP7_N001_d",
                     "bait_set": "IMPACT468_BAITS",
-                    "sample_id": "10075_D_2",
-                    "patient_id": "C-DRKHP7",
-                    "request_id": "10075_D",
-                    "run_id": ["JAX_0397"],
+                    "sample_id": "99990_D_2",
+                    "patient_id": "C-PPPPP7",
+                    "request_id": "99990_D",
+                    "run_id": ["SEQRUN_0004"],
                     "run_mode": "hiseq",
                     "preservation_type": ["Frozen"],
                     "sample_origin": ["Whole Blood"],
@@ -434,17 +434,17 @@ class TestPairRequest(TestCase):
                     "species": "Human",
                     "specimen_type": "Blood",
                     "tumor_type": "Normal",
-                    "pi": "John Smith",
+                    "pi": "Test Investigator",
                     "pi_email": "email@internet.com",
                 }
             ],
             "tumor": [
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "sample_id": "10075_D_1",
-                    "SM": "10075_D_1",
-                    "patient_id": "C-DRKHP7",
-                    "run_id": ["JAX_0397"],
+                    "sample_id": "99990_D_1",
+                    "SM": "99990_D_1",
+                    "patient_id": "C-PPPPP7",
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["Frozen"],
                     "sample_origin": [""],
                     "tumor_type": "Tumor",
@@ -462,11 +462,11 @@ class TestPairRequest(TestCase):
         """
         # Load fixtures
         # only normals
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.file.json"), verbosity=0)
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.filemetadata.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_2.file.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_2.filemetadata.json"), verbosity=0)
         # only tumors
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_3.file.json"), verbosity=0)
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_3.filemetadata.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_3.file.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_3.filemetadata.json"), verbosity=0)
 
         # check the total number of db entries now
         self.assertTrue(len(File.objects.all()) == 4)
@@ -475,14 +475,14 @@ class TestPairRequest(TestCase):
         samples = [
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-8VK0V7",
+                "patient_id": "C-PPPPP3",
                 "tumor_type": "Tumor",
-                "run_id": ["JAX_0397"],
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["EDTA-Streck"],
                 "sample_origin": [""],
-                "sample_id": "10075_D_3_5",
-                "SM": "10075_D_3_5",
-                "request_id": "10075_D_3",
+                "sample_id": "99990_D_3_5",
+                "SM": "99990_D_3_5",
+                "request_id": "99990_D_3",
                 "run_mode": "hiseq",
             }
         ]
@@ -492,14 +492,14 @@ class TestPairRequest(TestCase):
             "tumor": [
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "patient_id": "C-8VK0V7",
-                    "run_id": ["JAX_0397"],
+                    "patient_id": "C-PPPPP3",
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["EDTA-Streck"],
                     "tumor_type": "Tumor",
-                    "sample_id": "10075_D_3_5",
-                    "SM": "10075_D_3_5",
+                    "sample_id": "99990_D_3_5",
+                    "SM": "99990_D_3_5",
                     "sample_origin": [""],
-                    "request_id": "10075_D_3",
+                    "request_id": "99990_D_3",
                     "run_mode": "hiseq",
                 }
             ],
@@ -507,33 +507,33 @@ class TestPairRequest(TestCase):
                 {
                     "CN": "MSKCC",
                     "PL": "Illumina",
-                    "PU": ["HCYYWBBXY"],
-                    "LB": "10075_D_2_3",
+                    "PU": ["FCELLAAAA4"],
+                    "LB": "99990_D_2_3",
                     "tumor_type": "Normal",
-                    "ID": ["s_C_8VK0V7_N001_d_HCYYWBBXY"],
-                    "SM": "s_C_8VK0V7_N001_d",
+                    "ID": ["s_C_PPPPP3_N001_d_FCELLAAAA4"],
+                    "SM": "s_C_PPPPP3_N001_d",
                     "species": "Human",
-                    "patient_id": "C-8VK0V7",
+                    "patient_id": "C-PPPPP3",
                     "bait_set": "IMPACT468_BAITS",
-                    "sample_id": "10075_D_2_3",
+                    "sample_id": "99990_D_2_3",
                     "run_date": ["2019-12-12"],
                     "specimen_type": "Blood",
                     "R1": [
-                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R1_001.fastq.gz"
+                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R1_001.fastq.gz"
                     ],
                     "R2": [
-                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_2/Sample_JW_MEL_007_NORM_IGO_10075_D_2_3/JW_MEL_007_NORM_IGO_10075_D_2_3_S15_R2_001.fastq.gz"
+                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R2_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("7a3bceb31af84d3da1583731c83aeb5a")],
                     "R2_bid": [UUID("ecf003cdbd304e909d180d99e7fd79d3")],
                     "bam": [],
                     "bam_bid": [],
-                    "request_id": "10075_D_2",
+                    "request_id": "99990_D_2",
                     "sample_origin": ["Plasma"],
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "run_mode": "hiseq",
                     "preservation_type": ["EDTA-Streck"],
-                    "pi": "John Smith",
+                    "pi": "Test Investigator",
                     "pi_email": "email@internet.com",
                 }
             ],
@@ -547,10 +547,10 @@ class TestPairRequest(TestCase):
         in the event that a patient has several normals
         Return the Normal with the most recent run_date
         """
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.file.json"), verbosity=0)
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_2.filemetadata.json"), verbosity=0)
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_4.file.json"), verbosity=0)
-        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_4.filemetadata.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_2.file.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_2.filemetadata.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_4.file.json"), verbosity=0)
+        call_command("loaddata", os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_4.filemetadata.json"), verbosity=0)
 
         # check the total number of db entries now
         self.assertTrue(len(File.objects.all()) == 4)
@@ -559,12 +559,12 @@ class TestPairRequest(TestCase):
         samples = [
             {
                 "bait_set": "IMPACT468_BAITS",
-                "patient_id": "C-8VK0V7",
+                "patient_id": "C-PPPPP3",
                 "tumor_type": "Tumor",
-                "sample_id": "10075_D_3_5",
-                "SM": "10075_D_3_5",
-                "request_id": "10075_D_3",
-                "run_id": ["JAX_0397"],
+                "sample_id": "99990_D_3_5",
+                "SM": "99990_D_3_5",
+                "request_id": "99990_D_3",
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["EDTA-Streck"],
                 "sample_origin": [""],
                 "run_mode": "hiseq",
@@ -576,12 +576,12 @@ class TestPairRequest(TestCase):
             "tumor": [
                 {
                     "bait_set": "IMPACT468_BAITS",
-                    "patient_id": "C-8VK0V7",
+                    "patient_id": "C-PPPPP3",
                     "tumor_type": "Tumor",
-                    "sample_id": "10075_D_3_5",
-                    "SM": "10075_D_3_5",
-                    "request_id": "10075_D_3",
-                    "run_id": ["JAX_0397"],
+                    "sample_id": "99990_D_3_5",
+                    "SM": "99990_D_3_5",
+                    "request_id": "99990_D_3",
+                    "run_id": ["SEQRUN_0004"],
                     "sample_origin": [""],
                     "preservation_type": ["EDTA-Streck"],
                     "run_mode": "hiseq",
@@ -591,32 +591,32 @@ class TestPairRequest(TestCase):
                 {
                     "CN": "MSKCC",
                     "PL": "Illumina",
-                    "PU": ["HCYYWBBXY"],
-                    "LB": "10075_D_4_3",
+                    "PU": ["FCELLAAAA4"],
+                    "LB": "99990_D_4_3",
                     "tumor_type": "Normal",
-                    "ID": ["s_C_8VK0V7_N001_d_HCYYWBBXY"],
-                    "SM": "s_C_8VK0V7_N001_d",
+                    "ID": ["s_C_PPPPP3_N001_d_FCELLAAAA4"],
+                    "SM": "s_C_PPPPP3_N001_d",
                     "species": "Human",
-                    "patient_id": "C-8VK0V7",
+                    "patient_id": "C-PPPPP3",
                     "bait_set": "IMPACT468_BAITS",
-                    "sample_id": "10075_D_4_3",
+                    "sample_id": "99990_D_4_3",
                     "run_date": ["2019-12-13"],
                     "specimen_type": "Blood",
                     "R1": [
-                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_4/Sample_JW_MEL_007_NORM_IGO_10075_D_4_3/JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R1_001.fastq.gz"
+                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_4/Sample_SAMPLE_N_001_IGO_99990_D_4_3/SAMPLE_N_001_IGO_99990_D_4_3_S15_R1_001.fastq.gz"
                     ],
                     "R2": [
-                        "/ifs/archive/GCL/hiseq/FASTQ/JAX_0397_BHCYYWBBXY/Project_10075_D_4/Sample_JW_MEL_007_NORM_IGO_10075_D_4_3/JW_MEL_007_NORM_IGO_10075_D_4_3_S15_R2_001.fastq.gz"
+                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_4/Sample_SAMPLE_N_001_IGO_99990_D_4_3/SAMPLE_N_001_IGO_99990_D_4_3_S15_R2_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("404ad544428c405f967aa6920d091148")],
                     "R2_bid": [UUID("19703ff82e144f608d57891df80b2858")],
                     "bam": [],
                     "bam_bid": [],
-                    "request_id": "10075_D_4",
-                    "run_id": ["JAX_0397"],
+                    "request_id": "99990_D_4",
+                    "run_id": ["SEQRUN_0004"],
                     "preservation_type": ["EDTA-Streck"],
                     "sample_origin": ["Plasma"],
-                    "pi": "John Smith",
+                    "pi": "Test Investigator",
                     "pi_email": "email@internet.com",
                     "run_mode": "hiseq",
                 }
@@ -634,13 +634,13 @@ class TestPairRequest(TestCase):
         samples = [
             {
                 "CN": "MSKCC",
-                "ID": ["s_juno_argos_demo1_3_HCYYWBBXY"],
+                "ID": ["s_juno_argos_demo1_3_FCELLAAAA4"],
                 "LB": "juno_argos_demo1_3",
                 "PL": "Illumina",
-                "PU": ["HCYYWBBXY"],
-                "R1": ["/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"],
+                "PU": ["FCELLAAAA4"],
+                "R1": ["/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"],
                 "R1_bid": [UUID("a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac")],
-                "R2": ["/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"],
+                "R2": ["/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"],
                 "R2_bid": [UUID("c71c259a-ebc0-4490-9af1-bc99387a70d7")],
                 "bam": [],
                 "bam_bid": [],
@@ -649,7 +649,7 @@ class TestPairRequest(TestCase):
                 "sample_id": "s_juno_argos_demo1_3",
                 "patient_id": "DU874145",
                 "request_id": "juno_argos_demo1",
-                "run_id": ["JAX_0397"],
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["EDTA-Streck"],
                 "sample_origin": [""],
                 "run_date": ["2019-12-12"],
@@ -660,13 +660,13 @@ class TestPairRequest(TestCase):
             },
             {
                 "CN": "MSKCC",
-                "ID": ["s_juno_argos_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT"],
+                "ID": ["s_juno_argos_demo1_5_FCELLAAAA6_GTATTGGC-PPPP14"],
                 "LB": "juno_argos_demo1_5_1_1_1",
                 "PL": "Illumina",
-                "PU": ["HFTCNBBXY_GTATTGGC-TTGTCGGT"],
-                "R1": ["/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"],
+                "PU": ["FCELLAAAA6_GTATTGGC-PPPP14"],
+                "R1": ["/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"],
                 "R1_bid": [UUID("d2d8ed36-d8f4-4e93-b038-d38328fad021")],
-                "R2": ["/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"],
+                "R2": ["/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"],
                 "R2_bid": [UUID("2f77f3ac-ab25-4a02-90bd-86542401ac89")],
                 "bam": [],
                 "bam_bid": [],
@@ -675,7 +675,7 @@ class TestPairRequest(TestCase):
                 "sample_id": "s_juno_argos_demo1_5",
                 "patient_id": "DU874145",
                 "request_id": "juno_argos_demo1",
-                "run_id": ["JAX_0397"],
+                "run_id": ["SEQRUN_0004"],
                 "preservation_type": ["EDTA-Streck"],
                 "sample_origin": [""],
                 "run_date": ["2019-12-17"],
@@ -691,16 +691,16 @@ class TestPairRequest(TestCase):
             "tumor": [
                 {
                     "CN": "MSKCC",
-                    "ID": ["s_juno_argos_demo1_5_HFTCNBBXY_GTATTGGC-TTGTCGGT"],
+                    "ID": ["s_juno_argos_demo1_5_FCELLAAAA6_GTATTGGC-PPPP14"],
                     "LB": "juno_argos_demo1_5_1_1_1",
                     "PL": "Illumina",
-                    "PU": ["HFTCNBBXY_GTATTGGC-TTGTCGGT"],
+                    "PU": ["FCELLAAAA6_GTATTGGC-PPPP14"],
                     "R1": [
-                        "/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"
+                        "/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("d2d8ed36-d8f4-4e93-b038-d38328fad021")],
                     "R2": [
-                        "/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"
+                        "/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"
                     ],
                     "R2_bid": [UUID("2f77f3ac-ab25-4a02-90bd-86542401ac89")],
                     "SM": "s_juno_argos_demo1_5",
@@ -708,7 +708,7 @@ class TestPairRequest(TestCase):
                     "sample_id": "s_juno_argos_demo1_5",
                     "patient_id": "DU874145",
                     "request_id": "juno_argos_demo1",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "run_date": ["2019-12-17"],
                     "species": "Human",
                     "specimen_type": "Resection",
@@ -723,16 +723,16 @@ class TestPairRequest(TestCase):
             "normal": [
                 {
                     "CN": "MSKCC",
-                    "ID": ["s_juno_argos_demo1_3_HCYYWBBXY"],
+                    "ID": ["s_juno_argos_demo1_3_FCELLAAAA4"],
                     "LB": "juno_argos_demo1_3",
                     "PL": "Illumina",
-                    "PU": ["HCYYWBBXY"],
+                    "PU": ["FCELLAAAA4"],
                     "R1": [
-                        "/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"
+                        "/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac")],
                     "R2": [
-                        "/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"
+                        "/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"
                     ],
                     "R2_bid": [UUID("c71c259a-ebc0-4490-9af1-bc99387a70d7")],
                     "SM": "s_juno_argos_demo1_3",
@@ -740,7 +740,7 @@ class TestPairRequest(TestCase):
                     "sample_id": "s_juno_argos_demo1_3",
                     "patient_id": "DU874145",
                     "request_id": "juno_argos_demo1",
-                    "run_id": ["JAX_0397"],
+                    "run_id": ["SEQRUN_0004"],
                     "run_date": ["2019-12-12"],
                     "species": "Human",
                     "specimen_type": "Blood",

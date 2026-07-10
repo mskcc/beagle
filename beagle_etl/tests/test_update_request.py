@@ -31,7 +31,7 @@ class TestUpdateRequestDeserialization(TestCase):
                         "bicAnalysis": True,
                         "neoAg": False,
                         "deliveryDate": 1771290987386,
-                        "deliveryPath": "/ifs/datadelivery/igo_core/share/test_user",
+                        "deliveryPath": "/data/delivery/igo/share/test_user",
                         "pooledNormals": None,
                         "projectId": "12345",
                         "status": {"validationReport": "{}", "validationStatus": True},
@@ -62,7 +62,7 @@ class TestUpdateRequestDeserialization(TestCase):
                         "isCmoRequest": True,
                         "bicAnalysis": True,
                         "neoAg": False,
-                        "deliveryPath": "/ifs/datadelivery/igo_core/share/test_user",
+                        "deliveryPath": "/data/delivery/igo/share/test_user",
                         "projectId": "12345",
                         "status": {"validationReport": "{}", "validationStatus": True},
                     }

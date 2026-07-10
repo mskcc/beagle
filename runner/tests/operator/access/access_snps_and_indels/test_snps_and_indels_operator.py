@@ -122,7 +122,7 @@ class TestAccessSNVOperator(TestCase):
         :return:
         """
         # Delete the IGO test samples, so DMP normal must be used
-        igo_normals = File.objects.filter(path__regex="C-000884-N0")
+        igo_normals = File.objects.filter(path__regex="C-PPPP19-N0")
         [f.delete() for f in igo_normals]
 
         pipeline_slug = "AccessLegacySNVOperator"

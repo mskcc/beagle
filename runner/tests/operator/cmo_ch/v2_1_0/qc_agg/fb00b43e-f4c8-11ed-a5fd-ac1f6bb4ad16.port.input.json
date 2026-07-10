@@ -58,7 +58,7 @@
                 "location": "bid://546a6067-2d44-4a6f-bc7c-fce57030ad74"
             },
             "value": {
-                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list",
+                "path": "/data/cch/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list",
                 "class": "File"
             },
             "notify": false,
@@ -90,7 +90,7 @@
                 "location": "bid://546a6067-2d44-4a6f-bc7c-fce57030ad74"
             },
             "value": {
-                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list",
+                "path": "/data/cch/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.interval_list",
                 "class": "File"
             },
             "notify": false,
@@ -122,7 +122,7 @@
                 "location": "bid://80184010-f3e8-4604-bcd8-f00f8a28bb88"
             },
             "value": {
-                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.bed",
+                "path": "/data/cch/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/picard_baits.bed",
                 "class": "File"
             },
             "notify": false,
@@ -154,7 +154,7 @@
                 "location": "bid://f978a356-4c68-4325-a846-9eb9addea04b"
             },
             "value": {
-                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/fp_tiling_snps.vcf",
+                "path": "/data/cch/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/fp_tiling_snps.vcf",
                 "class": "File"
             },
             "notify": false,
@@ -196,7 +196,7 @@
                 ]
             },
             "value": {
-                "path": "/juno/work/cch/production/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
+                "path": "/data/cch/resources/reference/versions/hg19/Homo_sapiens_assembly19.fasta",
                 "class": "File",
                 "secondaryFiles": [
                     {
@@ -456,7 +456,7 @@
                 "location": "bid://5d40547d-5404-44d1-a8d4-60ce95841689"
             },
             "value": {
-                "path": "/juno/work/cch/production/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/hotspot-list-ch-pd-v1.maf",
+                "path": "/data/cch/resources/cmo-ch/versions/v1.0/regions_of_interest/versions/v1.0/hotspot-list-ch-pd-v1.maf",
                 "class": "File"
             },
             "notify": false,
@@ -932,7 +932,7 @@
                 "location": "bid://8c79064a-69f5-4a7f-8759-85c4f06a85b5"
             },
             "value": {
-                "path": "/juno/work/ci/temp/8dd44c29-73c3-4d9c-a6fb-999d41e76017/samples_json.json",
+                "path": "/data/pipeline/temp/8dd44c29-73c3-4d9c-a6fb-999d41e76017/samples_json.json",
                 "class": "File"
             },
             "notify": false,

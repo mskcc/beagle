@@ -73,17 +73,17 @@ class TestUltron(TestCase):
             "maf_files": [
                 {
                     "class": "File",
-                    "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
+                    "location": "juno:///data/pipeline/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
                 }
             ],
             "bam_files": [
                 {
                     "class": "File",
-                    "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
+                    "location": "juno:///data/pipeline/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
                     "secondaryFiles": [
                         {
                             "class": "File",
-                            "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bai",
+                            "location": "juno:///data/pipeline/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bai",
                         }
                     ],
                 }
@@ -91,15 +91,15 @@ class TestUltron(TestCase):
             "sample_ids": ["s_C_ALLANT_T003_d"],
             "ref_fasta": {
                 "class": "File",
-                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+                "location": "juno:///rtsess01/compute/data/pipeline/ci/resources/genomes/GRCh37/fasta/b37.fasta",
             },
             "exac_filter": {
                 "class": "File",
-                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+                "location": "juno:///rtsess01/compute/data/pipeline/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
         }
         self.maf_runner_ports = ["7f743915-a0d6-466c-b1eb-3f8501089a36", "b946625d-2753-4e5a-89b8-cc08beb1bc40"]
-        self.expected_output_directory = f"/juno/work/pi/beagle/output/argos_pair_sv/{UltronOperator.ARGOS_NAME}/ALN-REQ-ID/{UltronOperator.ARGOS_VERSION}/"
+        self.expected_output_directory = f"/data/pipeline/beagle/output/argos_pair_sv/{UltronOperator.ARGOS_NAME}/ALN-REQ-ID/{UltronOperator.ARGOS_VERSION}/"
         self.expected_project_prefix = "ALN-REQ-ID"
 
     def test_construct_output_directory(self):
@@ -130,24 +130,24 @@ class TestUltron(TestCase):
             "argos_version_string": "1.1.2",
             "exac_filter": {
                 "class": "File",
-                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+                "location": "juno:///rtsess01/compute/data/pipeline/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
             },
             "fillout_output_fname": "ALN-REQ-ID.fillout.maf",
             "is_impact": True,
             "ref_fasta": {
                 "class": "File",
-                "location": "juno:///rtsess01/compute/juno/bic/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
+                "location": "juno:///rtsess01/compute/data/pipeline/ci/resources/genomes/GRCh37/fasta/b37.fasta",
             },
             "sample_groups": [
                 [
                     {
                         "bam_file": {
                             "class": "File",
-                            "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bam",
+                            "location": "juno:///data/pipeline/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.rg.md.abra.printreads.bam",
                         },
                         "maf_file": {
                             "class": "File",
-                            "location": "juno:///juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts.maf",
+                            "location": "juno:///data/pipeline/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59/s_C_ALLANT_T001_d.s_C_ALLANT_N002_d.muts.maf",
                         },
                         "normal_id": "s_C_ALLANT_N002_d",
                         "prefilter": True,
@@ -175,11 +175,11 @@ class TestUltron(TestCase):
                     {
                         "bam_file": {
                             "class": "File",
-                            "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
+                            "location": "juno:///data/pipeline/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.rg.md.abra.printreads.bam",
                         },
                         "maf_file": {
                             "class": "File",
-                            "location": "juno:///juno/work/ci/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
+                            "location": "juno:///data/pipeline/voyager-output/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f/s_C_ALLANT_T003_d.s_C_ALLANT_N002_d.muts.maf",
                         },
                         "normal_id": "s_C_ALLANT_N002_d",
                         "prefilter": True,

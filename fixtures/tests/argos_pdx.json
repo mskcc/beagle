@@ -31,7 +31,7 @@
         "sample": "P-0112838-N01-IM7",
         "anon_id": "REDACTED",
         "patient": {
-          "cmo": "V5AJEY",
+          "cmo": "PPPP18",
           "dmp": "P-0000001"
         },
         "updated": "2024-09-26 05:04:16.056479+00:00",
@@ -40,7 +40,7 @@
         "imported": "2024-09-26 05:04:16.056467+00:00",
         "cmo_assay": "IMPACT505",
         "tumor_type": null,
-        "external_id": "C-V5AJEY-N901-dZ-IM7",
+        "external_id": "C-PPPP18-N901-dZ-IM7",
         "sample_type": null,
         "tissue_type": null,
         "primary_site": null,

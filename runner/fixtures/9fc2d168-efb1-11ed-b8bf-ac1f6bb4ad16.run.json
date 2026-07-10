@@ -13,7 +13,7 @@
             "job_statuses": {},
             "message": {},
             "output_metadata": {},
-            "output_directory": "/juno/res/ci/voyager/argos/BALTO_REQID/1.6.1/20230504_16_00_772883",
+            "output_directory": "/data/output/voyager/argos/BALTO_REQID/1.6.1/20230504_16_00_772883",
             "tags": {
                 "labHeadEmail": "superlabheadperson@myresearchorg.org",
                 "argos_run_ids": [
