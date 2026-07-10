@@ -10,6 +10,7 @@ from django.conf import settings
 from beagle_etl.smile_message.objects.request_object import RequestMetadata
 from beagle_etl.smile_message.objects.update_request import UpdateRequest
 from beagle_etl.smile_message.objects.update_sample import UpdateSample
+from check_cmo_sample_names import message
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import (
     ETLSetRecipeEvent,
@@ -29,6 +30,7 @@ from notifier.events import (
     WESJobFailedEvent,
     VoyagerCantProcessRequestAllNormalsEvent,
     SMILEUpdateEvent,
+    ErrorImportingFilesEvent,
 )
 from notifier.tasks import send_notification
 from notifier.helper import get_emails_to_notify
@@ -219,6 +221,15 @@ def new_request(message_id):
 
     if retry_samples:
         message.retry()
+        for email in settings.PERMISSION_DENIED_EMAILS:
+            e = ErrorImportingFilesEvent(job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+                                         email_to=email,
+                                         subject=f"VOYAGER: Permission Denied error during import for igoRequestId:{message.request_id} id:{message_id}",
+                                         email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                                         request_id=message.request_id,
+                                         msg=f"Samples {', '.join(sorted(retry_samples))} failed to import because fastqs don't have correct permissions"
+                                         )
+            send_notification.delay(e.to_dict())
         return
 
     request_metadata = data.request_metadata()
