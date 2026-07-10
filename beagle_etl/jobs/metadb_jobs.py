@@ -10,7 +10,6 @@ from django.conf import settings
 from beagle_etl.smile_message.objects.request_object import RequestMetadata
 from beagle_etl.smile_message.objects.update_request import UpdateRequest
 from beagle_etl.smile_message.objects.update_sample import UpdateSample
-from check_cmo_sample_names import message
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.events import (
     ETLSetRecipeEvent,
