@@ -1177,13 +1177,9 @@ class TestPairRequest(TestCase):
                     "LB": "juno_argos_demo1_5_1_1_1",
                     "PL": "Illumina",
                     "PU": ["FCELLAAAA6_GTATTGGC-PPPP14"],
-                    "R1": [
-                        "/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"
-                    ],
+                    "R1": ["/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"],
                     "R1_bid": [UUID("d2d8ed36-d8f4-4e93-b038-d38328fad021")],
-                    "R2": [
-                        "/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"
-                    ],
+                    "R2": ["/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"],
                     "R2_bid": [UUID("2f77f3ac-ab25-4a02-90bd-86542401ac89")],
                     "SM": "s_juno_argos_demo1_5",
                     "bait_set": "IMPACT468_BAITS",
@@ -1207,13 +1203,9 @@ class TestPairRequest(TestCase):
                     "LB": "juno_argos_demo1_3",
                     "PL": "Illumina",
                     "PU": ["FCELLAAAA4"],
-                    "R1": [
-                        "/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"
-                    ],
+                    "R1": ["/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"],
                     "R1_bid": [UUID("a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac")],
-                    "R2": [
-                        "/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"
-                    ],
+                    "R2": ["/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"],
                     "R2_bid": [UUID("c71c259a-ebc0-4490-9af1-bc99387a70d7")],
                     "SM": "s_juno_argos_demo1_3",
                     "bait_set": "IMPACT468_BAITS",

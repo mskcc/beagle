@@ -192,8 +192,7 @@ def construct_sample_inputs(samples, request_id, group_id):
             sample_sheets.append(
                 {
                     "class": "File",
-                    "location": "juno://"
-                    + "/data/access/resources/tools/voyager_resources/SampleSheet.csv",
+                    "location": "juno://" + "/data/access/resources/tools/voyager_resources/SampleSheet.csv",
                 }
             )
 
@@ -245,7 +244,7 @@ class AccessLegacyOperator(Operator):
         ]
 
         request_id = data[0]["metadata"][settings.REQUEST_ID_METADATA_KEY]
-        (sample_inputs, no_of_errors) = construct_sample_inputs(data, request_id, self.job_group_id)
+        sample_inputs, no_of_errors = construct_sample_inputs(data, request_id, self.job_group_id)
 
         if no_of_errors:
             return
