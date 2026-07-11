@@ -6,7 +6,10 @@ from django.db import migrations, models
 
 def set_scheduled_to_created_date(apps, schema_editor):
     SMILEMessage = apps.get_model("beagle_etl", "SMILEMessage")
-    SMILEMessage.objects.update(scheduled=models.F("created_date"))
+    messages = list(SMILEMessage.objects.all())
+    for message in messages:
+        message.scheduled = message.created_date
+    SMILEMessage.objects.bulk_update(messages, ["scheduled"], batch_size=1000)
 
 
 def noop(apps, schema_editor):
