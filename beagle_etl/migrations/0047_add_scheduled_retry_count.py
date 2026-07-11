@@ -4,6 +4,15 @@ import django.utils.timezone
 from django.db import migrations, models
 
 
+def set_scheduled_to_created_date(apps, schema_editor):
+    SMILEMessage = apps.get_model("beagle_etl", "SMILEMessage")
+    SMILEMessage.objects.update(scheduled=models.F("created_date"))
+
+
+def noop(apps, schema_editor):
+    pass
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -21,4 +30,5 @@ class Migration(migrations.Migration):
             name="scheduled",
             field=models.DateTimeField(default=django.utils.timezone.now),
         ),
+        migrations.RunPython(set_scheduled_to_created_date, noop),
     ]
