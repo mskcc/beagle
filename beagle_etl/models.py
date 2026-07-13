@@ -94,6 +94,9 @@ class SMILEMessage(BaseModel):
             self.scheduled = self.scheduled + timedelta(hours=24)
         elif self.retry_count == 1:
             self.scheduled = self.scheduled + timedelta(hours=24)
+        else:
+            self.status = SmileMessageStatus.FAILED
+            self.save(update_fields=["status"])
         self.retry_count += 1
         self.save(update_fields=["scheduled", "status", "retry_count"])
 

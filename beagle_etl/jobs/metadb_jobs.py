@@ -219,6 +219,9 @@ def new_request(message_id):
     retry_samples = {k for k, v in status.items() if v.status == "RETRY"}
 
     if retry_samples:
+        sample_status = sorted([sample.to_dict() for sample in status.values()], key=lambda d: d["sample"])
+        message.set_sample_status(sample_status)
+        message.add_log(f"Permission Denied error during import for igoRequestId:{message.request_id} id:{message_id}")
         message.retry()
         for email in settings.PERMISSION_DENIED_EMAILS:
             e = ErrorImportingFilesEvent(
