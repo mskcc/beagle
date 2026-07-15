@@ -69,11 +69,17 @@ class SMILEMessage(BaseModel):
 
     def in_progress(self):
         self.status = SmileMessageStatus.IN_PROGRESS
-        job_group = JobGroup.objects.create()
-        self.job_group = job_group
-        job_group_notifier_id = notifier_start(job_group, self.request_id)
-        job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
-        self.job_group_notifier = job_group_notifier
+        # Retries re-enter in_progress() with a job_group already set from the first
+        # attempt; skip creating another one so retries update the original ticket
+        # instead of opening a new one each pass.
+        if not self.job_group:
+            job_group = JobGroup.objects.create()
+            self.job_group = job_group
+            job_group_notifier_id = notifier_start(job_group, self.request_id)
+            job_group_notifier = (
+                JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
+            )
+            self.job_group_notifier = job_group_notifier
         self.save(update_fields=["job_group", "job_group_notifier", "status"])
 
     def complete(self, request_metadata=None):
@@ -89,14 +95,13 @@ class SMILEMessage(BaseModel):
             self._generate_description(request_metadata)
 
     def retry(self):
-        self.status = SmileMessageStatus.RETRY
-        if self.retry_count == 0:
-            self.scheduled = self.scheduled + timedelta(hours=24)
-        elif self.retry_count == 1:
-            self.scheduled = self.scheduled + timedelta(hours=24)
-        else:
+        if self.retry_count >= 2:
+            # Fail after 2 retries
             self.status = SmileMessageStatus.FAILED
-            self.save(update_fields=["status"])
+        else:
+            # Retry import after 24 hours
+            self.status = SmileMessageStatus.RETRY
+            self.scheduled = self.scheduled + timedelta(hours=24)
         self.retry_count += 1
         self.save(update_fields=["scheduled", "status", "retry_count"])
 
