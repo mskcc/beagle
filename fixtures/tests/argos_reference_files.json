@@ -6,7 +6,7 @@
       "created_date": "2019-10-24T00:23:18.887Z",
       "modified_date": "2019-10-24T00:23:18.887Z",
       "file_name": "1000G_phase1.snps.high_confidence.b37.vcf",
-      "path": "/data/pipeline/genomes/GRCh37/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf",
       "file_type": 11,
       "size": 7313069069,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -35,7 +35,7 @@
       "created_date": "2019-12-10T15:41:25.361Z",
       "modified_date": "2019-12-10T15:41:25.361Z",
       "file_name": "1000G_phase1.snps.high_confidence.b37.vcf",
-      "path": "/data/pipeline/request_files/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf",
+      "path": "/juno/work/ci/resources/request_files/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf",
       "file_type": 11,
       "size": 7313069069,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -61,7 +61,7 @@
       "created_date": "2019-10-24T00:23:34.737Z",
       "modified_date": "2019-10-24T00:23:34.738Z",
       "file_name": "AgilentExon_v2_b37_baits.ilist",
-      "path": "/data/pipeline/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_baits.ilist",
       "file_type": 7,
       "size": 7297884,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -90,7 +90,7 @@
       "created_date": "2019-10-24T00:23:35.220Z",
       "modified_date": "2019-10-24T00:23:35.220Z",
       "file_name": "AgilentExon_v2_b37_targets.ilist",
-      "path": "/data/pipeline/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_b37_targets.ilist",
       "file_type": 7,
       "size": 7297884,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -119,7 +119,7 @@
       "created_date": "2019-10-24T00:23:33.928Z",
       "modified_date": "2019-10-24T00:23:33.928Z",
       "file_name": "AgilentExon_v2_FP_tiling_genotypes.txt",
-      "path": "/data/pipeline/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/AgilentExon_v2/b37/AgilentExon_v2_FP_tiling_genotypes.txt",
       "file_type": 10,
       "size": 99137,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -148,7 +148,7 @@
       "created_date": "2019-12-06T20:05:01.506Z",
       "modified_date": "2019-12-06T20:05:01.506Z",
       "file_name": "b37.fasta",
-      "path": "/data/pipeline/genomes/GRCh37/fasta/b37.fasta",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
       "file_type": 2,
       "size": 3189750467,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -177,7 +177,7 @@
       "created_date": "2019-11-01T15:15:16.120Z",
       "modified_date": "2019-11-01T15:15:16.120Z",
       "file_name": "b37.fasta",
-      "path": "/data/depot/resources/genomes/GRCh37/bwa_fasta/b37.fasta",
+      "path": "/ifs/depot/pi/resources/genomes/GRCh37/bwa_fasta/b37.fasta",
       "file_type": 2,
       "size": 3189750467,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -205,7 +205,7 @@
       "created_date": "2019-12-10T15:41:47.402Z",
       "modified_date": "2019-12-10T15:41:47.402Z",
       "file_name": "CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
-      "path": "/data/pipeline/request_files/cosmic/CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
+      "path": "/juno/work/ci/resources/request_files/cosmic/CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
       "file_type": 11,
       "size": 112402812,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -231,7 +231,7 @@
       "created_date": "2019-10-24T00:23:15.682Z",
       "modified_date": "2019-10-24T00:23:15.682Z",
       "file_name": "CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
-      "path": "/data/pipeline/genomes/GRCh37/cosmic/67/CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/cosmic/67/CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
       "file_type": 11,
       "size": 112402812,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -261,7 +261,7 @@
       "created_date": "2019-11-01T15:15:12.001Z",
       "modified_date": "2019-11-01T15:15:12.001Z",
       "file_name": "dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
-      "path": "/data/depot/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
+      "path": "/ifs/depot/pi/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
       "file_type": 11,
       "size": 1015019014,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -289,7 +289,7 @@
       "created_date": "2019-10-24T00:23:17.243Z",
       "modified_date": "2019-10-24T00:23:17.243Z",
       "file_name": "dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
-      "path": "/data/pipeline/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
       "file_type": 11,
       "size": 1015019014,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -318,7 +318,7 @@
       "created_date": "2019-12-09T23:37:00.416Z",
       "modified_date": "2019-12-09T23:37:00.416Z",
       "file_name": "dbsnp_138.b37.excluding_sites_after_129.vcf",
-      "path": "/data/pipeline/request_files/dbsnp/dbsnp_138.b37.excluding_sites_after_129.vcf",
+      "path": "/juno/work/ci/resources/request_files/dbsnp/dbsnp_138.b37.excluding_sites_after_129.vcf",
       "file_type": 11,
       "size": 2432705678,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -344,7 +344,7 @@
       "created_date": "2019-10-24T00:23:16.257Z",
       "modified_date": "2019-10-24T00:23:16.257Z",
       "file_name": "dbsnp_138.b37.excluding_sites_after_129.vcf",
-      "path": "/data/pipeline/genomes/GRCh37/dbsnp/129/dbsnp_138.b37.excluding_sites_after_129.vcf",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/dbsnp/129/dbsnp_138.b37.excluding_sites_after_129.vcf",
       "file_type": 11,
       "size": 2432705678,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -374,7 +374,7 @@
       "created_date": "2019-10-24T00:23:16.984Z",
       "modified_date": "2019-10-24T00:23:16.984Z",
       "file_name": "ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
-      "path": "/data/pipeline/genomes/GRCh37/exac/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/exac/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
       "file_type": 11,
       "size": 337197976,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -403,7 +403,7 @@
       "created_date": "2019-12-10T15:42:27.587Z",
       "modified_date": "2019-12-10T15:42:27.587Z",
       "file_name": "ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
-      "path": "/data/pipeline/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+      "path": "/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
       "file_type": 11,
       "size": 337197976,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -429,7 +429,7 @@
       "created_date": "2019-10-24T00:23:19.218Z",
       "modified_date": "2019-10-24T00:23:19.218Z",
       "file_name": "GRCm38.fasta",
-      "path": "/data/pipeline/genomes/GRCm38/GRCm38.fasta",
+      "path": "/juno/work/ci/resources/genomes/GRCm38/GRCm38.fasta",
       "file_type": 2,
       "size": 2769885087,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -458,7 +458,7 @@
       "created_date": "2019-10-24T00:23:17.953Z",
       "modified_date": "2019-10-24T00:23:17.953Z",
       "file_name": "hapmap_3.3.b37.vcf",
-      "path": "/data/pipeline/genomes/GRCh37/hapmap33/hapmap_3.3.b37.vcf",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/hapmap33/hapmap_3.3.b37.vcf",
       "file_type": 11,
       "size": 225898391,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -487,7 +487,7 @@
       "created_date": "2019-12-09T23:34:12.885Z",
       "modified_date": "2019-12-09T23:34:12.886Z",
       "file_name": "hapmap_3.3.b37.vcf",
-      "path": "/data/pipeline/request_files/hapmap/hapmap_3.3.b37.vcf",
+      "path": "/juno/work/ci/resources/request_files/hapmap/hapmap_3.3.b37.vcf",
       "file_type": 11,
       "size": 225898391,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -513,7 +513,7 @@
       "created_date": "2019-12-09T23:31:22.151Z",
       "modified_date": "2019-12-09T23:31:22.151Z",
       "file_name": "hotspot-list-union-v1-v2.maf",
-      "path": "/data/pipeline/qc_resources/hotspot-list-union-v1-v2.maf",
+      "path": "/juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf",
       "file_type": 24,
       "size": 624846,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -539,7 +539,7 @@
       "created_date": "2019-11-01T15:19:45.187Z",
       "modified_date": "2019-11-01T15:19:45.187Z",
       "file_name": "human.hg19.excl.tsv",
-      "path": "/data/pipeline/igenomes/grch37/sv_calling/human.hg19.excl.tsv",
+      "path": "/juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/sv_calling/human.hg19.excl.tsv",
       "file_type": 9,
       "size": 5742,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -567,7 +567,7 @@
       "created_date": "2019-10-24T00:23:16.737Z",
       "modified_date": "2019-10-24T00:23:16.737Z",
       "file_name": "human.hg19.excl.tsv",
-      "path": "/data/pipeline/genomes/GRCh37/delly/human.hg19.excl.tsv",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/delly/human.hg19.excl.tsv",
       "file_type": 9,
       "size": 6984,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -596,7 +596,7 @@
       "created_date": "2019-10-24T00:23:18.550Z",
       "modified_date": "2019-10-24T00:23:18.550Z",
       "file_name": "Mills_and_1000G_gold_standard.indels.b37.vcf",
-      "path": "/data/pipeline/genomes/GRCh37/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf",
+      "path": "/juno/work/ci/resources/genomes/GRCh37/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf",
       "file_type": 11,
       "size": 86369975,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -625,7 +625,7 @@
       "created_date": "2019-12-10T15:40:05.224Z",
       "modified_date": "2019-12-10T15:40:05.224Z",
       "file_name": "Mills_and_1000G_gold_standard.indels.b37.vcf",
-      "path": "/data/pipeline/request_files/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf",
+      "path": "/juno/work/ci/resources/request_files/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf",
       "file_type": 11,
       "size": 86369975,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -651,7 +651,7 @@
       "created_date": "2019-11-04T18:31:52.747Z",
       "modified_date": "2019-11-04T18:31:52.747Z",
       "file_name": "Mills_and_1000G_gold_standard.indels.b37.vcf",
-      "path": "/data/pipeline/igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/Mills_and_1000G_gold_standard.indels.b37.vcf",
+      "path": "/juno/work/taylorlab/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/Mills_and_1000G_gold_standard.indels.b37.vcf",
       "file_type": 11,
       "size": 86369975,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -703,7 +703,7 @@
       "created_date": "2019-10-24T00:23:15.075Z",
       "modified_date": "2019-10-24T00:23:15.075Z",
       "file_name": "refGene_b37.sorted.txt",
-      "path": "/data/pipeline/request_files/refseq/refGene_b37.sorted.txt",
+      "path": "/juno/work/ci/resources/request_files/refseq/refGene_b37.sorted.txt",
       "file_type": 10,
       "size": 9953757,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -732,7 +732,7 @@
       "created_date": "2019-10-24T00:24:03.054Z",
       "modified_date": "2019-10-24T00:24:03.054Z",
       "file_name": "s_C_006284_N002_d.Group3.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006284_N002_d.Group3.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006284_N002_d.Group3.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 18001309333,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -761,7 +761,7 @@
       "created_date": "2019-10-24T00:24:03.293Z",
       "modified_date": "2019-10-24T00:24:03.293Z",
       "file_name": "s_C_006537_N001_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006537_N001_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006537_N001_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 13424642344,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -790,7 +790,7 @@
       "created_date": "2019-10-24T00:24:03.625Z",
       "modified_date": "2019-10-24T00:24:03.625Z",
       "file_name": "s_C_006550_N002_d.Group1.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006550_N002_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006550_N002_d.Group1.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 13851651891,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -819,7 +819,7 @@
       "created_date": "2019-10-24T00:24:03.884Z",
       "modified_date": "2019-10-24T00:24:03.884Z",
       "file_name": "s_C_006609_N001_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006609_N001_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006609_N001_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 16764556278,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -848,7 +848,7 @@
       "created_date": "2019-10-24T00:24:04.123Z",
       "modified_date": "2019-10-24T00:24:04.123Z",
       "file_name": "s_C_006610_N001_d.Group1.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006610_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006610_N001_d.Group1.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 17797687748,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -877,7 +877,7 @@
       "created_date": "2019-10-24T00:24:04.371Z",
       "modified_date": "2019-10-24T00:24:04.371Z",
       "file_name": "s_C_006626_N001_d.Group19.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006626_N001_d.Group19.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006626_N001_d.Group19.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 15450048427,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -906,7 +906,7 @@
       "created_date": "2019-10-24T00:24:04.617Z",
       "modified_date": "2019-10-24T00:24:04.617Z",
       "file_name": "s_C_006627_N001_d.Group20.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006627_N001_d.Group20.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006627_N001_d.Group20.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 21418934197,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -935,7 +935,7 @@
       "created_date": "2019-10-24T00:24:04.857Z",
       "modified_date": "2019-10-24T00:24:04.857Z",
       "file_name": "s_C_006628_N001_d.Group15.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006628_N001_d.Group15.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006628_N001_d.Group15.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 20242506560,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -964,7 +964,7 @@
       "created_date": "2019-10-24T00:24:05.103Z",
       "modified_date": "2019-10-24T00:24:05.103Z",
       "file_name": "s_C_006630_N001_d.Group14.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006630_N001_d.Group14.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006630_N001_d.Group14.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 18554952981,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -993,7 +993,7 @@
       "created_date": "2019-10-24T00:24:05.351Z",
       "modified_date": "2019-10-24T00:24:05.351Z",
       "file_name": "s_C_006631_N001_d.Group17.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006631_N001_d.Group17.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006631_N001_d.Group17.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 17671380235,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1022,7 +1022,7 @@
       "created_date": "2019-10-24T00:24:05.592Z",
       "modified_date": "2019-10-24T00:24:05.592Z",
       "file_name": "s_C_006632_N001_d.Group16.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006632_N001_d.Group16.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006632_N001_d.Group16.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 17956822592,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1051,7 +1051,7 @@
       "created_date": "2019-10-24T00:24:05.836Z",
       "modified_date": "2019-10-24T00:24:05.836Z",
       "file_name": "s_C_006633_N001_d.Group13.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006633_N001_d.Group13.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006633_N001_d.Group13.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 14995930592,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1080,7 +1080,7 @@
       "created_date": "2019-10-24T00:24:06.083Z",
       "modified_date": "2019-10-24T00:24:06.083Z",
       "file_name": "s_C_006635_N001_d.Group8.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006635_N001_d.Group8.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006635_N001_d.Group8.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 19452196435,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1109,7 +1109,7 @@
       "created_date": "2019-10-24T00:24:06.409Z",
       "modified_date": "2019-10-24T00:24:06.409Z",
       "file_name": "s_C_006636_N001_d.Group9.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006636_N001_d.Group9.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006636_N001_d.Group9.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 19189450319,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1138,7 +1138,7 @@
       "created_date": "2019-10-24T00:24:06.658Z",
       "modified_date": "2019-10-24T00:24:06.658Z",
       "file_name": "s_C_006637_N002_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006637_N002_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006637_N002_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 10888838079,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1167,7 +1167,7 @@
       "created_date": "2019-10-24T00:24:06.901Z",
       "modified_date": "2019-10-24T00:24:06.901Z",
       "file_name": "s_C_006638_N001_d.Group1.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006638_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006638_N001_d.Group1.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 10088003650,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1196,7 +1196,7 @@
       "created_date": "2019-10-24T00:24:07.146Z",
       "modified_date": "2019-10-24T00:24:07.146Z",
       "file_name": "s_C_006639_N001_d.Group6.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006639_N001_d.Group6.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006639_N001_d.Group6.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 18437335538,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1225,7 +1225,7 @@
       "created_date": "2019-10-24T00:24:07.394Z",
       "modified_date": "2019-10-24T00:24:07.394Z",
       "file_name": "s_C_006640_N001_d.Group7.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006640_N001_d.Group7.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006640_N001_d.Group7.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 18781758639,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1254,7 +1254,7 @@
       "created_date": "2019-10-24T00:24:07.716Z",
       "modified_date": "2019-10-24T00:24:07.716Z",
       "file_name": "s_C_006641_N001_d.Group4.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006641_N001_d.Group4.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006641_N001_d.Group4.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 15954753147,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1283,7 +1283,7 @@
       "created_date": "2019-10-24T00:24:07.979Z",
       "modified_date": "2019-10-24T00:24:07.979Z",
       "file_name": "s_C_006642_N001_d.Group5.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006642_N001_d.Group5.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006642_N001_d.Group5.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 17579506808,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1312,7 +1312,7 @@
       "created_date": "2019-10-24T00:24:08.240Z",
       "modified_date": "2019-10-24T00:24:08.240Z",
       "file_name": "s_C_006643_N001_d.Group2.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006643_N001_d.Group2.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006643_N001_d.Group2.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 17298827865,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1341,7 +1341,7 @@
       "created_date": "2019-10-24T00:24:08.520Z",
       "modified_date": "2019-10-24T00:24:08.520Z",
       "file_name": "s_C_006644_N001_d.Group3.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006644_N001_d.Group3.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006644_N001_d.Group3.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 19302206744,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1370,7 +1370,7 @@
       "created_date": "2019-10-24T00:24:08.779Z",
       "modified_date": "2019-10-24T00:24:08.779Z",
       "file_name": "s_C_006645_N001_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006645_N001_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006645_N001_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 15523622669,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1399,7 +1399,7 @@
       "created_date": "2019-10-24T00:24:09.034Z",
       "modified_date": "2019-10-24T00:24:09.034Z",
       "file_name": "s_C_006646_N001_d.Group1.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006646_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006646_N001_d.Group1.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 17007314582,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1428,7 +1428,7 @@
       "created_date": "2019-10-24T00:24:09.280Z",
       "modified_date": "2019-10-24T00:24:09.281Z",
       "file_name": "s_C_006647_N001_d.Group18.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006647_N001_d.Group18.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006647_N001_d.Group18.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 20776680414,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1457,7 +1457,7 @@
       "created_date": "2019-10-24T00:24:09.521Z",
       "modified_date": "2019-10-24T00:24:09.521Z",
       "file_name": "s_C_006648_N001_d.Group11.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006648_N001_d.Group11.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006648_N001_d.Group11.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 17232710261,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1486,7 +1486,7 @@
       "created_date": "2019-10-24T00:24:09.769Z",
       "modified_date": "2019-10-24T00:24:09.769Z",
       "file_name": "s_C_006649_N001_d.Group10.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006649_N001_d.Group10.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006649_N001_d.Group10.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 17366153538,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1515,7 +1515,7 @@
       "created_date": "2019-10-24T00:24:10.024Z",
       "modified_date": "2019-10-24T00:24:10.024Z",
       "file_name": "s_C_006650_N001_d.Group21.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006650_N001_d.Group21.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006650_N001_d.Group21.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 16571180154,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1544,7 +1544,7 @@
       "created_date": "2019-10-24T00:24:10.268Z",
       "modified_date": "2019-10-24T00:24:10.268Z",
       "file_name": "s_C_006904_N001_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006904_N001_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006904_N001_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 18185638557,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1573,7 +1573,7 @@
       "created_date": "2019-10-24T00:24:10.512Z",
       "modified_date": "2019-10-24T00:24:10.512Z",
       "file_name": "s_C_006905_N001_d.Group1.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006905_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006905_N001_d.Group1.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 18558003865,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1602,7 +1602,7 @@
       "created_date": "2019-10-24T00:24:10.758Z",
       "modified_date": "2019-10-24T00:24:10.758Z",
       "file_name": "s_C_006906_N001_d.Group1.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006906_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006906_N001_d.Group1.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 16951748171,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1631,7 +1631,7 @@
       "created_date": "2019-10-24T00:24:10.995Z",
       "modified_date": "2019-10-24T00:24:10.995Z",
       "file_name": "s_C_006907_N001_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006907_N001_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006907_N001_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 16389279357,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1660,7 +1660,7 @@
       "created_date": "2019-10-24T00:24:11.235Z",
       "modified_date": "2019-10-24T00:24:11.235Z",
       "file_name": "s_C_006996_N001_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_006996_N001_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_006996_N001_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 10690676737,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1689,7 +1689,7 @@
       "created_date": "2019-10-24T00:24:11.482Z",
       "modified_date": "2019-10-24T00:24:11.482Z",
       "file_name": "s_C_0AEE89_N001_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_0AEE89_N001_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_0AEE89_N001_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 13862649385,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1718,7 +1718,7 @@
       "created_date": "2019-10-24T00:24:11.720Z",
       "modified_date": "2019-10-24T00:24:11.720Z",
       "file_name": "s_C_1NPV4P_N001_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_1NPV4P_N001_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_1NPV4P_N001_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 11105358516,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1747,7 +1747,7 @@
       "created_date": "2019-10-24T00:24:11.963Z",
       "modified_date": "2019-10-24T00:24:11.963Z",
       "file_name": "s_C_4W32NJ_N001_d.Group1.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_4W32NJ_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_4W32NJ_N001_d.Group1.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 17582103301,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1776,7 +1776,7 @@
       "created_date": "2019-10-24T00:24:12.210Z",
       "modified_date": "2019-10-24T00:24:12.210Z",
       "file_name": "s_C_H9KJFX_N001_d.Group2.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_H9KJFX_N001_d.Group2.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_H9KJFX_N001_d.Group2.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 19349236927,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1805,7 +1805,7 @@
       "created_date": "2019-10-24T00:24:12.513Z",
       "modified_date": "2019-10-24T00:24:12.513Z",
       "file_name": "s_C_P5FLLT_N001_d.Group4.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_P5FLLT_N001_d.Group4.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_P5FLLT_N001_d.Group4.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 20668078544,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1834,7 +1834,7 @@
       "created_date": "2019-10-24T00:24:12.759Z",
       "modified_date": "2019-10-24T00:24:12.759Z",
       "file_name": "s_C_VC7LNE_N001_d.Group5.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_VC7LNE_N001_d.Group5.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_VC7LNE_N001_d.Group5.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 18873117772,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1863,7 +1863,7 @@
       "created_date": "2019-12-06T20:06:03.478Z",
       "modified_date": "2019-12-06T20:06:03.478Z",
       "file_name": "s_C_WV53F0_N001_d.Group0.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IDT_Exome_v1_FP_b37/s_C_WV53F0_N001_d.Group0.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IDT_Exome_v1_FP_b37/s_C_WV53F0_N001_d.Group0.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 19501528278,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1892,7 +1892,7 @@
       "created_date": "2019-10-24T00:23:29.865Z",
       "modified_date": "2019-10-24T00:23:29.865Z",
       "file_name": "picard_baits.interval_list",
-      "path": "/data/pipeline/genomes/GRCh37_mm10/targets/picard_baits.interval_list",
+      "path": "/juno/work/ci/resources/genomes/GRCh37_mm10/targets/picard_baits.interval_list",
       "file_type": 7,
       "size": 342055,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1937,7 +1937,7 @@
       "created_date": "2019-10-24T00:23:28.565Z",
       "modified_date": "2019-10-24T00:23:28.565Z",
       "file_name": "picard_baits.interval_list",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list",
       "file_type": 7,
       "size": 332599,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1966,7 +1966,7 @@
       "created_date": "2019-10-24T00:23:26.309Z",
       "modified_date": "2019-10-24T00:23:26.309Z",
       "file_name": "picard_baits.interval_list",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT341/b37/picard_baits.interval_list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/picard_baits.interval_list",
       "file_type": 7,
       "size": 294464,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -1995,7 +1995,7 @@
       "created_date": "2019-10-24T00:23:27.437Z",
       "modified_date": "2019-10-24T00:23:27.437Z",
       "file_name": "picard_baits.interval_list",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT410/b37/picard_baits.interval_list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/picard_baits.interval_list",
       "file_type": 7,
       "size": 278804,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2008,7 +2008,7 @@
       "created_date": "2019-10-24T00:23:26.600Z",
       "modified_date": "2019-10-24T00:23:26.600Z",
       "file_name": "picard_targets.interval_list",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT341/b37/picard_targets.interval_list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/picard_targets.interval_list",
       "file_type": 7,
       "size": 157824,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2037,7 +2037,7 @@
       "created_date": "2019-10-24T00:23:27.688Z",
       "modified_date": "2019-10-24T00:23:27.688Z",
       "file_name": "picard_targets.interval_list",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT410/b37/picard_targets.interval_list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/picard_targets.interval_list",
       "file_type": 7,
       "size": 175270,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2066,7 +2066,7 @@
       "created_date": "2019-10-24T00:23:28.892Z",
       "modified_date": "2019-10-24T00:23:28.892Z",
       "file_name": "picard_targets.interval_list",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
       "file_type": 7,
       "size": 198736,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2095,7 +2095,7 @@
       "created_date": "2019-10-24T00:23:30.163Z",
       "modified_date": "2019-10-24T00:23:30.163Z",
       "file_name": "picard_targets.interval_list",
-      "path": "/data/pipeline/genomes/GRCh37_mm10/targets/picard_targets.interval_list",
+      "path": "/juno/work/ci/resources/genomes/GRCh37_mm10/targets/picard_targets.interval_list",
       "file_type": 7,
       "size": 208617,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2124,7 +2124,7 @@
       "created_date": "2019-10-24T00:23:26.017Z",
       "modified_date": "2019-10-24T00:23:26.017Z",
       "file_name": "FP_tiling_intervals.list",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT341/b37/FP_tiling_intervals.list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/FP_tiling_intervals.list",
       "file_type": 7,
       "size": 21700,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2153,7 +2153,7 @@
       "created_date": "2019-10-24T00:23:27.113Z",
       "modified_date": "2019-10-24T00:23:27.113Z",
       "file_name": "FP_tiling_intervals.list",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT410/b37/FP_tiling_intervals.list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/FP_tiling_intervals.list",
       "file_type": 7,
       "size": 21700,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2182,7 +2182,7 @@
       "created_date": "2019-10-24T00:23:28.279Z",
       "modified_date": "2019-10-24T00:23:28.279Z",
       "file_name": "FP_tiling_intervals.list",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
       "file_type": 7,
       "size": 21700,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2211,7 +2211,7 @@
       "created_date": "2019-10-24T00:23:29.524Z",
       "modified_date": "2019-10-24T00:23:29.524Z",
       "file_name": "FP_tiling_intervals.list",
-      "path": "/data/pipeline/genomes/GRCh37_mm10/targets/FP_tiling_intervals.list",
+      "path": "/juno/work/ci/resources/genomes/GRCh37_mm10/targets/FP_tiling_intervals.list",
       "file_type": 7,
       "size": 21700,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2240,7 +2240,7 @@
       "created_date": "2019-10-24T00:23:22.167Z",
       "modified_date": "2019-10-24T00:23:22.167Z",
       "file_name": "FP_tiling_genotypes.txt",
-      "path": "/data/pipeline/genomic_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IDT_Exome_v1_FP/b37/FP_tiling_genotypes.txt",
       "file_type": 10,
       "size": 38179,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2269,7 +2269,7 @@
       "created_date": "2019-10-24T00:23:25.702Z",
       "modified_date": "2019-10-24T00:23:25.702Z",
       "file_name": "FP_tiling_genotypes.txt",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT341/b37/FP_tiling_genotypes.txt",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT341/b37/FP_tiling_genotypes.txt",
       "file_type": 10,
       "size": 16088,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2298,7 +2298,7 @@
       "created_date": "2019-10-24T00:23:26.865Z",
       "modified_date": "2019-10-24T00:23:26.865Z",
       "file_name": "FP_tiling_genotypes.txt",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT410/b37/FP_tiling_genotypes.txt",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT410/b37/FP_tiling_genotypes.txt",
       "file_type": 10,
       "size": 16088,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2327,7 +2327,7 @@
       "created_date": "2019-10-24T00:23:27.976Z",
       "modified_date": "2019-10-24T00:23:27.976Z",
       "file_name": "FP_tiling_genotypes.txt",
-      "path": "/data/pipeline/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
+      "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
       "file_type": 10,
       "size": 16088,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2356,7 +2356,7 @@
       "created_date": "2019-10-24T00:23:29.243Z",
       "modified_date": "2019-10-24T00:23:29.243Z",
       "file_name": "FP_tiling_genotypes.txt",
-      "path": "/data/pipeline/genomes/GRCh37_mm10/targets/FP_tiling_genotypes.txt",
+      "path": "/juno/work/ci/resources/genomes/GRCh37_mm10/targets/FP_tiling_genotypes.txt",
       "file_type": 10,
       "size": 16088,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2385,7 +2385,7 @@
       "created_date": "2019-10-24T00:23:44.904Z",
       "modified_date": "2019-10-24T00:23:44.904Z",
       "file_name": "s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2298166927,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2414,7 +2414,7 @@
       "created_date": "2019-10-24T00:23:45.151Z",
       "modified_date": "2019-10-24T00:23:45.151Z",
       "file_name": "s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1281116533,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2443,7 +2443,7 @@
       "created_date": "2019-10-24T00:23:45.392Z",
       "modified_date": "2019-10-24T00:23:45.392Z",
       "file_name": "s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1872524914,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2472,7 +2472,7 @@
       "created_date": "2019-10-24T00:23:45.638Z",
       "modified_date": "2019-10-24T00:23:45.638Z",
       "file_name": "s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2587901961,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2501,7 +2501,7 @@
       "created_date": "2019-10-24T00:23:45.879Z",
       "modified_date": "2019-10-24T00:23:45.879Z",
       "file_name": "s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2054678576,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2530,7 +2530,7 @@
       "created_date": "2019-10-24T00:23:46.115Z",
       "modified_date": "2019-10-24T00:23:46.115Z",
       "file_name": "s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1507048799,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2559,7 +2559,7 @@
       "created_date": "2019-10-24T00:23:46.359Z",
       "modified_date": "2019-10-24T00:23:46.359Z",
       "file_name": "s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1702329989,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2588,7 +2588,7 @@
       "created_date": "2019-10-24T00:23:46.665Z",
       "modified_date": "2019-10-24T00:23:46.665Z",
       "file_name": "s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1837781380,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2617,7 +2617,7 @@
       "created_date": "2019-10-24T00:23:46.903Z",
       "modified_date": "2019-10-24T00:23:46.903Z",
       "file_name": "s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2972235408,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2646,7 +2646,7 @@
       "created_date": "2019-10-24T00:23:47.142Z",
       "modified_date": "2019-10-24T00:23:47.142Z",
       "file_name": "s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2093758629,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2675,7 +2675,7 @@
       "created_date": "2019-10-24T00:23:47.452Z",
       "modified_date": "2019-10-24T00:23:47.452Z",
       "file_name": "s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1906184759,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2704,7 +2704,7 @@
       "created_date": "2019-10-24T00:23:47.702Z",
       "modified_date": "2019-10-24T00:23:47.702Z",
       "file_name": "s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2049846455,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2733,7 +2733,7 @@
       "created_date": "2019-10-24T00:23:48.002Z",
       "modified_date": "2019-10-24T00:23:48.002Z",
       "file_name": "s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1438785234,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2762,7 +2762,7 @@
       "created_date": "2019-10-24T00:23:48.265Z",
       "modified_date": "2019-10-24T00:23:48.265Z",
       "file_name": "s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2337197309,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2791,7 +2791,7 @@
       "created_date": "2019-10-24T00:23:48.506Z",
       "modified_date": "2019-10-24T00:23:48.506Z",
       "file_name": "s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1179733581,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2820,7 +2820,7 @@
       "created_date": "2019-10-24T00:23:48.746Z",
       "modified_date": "2019-10-24T00:23:48.746Z",
       "file_name": "s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1504713508,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2849,7 +2849,7 @@
       "created_date": "2019-10-24T00:23:48.989Z",
       "modified_date": "2019-10-24T00:23:48.989Z",
       "file_name": "s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2324784125,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2878,7 +2878,7 @@
       "created_date": "2019-10-24T00:23:49.232Z",
       "modified_date": "2019-10-24T00:23:49.232Z",
       "file_name": "s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2332122557,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2907,7 +2907,7 @@
       "created_date": "2019-10-24T00:23:49.472Z",
       "modified_date": "2019-10-24T00:23:49.472Z",
       "file_name": "s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2999188032,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2936,7 +2936,7 @@
       "created_date": "2019-10-24T00:23:49.716Z",
       "modified_date": "2019-10-24T00:23:49.716Z",
       "file_name": "s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2013280397,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2965,7 +2965,7 @@
       "created_date": "2019-10-24T00:23:49.956Z",
       "modified_date": "2019-10-24T00:23:49.956Z",
       "file_name": "s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2143139421,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -2994,7 +2994,7 @@
       "created_date": "2019-10-24T00:23:50.196Z",
       "modified_date": "2019-10-24T00:23:50.196Z",
       "file_name": "s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2613987166,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3023,7 +3023,7 @@
       "created_date": "2019-10-24T00:23:50.456Z",
       "modified_date": "2019-10-24T00:23:50.456Z",
       "file_name": "s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 3185868859,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3052,7 +3052,7 @@
       "created_date": "2019-10-24T00:23:50.696Z",
       "modified_date": "2019-10-24T00:23:50.696Z",
       "file_name": "s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1893685916,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3081,7 +3081,7 @@
       "created_date": "2019-10-24T00:23:51.016Z",
       "modified_date": "2019-10-24T00:23:51.016Z",
       "file_name": "s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2943821584,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3110,7 +3110,7 @@
       "created_date": "2019-10-24T00:23:51.267Z",
       "modified_date": "2019-10-24T00:23:51.267Z",
       "file_name": "s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2450372054,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3139,7 +3139,7 @@
       "created_date": "2019-10-24T00:23:51.511Z",
       "modified_date": "2019-10-24T00:23:51.511Z",
       "file_name": "s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2842957613,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3168,7 +3168,7 @@
       "created_date": "2019-10-24T00:23:51.753Z",
       "modified_date": "2019-10-24T00:23:51.753Z",
       "file_name": "s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1841725480,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3197,7 +3197,7 @@
       "created_date": "2019-10-24T00:23:52.057Z",
       "modified_date": "2019-10-24T00:23:52.057Z",
       "file_name": "s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1677939673,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3226,7 +3226,7 @@
       "created_date": "2019-10-24T00:23:52.309Z",
       "modified_date": "2019-10-24T00:23:52.309Z",
       "file_name": "s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 2076693674,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3255,7 +3255,7 @@
       "created_date": "2019-10-24T00:23:42.302Z",
       "modified_date": "2019-10-24T00:23:42.302Z",
       "file_name": "s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 3727525387,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3284,7 +3284,7 @@
       "created_date": "2019-10-24T00:23:42.542Z",
       "modified_date": "2019-10-24T00:23:42.542Z",
       "file_name": "s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 3506739569,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3313,7 +3313,7 @@
       "created_date": "2019-10-24T00:23:42.781Z",
       "modified_date": "2019-10-24T00:23:42.781Z",
       "file_name": "s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 3554787689,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3342,7 +3342,7 @@
       "created_date": "2019-10-24T00:23:43.018Z",
       "modified_date": "2019-10-24T00:23:43.018Z",
       "file_name": "s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 4384120977,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3371,7 +3371,7 @@
       "created_date": "2019-10-24T00:23:43.368Z",
       "modified_date": "2019-10-24T00:23:43.368Z",
       "file_name": "s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 357147001,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3400,7 +3400,7 @@
       "created_date": "2019-10-24T00:23:43.629Z",
       "modified_date": "2019-10-24T00:23:43.629Z",
       "file_name": "s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1685774338,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3429,7 +3429,7 @@
       "created_date": "2019-10-24T00:23:43.866Z",
       "modified_date": "2019-10-24T00:23:43.866Z",
       "file_name": "s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 3817576500,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3458,7 +3458,7 @@
       "created_date": "2019-10-24T00:23:44.108Z",
       "modified_date": "2019-10-24T00:23:44.108Z",
       "file_name": "s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 3542807384,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3487,7 +3487,7 @@
       "created_date": "2019-10-24T00:23:44.400Z",
       "modified_date": "2019-10-24T00:23:44.400Z",
       "file_name": "s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 1873938178,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"
@@ -3516,7 +3516,7 @@
       "created_date": "2019-10-24T00:23:44.656Z",
       "modified_date": "2019-10-24T00:23:44.656Z",
       "file_name": "s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
-      "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
+      "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
       "file_type": 3,
       "size": 4023855606,
       "file_group": "4616ef88-103c-4cf4-baab-f3a247bc2172"

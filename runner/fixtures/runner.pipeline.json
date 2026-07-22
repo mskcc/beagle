@@ -40,7 +40,7 @@
       "version": "1.1.2",
       "entrypoint": "workflows/pair-workflow-sv.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/argos_pair_sv",
+      "output_directory": "/juno/work/pi/beagle/output/argos_pair_sv",
       "operator": 1,
       "default": true
     }
@@ -56,7 +56,7 @@
       "version": "master",
       "entrypoint": "flatbush.cwl",
       "output_file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
-      "output_directory": "/data/pipeline/beagle/output/flatbush",
+      "output_directory": "/juno/work/pi/beagle/output/flatbush",
       "default": true
     }
   },
@@ -71,7 +71,7 @@
       "version": "1.0.0",
       "entrypoint": "workflows/copy_outputs.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/copy_outputs",
+      "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
       "operator": 4,
       "default": true
     }
@@ -230,7 +230,7 @@
       "version": "1.1.2",
       "entrypoint": "workflows/pair-workflow-sv.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/argos_pair_sv",
+      "output_directory": "/juno/work/pi/beagle/output/argos_pair_sv",
       "operator": 1,
       "default": true
     }
@@ -246,7 +246,7 @@
       "version": "1.1.3",
       "entrypoint": "modules/pair/alignment-pair.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/alignment_pair_sv",
+      "output_directory": "/juno/work/pi/beagle/output/alignment_pair_sv",
       "operator": 18,
       "default": true
     }
@@ -262,7 +262,7 @@
       "version": "master",
       "entrypoint": "flatbush.cwl",
       "output_file_group": "a66f03b4-ce43-40d0-9134-d5a3575cabae",
-      "output_directory": "/data/pipeline/beagle/output/flatbush",
+      "output_directory": "/juno/work/pi/beagle/output/flatbush",
       "default": true
     }
   },
@@ -277,7 +277,7 @@
       "version": "1.0.0",
       "entrypoint": "workflows/copy_outputs.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/copy_outputs",
+      "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
       "operator": 4,
       "default": true
     }
@@ -517,7 +517,7 @@
       "version": "1.1.2",
       "entrypoint": "workflows/pair-workflow-sv.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/argos_pair_sv",
+      "output_directory": "/juno/work/pi/beagle/output/argos_pair_sv",
       "operator": 22,
       "default": true
     }
@@ -549,7 +549,7 @@
       "version": "1.1.2",
       "entrypoint": "modules/pair/alignment-pair.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/argos_pair_sv",
+      "output_directory": "/juno/work/pi/beagle/output/argos_pair_sv",
       "operator": 24,
       "default": true
     }
@@ -565,7 +565,7 @@
       "version": "1.7.0",
       "entrypoint": "workflows/copy_outputs.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/copy_outputs",
+      "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
       "operator": 25,
       "default": true
     }
@@ -677,7 +677,7 @@
       "version": "1.8.0",
       "entrypoint": "workflows/copy_outputs.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/copy_outputs",
+      "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
       "operator": 32,
       "default": true
     }
@@ -693,7 +693,7 @@
       "version": "1.8.0",
       "entrypoint": "workflows/copy_outputs.cwl",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/copy_outputs",
+      "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
       "operator": 33,
       "default": true
     }
@@ -709,7 +709,7 @@
       "version": "feature/voyager",
       "entrypoint": "dsl2.nf",
       "output_file_group": "a975f490-1b02-4575-abae-a4f8e3667733",
-      "output_directory": "/data/pipeline/beagle/output/copy_outputs",
+      "output_directory": "/juno/work/pi/beagle/output/copy_outputs",
       "operator": 34,
       "default": true
     }

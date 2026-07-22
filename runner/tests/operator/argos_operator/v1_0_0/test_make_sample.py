@@ -63,7 +63,7 @@ class TestMakeSample(TestCase):
                     "tissueLocation": "",
                     "tumorOrNormal": "Normal",
                 },
-                "path": "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R1_001.fastq.gz",
+                "path": "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R1_001.fastq.gz",
             },
             {
                 "file_name": "SAMPLE_N_001_IGO_99990_D_2_3_S15_R2_001.fastq.gz",
@@ -114,7 +114,7 @@ class TestMakeSample(TestCase):
                     "tissueLocation": "",
                     "tumorOrNormal": "Normal",
                 },
-                "path": "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R2_001.fastq.gz",
+                "path": "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R2_001.fastq.gz",
             },
         ]
 
@@ -127,11 +127,11 @@ class TestMakeSample(TestCase):
             "PL": "Illumina",
             "PU": ["FCELLAAAA4"],
             "R1": [
-                "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R1_001.fastq.gz"
+                "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R1_001.fastq.gz"
             ],
             "R1_bid": [UUID("a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac")],
             "R2": [
-                "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R2_001.fastq.gz"
+                "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R2_001.fastq.gz"
             ],
             "R2_bid": [UUID("c71c259a-ebc0-4490-9af1-bc99387a70d7")],
             "bam": [],

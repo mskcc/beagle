@@ -13,13 +13,13 @@
       "zR1": [
         {
           "class": "File",
-          "location": "juno:///data/archive/cmo/fastq/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_XXX002_P3_12345_L1_IGO_99991_B_1/XXX002_P3_12345_L1_IGO_99991_B_1_S82_R1_001.fastq.gz"
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_XXX002_P3_12345_L1_IGO_99991_B_1/XXX002_P3_12345_L1_IGO_99991_B_1_S82_R1_001.fastq.gz"
         }
       ],
       "zR2": [
         {
           "class": "File",
-          "location": "juno:///data/archive/cmo/fastq/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_XXX002_P3_12345_L1_IGO_99991_B_1/XXX002_P3_12345_L1_IGO_99991_B_1_S82_R2_001.fastq.gz"
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_XXX002_P3_12345_L1_IGO_99991_B_1/XXX002_P3_12345_L1_IGO_99991_B_1_S82_R2_001.fastq.gz"
         }
       ],
       "bam": [],
@@ -44,13 +44,13 @@
       "R1": [
         {
           "class": "File",
-          "location": "juno:///data/archive/cmo/fastq/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_00-0000003a_IGO_99991_B_2/00-0000003a_IGO_99991_B_2_S83_R1_001.fastq.gz"
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_00-0000003a_IGO_99991_B_2/00-0000003a_IGO_99991_B_2_S83_R1_001.fastq.gz"
         }
       ],
       "R2": [
         {
           "class": "File",
-          "location": "juno:///data/archive/cmo/fastq/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_00-0000003a_IGO_99991_B_2/00-0000003a_IGO_99991_B_2_S83_R2_001.fastq.gz"
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_00-0000003a_IGO_99991_B_2/00-0000003a_IGO_99991_B_2_S83_R2_001.fastq.gz"
         }
       ],
       "zR1": [],
@@ -159,13 +159,13 @@
       "zR1": [
         {
           "class": "File",
-          "location": "juno:///data/archive/cmo/fastq/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_XXX017_P1_12345a_R_43_IGO_99991_B_3/XXX017_P1_12345a_R_43_IGO_99991_B_3_S84_R1_001.fastq.gz"
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_XXX017_P1_12345a_R_43_IGO_99991_B_3/XXX017_P1_12345a_R_43_IGO_99991_B_3_S84_R1_001.fastq.gz"
         }
       ],
       "zR2": [
         {
           "class": "File",
-          "location": "juno:///data/archive/cmo/fastq/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_XXX017_P1_12345a_R_43_IGO_99991_B_3/XXX017_P1_12345a_R_43_IGO_99991_B_3_S84_R2_001.fastq.gz"
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_XXX017_P1_12345a_R_43_IGO_99991_B_3/XXX017_P1_12345a_R_43_IGO_99991_B_3_S84_R2_001.fastq.gz"
         }
       ],
       "bam": [],
@@ -190,13 +190,13 @@
       "R1": [
         {
           "class": "File",
-          "location": "juno:///data/archive/cmo/fastq/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_00-0000004a_IGO_99991_B_4/00-0000004a_IGO_99991_B_4_S85_R1_001.fastq.gz"
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_00-0000004a_IGO_99991_B_4/00-0000004a_IGO_99991_B_4_S85_R1_001.fastq.gz"
         }
       ],
       "R2": [
         {
           "class": "File",
-          "location": "juno:///data/archive/cmo/fastq/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_00-0000004a_IGO_99991_B_4/00-0000004a_IGO_99991_B_4_S85_R2_001.fastq.gz"
+          "location": "juno:///juno/archive/msk/cmo/FASTQ/SEQRUN_0005_BFCELLAAAA1/Project_99991_B/Sample_00-0000004a_IGO_99991_B_4/00-0000004a_IGO_99991_B_4_S85_R2_001.fastq.gz"
         }
       ],
       "zR1": [],

@@ -294,11 +294,11 @@ class TestPairRequest(TestCase):
                     "PL": "Illumina",
                     "PU": ["FCELLAAAA4"],
                     "R1": [
-                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R1_001.fastq.gz"
+                        "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R1_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("40a07e9a-2198-40b7-9f7f-7696c9d6429e")],
                     "R2": [
-                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R2_001.fastq.gz"
+                        "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R2_001.fastq.gz"
                     ],
                     "R2_bid": [UUID("bb7ff922-b741-4df7-ba2a-4f3b8549e8b5")],
                     "bam": [],
@@ -373,11 +373,11 @@ class TestPairRequest(TestCase):
                     "PL": "Illumina",
                     "PU": ["FCELLAAAA4"],
                     "R1": [
-                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R1_001.fastq.gz"
+                        "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R1_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("40a07e9a-2198-40b7-9f7f-7696c9d6429e")],
                     "R2": [
-                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R2_001.fastq.gz"
+                        "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D/Sample_31-N_IGO_99990_D_2/31-N_IGO_99990_D_2_S14_R2_001.fastq.gz"
                     ],
                     "R2_bid": [UUID("bb7ff922-b741-4df7-ba2a-4f3b8549e8b5")],
                     "bam": [],
@@ -475,10 +475,10 @@ class TestPairRequest(TestCase):
                     "run_date": ["2019-12-12"],
                     "specimen_type": "Blood",
                     "R1": [
-                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R1_001.fastq.gz"
+                        "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R1_001.fastq.gz"
                     ],
                     "R2": [
-                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R2_001.fastq.gz"
+                        "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_2/Sample_SAMPLE_N_001_IGO_99990_D_2_3/SAMPLE_N_001_IGO_99990_D_2_3_S15_R2_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac")],
                     "R2_bid": [UUID("c71c259a-ebc0-4490-9af1-bc99387a70d7")],
@@ -556,10 +556,10 @@ class TestPairRequest(TestCase):
                     "run_date": ["2019-12-13"],
                     "specimen_type": "Blood",
                     "R1": [
-                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_4/Sample_SAMPLE_N_001_IGO_99990_D_4_3/SAMPLE_N_001_IGO_99990_D_4_3_S15_R1_001.fastq.gz"
+                        "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_4/Sample_SAMPLE_N_001_IGO_99990_D_4_3/SAMPLE_N_001_IGO_99990_D_4_3_S15_R1_001.fastq.gz"
                     ],
                     "R2": [
-                        "/data/archive/fastq/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_4/Sample_SAMPLE_N_001_IGO_99990_D_4_3/SAMPLE_N_001_IGO_99990_D_4_3_S15_R2_001.fastq.gz"
+                        "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0004_BFCELLAAAA4/Project_99990_D_4/Sample_SAMPLE_N_001_IGO_99990_D_4_3/SAMPLE_N_001_IGO_99990_D_4_3_S15_R2_001.fastq.gz"
                     ],
                     "R1_bid": [UUID("08072445-84ff-4b43-855d-d8d2dc87e2d5")],
                     "R2_bid": [UUID("f0d9a1e1-9414-42df-a749-08776732ee04")],
@@ -1124,9 +1124,9 @@ class TestPairRequest(TestCase):
                 "LB": "juno_argos_demo1_3",
                 "PL": "Illumina",
                 "PU": ["FCELLAAAA4"],
-                "R1": ["/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"],
+                "R1": ["/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"],
                 "R1_bid": [UUID("a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac")],
-                "R2": ["/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"],
+                "R2": ["/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"],
                 "R2_bid": [UUID("c71c259a-ebc0-4490-9af1-bc99387a70d7")],
                 "bam": [],
                 "bam_bid": [],
@@ -1148,9 +1148,9 @@ class TestPairRequest(TestCase):
                 "LB": "juno_argos_demo1_5_1_1_1",
                 "PL": "Illumina",
                 "PU": ["FCELLAAAA6_GTATTGGC-PPPP14"],
-                "R1": ["/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"],
+                "R1": ["/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"],
                 "R1_bid": [UUID("d2d8ed36-d8f4-4e93-b038-d38328fad021")],
-                "R2": ["/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"],
+                "R2": ["/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"],
                 "R2_bid": [UUID("2f77f3ac-ab25-4a02-90bd-86542401ac89")],
                 "bam": [],
                 "bam_bid": [],
@@ -1177,9 +1177,9 @@ class TestPairRequest(TestCase):
                     "LB": "juno_argos_demo1_5_1_1_1",
                     "PL": "Illumina",
                     "PU": ["FCELLAAAA6_GTATTGGC-PPPP14"],
-                    "R1": ["/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"],
+                    "R1": ["/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R1_001.fastq.gz"],
                     "R1_bid": [UUID("d2d8ed36-d8f4-4e93-b038-d38328fad021")],
-                    "R2": ["/data/pipeline/test/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"],
+                    "R2": ["/juno/work/ci/argos-test/data/fastq/DU874145-T/DU874145-T_IGO_00000_TEST_L001_R2_001.fastq.gz"],
                     "R2_bid": [UUID("2f77f3ac-ab25-4a02-90bd-86542401ac89")],
                     "SM": "s_juno_argos_demo1_5",
                     "bait_set": "IMPACT468_BAITS",
@@ -1203,9 +1203,9 @@ class TestPairRequest(TestCase):
                     "LB": "juno_argos_demo1_3",
                     "PL": "Illumina",
                     "PU": ["FCELLAAAA4"],
-                    "R1": ["/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"],
+                    "R1": ["/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz"],
                     "R1_bid": [UUID("a46c5e6b-0793-4cd2-b5dd-92b3d71cf1ac")],
-                    "R2": ["/data/pipeline/test/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"],
+                    "R2": ["/juno/work/ci/argos-test/data/fastq/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz"],
                     "R2_bid": [UUID("c71c259a-ebc0-4490-9af1-bc99387a70d7")],
                     "SM": "s_juno_argos_demo1_3",
                     "bait_set": "IMPACT468_BAITS",

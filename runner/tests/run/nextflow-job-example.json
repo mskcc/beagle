@@ -3,7 +3,7 @@
   "tags": {},
   "app": "22f07afa-fde6-43f7-b9c1-4ab7ecd6a26d",
   "output_metadata": {},
-  "output_directory": "/data/pipeline/staging-output/nextflow_run",
+  "output_directory": "/juno/work/ci/staging-output/nextflow_run",
   "inputs": {
     "somatic": "True",
     "mapping": [
@@ -13,11 +13,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_MHC1-N_R1_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_MHC1-N_R1_xxx.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_MHC1-N_R2_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_MHC1-N_R2_xxx.fastq.gz"
         }
       },
       {
@@ -26,11 +26,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_Variants1-N_R1_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_Variants1-N_R1_xxx.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_Variants1-N_R2_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_Variants1-N_R2_xxx.fastq.gz"
         }
       },
       {
@@ -39,11 +39,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_MHC1-T_L001_R1_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_MHC1-T_L001_R1_xxx.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_MHC1-T_L001_R2_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_MHC1-T_L001_R2_xxx.fastq.gz"
         }
       },
       {
@@ -52,11 +52,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_Variants1-T_R1_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_Variants1-T_R1_xxx.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_Variants1-T_R2_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_Variants1-T_R2_xxx.fastq.gz"
         }
       },
       {
@@ -65,11 +65,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_MHC2-N_R1_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_MHC2-N_R1_xxx.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_MHC2-N_R2_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_MHC2-N_R2_xxx.fastq.gz"
         }
       },
       {
@@ -78,11 +78,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_Variants2-N_R1_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_Variants2-N_R1_xxx.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_Variants2-N_R2_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_Variants2-N_R2_xxx.fastq.gz"
         }
       },
       {
@@ -91,11 +91,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_MHC2-T_R1_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_MHC2-T_R1_xxx.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_MHC2-T_R2_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_MHC2-T_R2_xxx.fastq.gz"
         }
       },
       {
@@ -104,11 +104,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_Variants2-T_R1_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_Variants2-T_R1_xxx.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/small_Variants2-T_R2_xxx.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/small_Variants2-T_R2_xxx.fastq.gz"
         }
       },
       {
@@ -117,11 +117,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/DU874145-N_IGO_00000_TEST_R1_001.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/DU874145-N_IGO_00000_TEST_R1_001.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/DU874145-N_IGO_00000_TEST_R2_001.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/DU874145-N_IGO_00000_TEST_R2_001.fastq.gz"
         }
       },
       {
@@ -130,11 +130,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/DU874145-T_IGO_00000_TEST_R1_001.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/DU874145-T_IGO_00000_TEST_R1_001.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/DU874145-T_IGO_00000_TEST_R2_001.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/DU874145-T_IGO_00000_TEST_R2_001.fastq.gz"
         }
       },
       {
@@ -143,11 +143,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/DU874146-N_IGO_00000_TEST_R1_001.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/DU874146-N_IGO_00000_TEST_R1_001.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/DU874146-N_IGO_00000_TEST_R2_001.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/DU874146-N_IGO_00000_TEST_R2_001.fastq.gz"
         }
       },
       {
@@ -156,11 +156,11 @@
         "target": "agilent",
         "fastq_pe1": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/DU874146-T_IGO_00000_TEST_R1_001.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/DU874146-T_IGO_00000_TEST_R1_001.fastq.gz"
         },
         "fastq_pe2": {
           "class": "File",
-          "location": "juno:///data/pipeline/testdata/fastq/DU874146-T_IGO_00000_TEST_R2_001.fastq.gz"
+          "location": "juno:///juno/work/taylorlab/cmopipeline/testdata/fastq/DU874146-T_IGO_00000_TEST_R2_001.fastq.gz"
         }
       }
     ],

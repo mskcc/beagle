@@ -13,7 +13,7 @@
       "job_statuses": {},
       "message": {},
       "output_metadata": {},
-      "output_directory": "/data/pipeline/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
+      "output_directory": "/juno/work/ci/voyager-output/4d9c8213-df56-4a0f-8d86-ce2bd8349c59",
       "tags": {
         "igoRequestId": "ALN-REQ-ID",
         "labHeadName": "Dr. McGee",

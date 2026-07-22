@@ -122,8 +122,8 @@
         "fields": {
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
-            "file_name": "DONOR00-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
-            "path": "/test/path/DONOR00-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+            "file_name": "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
+            "path": "/test/path/DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -135,8 +135,8 @@
         "fields": {
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
-            "file_name": "DONOR00-TP_cl_aln_srt_MD_IR_FX_BR.bam",
-            "path": "/test/path/DONOR00-TP_cl_aln_srt_MD_IR_FX_BR.bam",
+            "file_name": "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam",
+            "path": "/test/path/DONOR22-TP_cl_aln_srt_MD_IR_FX_BR.bam",
             "file_type": 3,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"

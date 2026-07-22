@@ -6,7 +6,7 @@
             "created_date": "2020-01-06T19:59:50.576Z",
             "modified_date": "2020-01-06T19:59:50.579Z",
             "file_name": "SAMPLE_T_001_IGO_99990_D_3_5_S80_R1_001.fastq.gz",
-            "path": "/data/archive/fastq/SEQRUN_0008_BFCELLAAAA6/Project_99990_D_3/Sample_SAMPLE_T_001_IGO_99990_D_3_5/SAMPLE_T_001_IGO_99990_D_3_5_S80_R1_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0008_BFCELLAAAA6/Project_99990_D_3/Sample_SAMPLE_T_001_IGO_99990_D_3_5/SAMPLE_T_001_IGO_99990_D_3_5_S80_R1_001.fastq.gz",
             "file_type": 1,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
@@ -19,7 +19,7 @@
             "created_date": "2020-01-06T19:59:50.591Z",
             "modified_date": "2020-01-06T19:59:50.592Z",
             "file_name": "SAMPLE_T_001_IGO_99990_D_3_5_S80_R2_001.fastq.gz",
-            "path": "/data/archive/fastq/SEQRUN_0008_BFCELLAAAA6/Project_99990_D_3/Sample_SAMPLE_T_001_IGO_99990_D_3_5/SAMPLE_T_001_IGO_99990_D_3_5_S80_R2_001.fastq.gz",
+            "path": "/ifs/archive/GCL/hiseq/FASTQ/SEQRUN_0008_BFCELLAAAA6/Project_99990_D_3/Sample_SAMPLE_T_001_IGO_99990_D_3_5/SAMPLE_T_001_IGO_99990_D_3_5_S80_R2_001.fastq.gz",
             "file_type": 1,
             "size": 0,
             "file_group": "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"

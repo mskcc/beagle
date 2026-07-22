@@ -24,7 +24,7 @@
                 "location": "bid://72aa956a-7d5b-485f-8cc2-c4df96c5d626"
             },
             "value": {
-                "path": "/data/pipeline/request_files/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf",
+                "path": "/juno/work/ci/resources/request_files/snps_1000g/1000G_phase1.snps.high_confidence.b37.vcf",
                 "class": "File"
             },
             "notify": false,
@@ -58,7 +58,7 @@
                 "location": "bid://f2391e3a-6fa5-4f51-ac97-d961f49a7ea7"
             },
             "value": {
-                "path": "/data/pipeline/request_files/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf",
+                "path": "/juno/work/ci/resources/request_files/indels_1000g/Mills_and_1000G_gold_standard.indels.b37.vcf",
                 "class": "File"
             },
             "notify": false,
@@ -92,7 +92,7 @@
                 "location": "bid://505d6f3c-0541-4151-94eb-719d86790fce"
             },
             "value": {
-                "path": "/data/pipeline/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
+                "path": "/juno/work/ci/resources/vep/cache/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz",
                 "class": "File"
             },
             "notify": false,
@@ -126,7 +126,7 @@
                 "location": "bid://5348bbd0-6441-4d32-b6d7-33e1807d2655"
             },
             "value": {
-                "path": "/data/pipeline/request_files/cosmic/CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
+                "path": "/juno/work/ci/resources/request_files/cosmic/CosmicCodingMuts_v67_b37_20131024__NDS.vcf",
                 "class": "File"
             },
             "notify": false,
@@ -166,7 +166,7 @@
                 "location": "bid://d4c3f8ae-491e-4574-bfc8-b54d0b0c8162"
             },
             "value": {
-                "path": "/data/pipeline/genomes/GRCm38/GRCm38.fasta",
+                "path": "/juno/work/ci/resources/genomes/GRCm38/GRCm38.fasta",
                 "class": "File"
             },
             "notify": false,
@@ -200,7 +200,7 @@
                 "location": "bid://54f9809d-0e64-4450-8ad9-240195c55552"
             },
             "value": {
-                "path": "/data/pipeline/request_files/hapmap/hapmap_3.3.b37.vcf",
+                "path": "/juno/work/ci/resources/request_files/hapmap/hapmap_3.3.b37.vcf",
                 "class": "File"
             },
             "notify": false,
@@ -234,7 +234,7 @@
                 "location": "bid://2b22e87b-a6c1-4c96-8627-75bcd5cf5ce6"
             },
             "value": {
-                "path": "/data/pipeline/request_files/dbsnp/dbsnp_138.b37.excluding_sites_after_129.vcf",
+                "path": "/juno/work/ci/resources/request_files/dbsnp/dbsnp_138.b37.excluding_sites_after_129.vcf",
                 "class": "File"
             },
             "notify": false,
@@ -274,7 +274,7 @@
                 "location": "bid://5e9540ae-c3b8-45c1-9994-fd86b81b0719"
             },
             "value": {
-                "path": "/data/pipeline/genomes/GRCh37/fasta/b37.fasta",
+                "path": "/juno/work/ci/resources/genomes/GRCh37/fasta/b37.fasta",
                 "class": "File"
             },
             "notify": false,
@@ -447,41 +447,41 @@
             },
             "value": {
                 "refseq": {
-                    "path": "/data/pipeline/request_files/refseq/refGene_b37.sorted.txt",
+                    "path": "/juno/work/ci/resources/request_files/refseq/refGene_b37.sorted.txt",
                     "class": "File"
                 },
                 "vep_data": "/var/cache",
                 "vep_path": "/usr/bin/vep",
                 "custom_enst": "/usr/bin/vcf2maf/data/isoform_overrides_at_mskcc",
                 "facets_snps": {
-                    "path": "/data/pipeline/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
+                    "path": "/juno/work/ci/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz",
                     "class": "File"
                 },
                 "hotspot_vcf": "/usr/bin/basicfiltering/data/hotspot-list-union-v1-v2.vcf",
                 "fp_genotypes": {
-                    "path": "/data/pipeline/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_genotypes.txt",
                     "class": "File"
                 },
                 "fp_intervals": {
-                    "path": "/data/pipeline/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/FP_tiling_intervals.list",
                     "class": "File"
                 },
                 "hotspot_list": "/usr/bin/ngs-filters/data/hotspot-list-union-v1-v2.txt",
                 "delly_exclude": {
-                    "path": "/data/pipeline/genomes/GRCh37/delly/human.hg19.excl.tsv",
+                    "path": "/juno/work/ci/resources/genomes/GRCh37/delly/human.hg19.excl.tsv",
                     "class": "File"
                 },
                 "bait_intervals": {
-                    "path": "/data/pipeline/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list",
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_baits.interval_list",
                     "class": "File"
                 },
                 "conpair_markers": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.txt",
                 "hotspot_list_maf": {
-                    "path": "/data/pipeline/qc_resources/hotspot-list-union-v1-v2.maf",
+                    "path": "/juno/work/ci/resources/qc_resources/hotspot-list-union-v1-v2.maf",
                     "class": "File"
                 },
                 "target_intervals": {
-                    "path": "/data/pipeline/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
+                    "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
                     "class": "File"
                 },
                 "conpair_markers_bed": "/usr/bin/conpair/data/markers/GRCh37.autosomes.phase3_shapeit2_mvncall_integrated.20130502.SNV.genotype.sselect_v4_MAF_0.4_LD_0.8.bed"
@@ -683,163 +683,163 @@
             ],
             "value": [
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006708_N001_d.Group9.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006709_N001_d.Group11.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006710_N001_d.Group5.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006711_N001_d.Group7.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006713_N001_d.Group10.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006714_N001_d.Group8.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006715_N001_d.Group6.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006716_N001_d.Group4.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006717_N001_d.Group3.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_006718_N001_d.Group1.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_09TAFV_N001_d.Group20.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_1FPU8J_N001_d.Group10.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_29F7HE_N001_d.Group17.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_2J273K_N001_d.Group22.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_32WX55_N001_d.Group17.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_3WFCFP_N001_d.Group24.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_4XFY8V_N001_d.Group2.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_7XDAJW_N001_d.Group15.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_96X4FW_N001_d.Group13.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_A8N9WX_N001_d.Group12.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_CTR0E9_N001_d.Group25.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_DJE4C0_N001_d.Group8.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FDR1YC_N001_d.Group27.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_FWK8C0_N001_d.Group8.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_HRE3UJ_N001_d.Group9.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JFM1K9_N001_d.Group3.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_JWYL4J_N001_d.Group19.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_KAT85C_N001_d.Group15.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LC80PX_N001_d.Group7.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_LNNV52_N001_d.Group26.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_MWF8PH_N001_d.Group6.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NJHH88_N001_d.Group16.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_NR3W32_N001_d.Group21.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_P10A8A_N001_d.Group29.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U53DXH_N001_d.Group1.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_U8A7CR_N001_d.Group14.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_VXC8TK_N001_d.Group24.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_W0TXP0_N001_d.Group22.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_WWTK32_N001_d.Group18.rg.md.abra.printreads.bam",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/curated_bams/IMPACT468_b37/s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/resources/curated_bams/IMPACT468_b37/s_C_XXC7N6_N001_d.Group12.rg.md.abra.printreads.bam",
                     "class": "File"
                 }
             ],
@@ -1268,13 +1268,13 @@
                     ],
                     "R1": [
                         {
-                            "path": "/data/pipeline/prototypes/register_fastqs/DU874146-T/DU874146-T_IGO_00000_TEST_L001_R1_001.fastq.gz",
+                            "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874146-T/DU874146-T_IGO_00000_TEST_L001_R1_001.fastq.gz",
                             "class": "File"
                         }
                     ],
                     "R2": [
                         {
-                            "path": "/data/pipeline/prototypes/register_fastqs/DU874146-T/DU874146-T_IGO_00000_TEST_L001_R2_001.fastq.gz",
+                            "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874146-T/DU874146-T_IGO_00000_TEST_L001_R2_001.fastq.gz",
                             "class": "File"
                         }
                     ],
@@ -1300,13 +1300,13 @@
                     ],
                     "R1": [
                         {
-                            "path": "/data/pipeline/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz",
+                            "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R1_001.fastq.gz",
                             "class": "File"
                         }
                     ],
                     "R2": [
                         {
-                            "path": "/data/pipeline/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz",
+                            "path": "/juno/work/ci/pi/prototypes/register_fastqs/DU874145-N/DU874145-N_IGO_00000_TEST_L001_R2_001.fastq.gz",
                             "class": "File"
                         }
                     ],

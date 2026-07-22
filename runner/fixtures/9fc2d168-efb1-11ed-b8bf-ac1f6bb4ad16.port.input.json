@@ -101,11 +101,11 @@
             ],
             "value": [
                 {
-                    "path": "/data/pipeline/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.maf",
+                    "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.maf",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.maf",
+                    "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.maf",
                     "class": "File"
                 }
             ],
@@ -139,7 +139,7 @@
                 "location": "bid://0d6d4e53-f7cd-412c-bf14-5c147ab2abae"
             },
             "value": {
-                "path": "/data/pipeline/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
+                "path": "/juno/work/ci/resources/genomic_resources/targets/IMPACT468/b37/picard_targets.interval_list",
                 "class": "File"
             },
             "notify": false,
@@ -171,7 +171,7 @@
                 "location": "bid://6c90454d-fc4c-4cce-84a9-dce5d7da4345"
             },
             "value": {
-                "path": "/data/pipeline/known_fusions/known_fusions_at_mskcc.txt",
+                "path": "/juno/work/ci/resources/known_fusions/known_fusions_at_mskcc.txt",
                 "class": "File"
             },
             "notify": false,
@@ -1026,11 +1026,11 @@
             ],
             "value": [
                 {
-                    "path": "/data/pipeline/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.portal.txt",
+                    "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.svs.pass.vep.portal.txt",
                     "class": "File"
                 },
                 {
-                    "path": "/data/pipeline/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.portal.txt",
+                    "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.svs.pass.vep.portal.txt",
                     "class": "File"
                 }
             ],
@@ -1088,26 +1088,26 @@
                 {
                     "pair_id": "s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d",
                     "pair_maf": {
-                        "path": "/data/pipeline/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.muts.maf",
+                        "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.s_C_ABCDEF_N001_d.muts.maf",
                         "class": "File"
                     },
                     "tumor_id": "s_C_ABCDEF_X001_d",
                     "normal_id": "s_C_ABCDEF_N001_d",
                     "snp_pileup": {
-                        "path": "/data/pipeline/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads__s_C_ABCDEF_X001_d.rg.md.abra.printreads.dat.gz",
+                        "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads__s_C_ABCDEF_X001_d.rg.md.abra.printreads.dat.gz",
                         "class": "File"
                     }
                 },
                 {
                     "pair_id": "s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d",
                     "pair_maf": {
-                        "path": "/data/pipeline/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.muts.maf",
+                        "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.s_C_GHIJKL_N001_d.muts.maf",
                         "class": "File"
                     },
                     "tumor_id": "s_C_GHIJKL_X001_d",
                     "normal_id": "s_C_GHIJKL_N001_d",
                     "snp_pileup": {
-                        "path": "/data/pipeline/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads__s_C_GHIJKL_X001_d.rg.md.abra.printreads.dat.gz",
+                        "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads__s_C_GHIJKL_X001_d.rg.md.abra.printreads.dat.gz",
                         "class": "File"
                     }
                 }
@@ -1213,21 +1213,21 @@
             ],
             "value": [
                 {
-                    "path": "/data/pipeline/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bam",
                     "class": "File",
                     "secondaryFiles": [
                         {
-                            "path": "/data/pipeline/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bai",
+                            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_X001_d.rg.md.abra.printreads.bai",
                             "class": "File"
                         }
                     ]
                 },
                 {
-                    "path": "/data/pipeline/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bam",
                     "class": "File",
                     "secondaryFiles": [
                         {
-                            "path": "/data/pipeline/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bai",
+                            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_X001_d.rg.md.abra.printreads.bai",
                             "class": "File"
                         }
                     ]
@@ -1345,7 +1345,7 @@
                 "location": "bid://0db3314e-1a17-4d24-8910-a88f73cb8a7c"
             },
             "value": {
-                "path": "/data/pipeline/helix_filters/reference_data/gene_lists/all_IMPACT_genes.tsv",
+                "path": "/juno/work/ci/helix_filters_01/reference_data/gene_lists/all_IMPACT_genes.tsv",
                 "class": "File"
             },
             "notify": false,
@@ -1401,7 +1401,7 @@
                 "location": "bid://ffb33d50-5bda-4b89-b6cc-b0aeda4c547a"
             },
             "value": {
-                "path": "/data/pipeline/request_files/msisensor/microsatellites.list",
+                "path": "/juno/work/ci/resources/request_files/msisensor/microsatellites.list",
                 "class": "File"
             },
             "notify": false,
@@ -1454,21 +1454,21 @@
             ],
             "value": [
                 {
-                    "path": "/data/pipeline/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bam",
                     "class": "File",
                     "secondaryFiles": [
                         {
-                            "path": "/data/pipeline/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bai",
+                            "path": "/juno/work/ci/voyager-output/0bd2b1c4-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_ABCDEF_N001_d.rg.md.abra.printreads.bai",
                             "class": "File"
                         }
                     ]
                 },
                 {
-                    "path": "/data/pipeline/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bam",
+                    "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bam",
                     "class": "File",
                     "secondaryFiles": [
                         {
-                            "path": "/data/pipeline/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bai",
+                            "path": "/juno/work/ci/voyager-output/0bd48b70-ea95-11ed-a7a5-ac1f6bb4ad16/s_C_GHIJKL_N001_d.rg.md.abra.printreads.bai",
                             "class": "File"
                         }
                     ]

@@ -73,8 +73,8 @@
             "runDate": "2022-03-20",
             "flowCellLanes": [5],
             "fastqs": [
-              "/data/archive/fastq/TEST_RUN_001/Project_99990_D/Sample_TestSample001_IGO_99990_D_2/TestSample001_IGO_99990_D_2_S1_R1_001.fastq.gz",
-              "/data/archive/fastq/TEST_RUN_001/Project_99990_D/Sample_TestSample001_IGO_99990_D_2/TestSample001_IGO_99990_D_2_S1_R2_001.fastq.gz"
+              "/ifs/archive/GCL/hiseq/FASTQ/TEST_RUN_001/Project_99990_D/Sample_TestSample001_IGO_99990_D_2/TestSample001_IGO_99990_D_2_S1_R1_001.fastq.gz",
+              "/ifs/archive/GCL/hiseq/FASTQ/TEST_RUN_001/Project_99990_D/Sample_TestSample001_IGO_99990_D_2/TestSample001_IGO_99990_D_2_S1_R2_001.fastq.gz"
             ]
           }
         ]
@@ -141,8 +141,8 @@
               "runDate": "2022-03-20",
               "flowCellLanes": [5],
               "fastqs": [
-                "/data/archive/fastq/TEST_RUN_001/Project_99990_D/Sample_TestSample001_IGO_99990_D_2/TestSample001_IGO_99990_D_2_S1_R1_001.fastq.gz",
-                "/data/archive/fastq/TEST_RUN_001/Project_99990_D/Sample_TestSample001_IGO_99990_D_2/TestSample001_IGO_99990_D_2_S1_R2_001.fastq.gz"
+                "/ifs/archive/GCL/hiseq/FASTQ/TEST_RUN_001/Project_99990_D/Sample_TestSample001_IGO_99990_D_2/TestSample001_IGO_99990_D_2_S1_R1_001.fastq.gz",
+                "/ifs/archive/GCL/hiseq/FASTQ/TEST_RUN_001/Project_99990_D/Sample_TestSample001_IGO_99990_D_2/TestSample001_IGO_99990_D_2_S1_R2_001.fastq.gz"
               ]
             }
           ]
