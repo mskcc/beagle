@@ -17,7 +17,7 @@ SAMPLE_ID_SEP = "_cl_aln"
 TUMOR_SEARCH = "-L0"
 NORMAL_SEARCH = "-N0"
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
-ACCESS_DEFAULT_CNV_NORMAL_FILENAME = r"DONOR00-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam$"
+ACCESS_DEFAULT_CNV_NORMAL_FILENAME = r"DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam$"
 UNFILTERED_BAM_SEARCH = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam"
 
 

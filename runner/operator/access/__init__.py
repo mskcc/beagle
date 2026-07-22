@@ -7,8 +7,8 @@ from file_system.models import File, FileMetadata
 logger = logging.getLogger(__name__)
 
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "access_curated_normals"
-ACCESS_DEFAULT_NORMAL_ID = "DONOR00-TP"
-ACCESS_DEFAULT_NORMAL_FILENAME = "DONOR00-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+ACCESS_DEFAULT_NORMAL_ID = "DONOR22-TP"
+ACCESS_DEFAULT_NORMAL_FILENAME = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 NORMAL_SAMPLE_SEARCH = "-N0"
 DMP_UNFILTERED_REGEX = "-unfilter.bam"
 IGO_UNFILTERED_REGEX = "__aln_srt_IR_FX.bam"

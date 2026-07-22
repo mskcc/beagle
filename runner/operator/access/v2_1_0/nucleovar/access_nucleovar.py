@@ -24,9 +24,9 @@ from file_system.models import File, FileGroup, FileType
 WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 ACCESS_CURATED_BAMS_FILE_GROUP_SLUG = "access_curated_normals"
-ACCESS_DEFAULT_NORMAL_ID = "DONOR00-TP"
-ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = "DONOR00-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
-ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = "DONOR00-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
+ACCESS_DEFAULT_NORMAL_ID = "DONOR22-TP"
+ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = "DONOR22-TP_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 NORMAL_SAMPLE_SEARCH = "-N0"
 TUMOR_SAMPLE_SEARCH = "-L0"
 DUPLEX_BAM_SEARCH = "__aln_srt_IR_FX-duplex.bam"
@@ -754,16 +754,16 @@ class NucleoVarOperator(Operator):
             input_json = {
                 "input": bams,
                 "aux_bams": aux_bams,
-                "fasta": "/data/access/resources/reference/current/Homo_sapiens_assembly19.fasta",
-                "fai": "/data/access/resources/reference/current/Homo_sapiens_assembly19.fasta.fai",
-                "dict": "/data/access/resources/reference/current/Homo_sapiens_assembly19.dict",
-                "canonical_bed": "/data/access/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0panelA_canonicaltargets_500buffer.bed",
-                "target_bed": "/data/access/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0panelA_canonicaltargets_500buffer.bed",
-                "rules_json": "/data/access/resources/nucleovar/rules.json",
-                "header_file": "/data/access/resources/nucleovar/mutect1_annotate_concat_header.txt",
-                "blocklist": "/data/access/resources/nucleovar/access_blocklist.txt",
-                "canonical_tx_ref": "/data/access/resources/nucleovar/canonical_target_tx_ref.tsv",
-                "hotspots": "/data/access/resources/nucleovar/hotspots.maf",
+                "fasta": "/juno/work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta",
+                "fai": "/juno/work/access/production/resources/reference/current/Homo_sapiens_assembly19.fasta.fai",
+                "dict": "/juno/work/access/production/resources/reference/current/Homo_sapiens_assembly19.dict",
+                "canonical_bed": "/juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0panelA_canonicaltargets_500buffer.bed",
+                "target_bed": "/juno/work/access/production/resources/msk-access/v1.0/regions_of_interest/versions/v1.0/MSK-ACCESS-v1_0panelA_canonicaltargets_500buffer.bed",
+                "rules_json": "/juno/work/access/production/resources/nucleovar/rules.json",
+                "header_file": "/juno/work/access/production/resources/nucleovar/mutect1_annotate_concat_header.txt",
+                "blocklist": "/juno/work/access/production/resources/nucleovar/access_blocklist.txt",
+                "canonical_tx_ref": "/juno/work/access/production/resources/nucleovar/canonical_target_tx_ref.tsv",
+                "hotspots": "/juno/work/access/production/resources/nucleovar/hotspots.maf",
                 "annotator": "genomenexus",
             }
             sample_metadata = {

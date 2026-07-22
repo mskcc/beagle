@@ -1,28 +1,28 @@
 {
     "baits_list": {
-        "location": "juno:///data/pipeline/igenomes/grch37/baits/AgilentExon_51MB_b37_v3_baits.interval_list",
+        "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/baits/AgilentExon_51MB_b37_v3_baits.interval_list",
         "class": "File"
     }, 
     "target_bed": {
-        "location": "juno:///data/pipeline/igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.plus5bp.bed.gz",
+        "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.plus5bp.bed.gz",
         "class": "File", 
         "secondaryFiles": [
             {
-                "location": "juno:///data/pipeline/igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.plus5bp.bed.gz.tbi",
+                "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.plus5bp.bed.gz.tbi",
                 "class": "File"
             }
         ]
     }, 
     "msisensor_list": {
-        "location": "juno:///data/pipeline/igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Sequence/WholeGenomeFasta/human_g1k_v37_decoy.fasta.microsatellites.list", 
+        "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Sequence/WholeGenomeFasta/human_g1k_v37_decoy.fasta.microsatellites.list", 
         "class": "File"
     }, 
     "facets_vcf": {
-        "location": "juno:///data/depot/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf", 
+        "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf", 
         "class": "File", 
         "secondaryFiles": [
             {
-                "location": "juno:///data/depot/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz", 
+                "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/facets_snps/dbsnp_137.b37__RmDupsClean__plusPseudo50__DROP_SORT.vcf.gz", 
                 "class": "File"
             }
         ]
@@ -53,7 +53,7 @@
         "max_depth": 4000
     }, 
     "targets_list": {
-        "location": "juno:///data/pipeline/igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.interval_list",
+        "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/targets/AgilentExon_51MB_b37_v3_targets.interval_list",
         "class": "File"
     }, 
     "delly_params": {
@@ -65,62 +65,62 @@
             "INV"
         ], 
         "exclude": {
-            "location": "juno:///data/pipeline/igenomes/grch37/sv_calling/human.hg19.excl.tsv", 
+            "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/grch37/sv_calling/human.hg19.excl.tsv", 
             "class": "File"
         }
     }, 
     "known_sites": [
         {
-            "location": "juno:///data/pipeline/igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/1000G_phase1.indels.b37.vcf", 
+            "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/1000G_phase1.indels.b37.vcf", 
             "class": "File", 
             "secondaryFiles": [
                 {
-                    "location": "juno:///data/pipeline/igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/1000G_phase1.indels.b37.vcf.idx", 
+                    "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/1000G_phase1.indels.b37.vcf.idx", 
                     "class": "File"
                 }
             ]
         }, 
         {
-            "location": "juno:///data/pipeline/igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/Mills_and_1000G_gold_standard.indels.b37.vcf", 
+            "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/Mills_and_1000G_gold_standard.indels.b37.vcf", 
             "class": "File", 
             "secondaryFiles": [
                 {
-                    "location": "juno:///data/pipeline/igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/Mills_and_1000G_gold_standard.indels.b37.vcf.idx", 
+                    "location": "juno:///juno/work/taylorlab/cmopipeline/mskcc-igenomes/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GATKBundle/Mills_and_1000G_gold_standard.indels.b37.vcf.idx", 
                     "class": "File"
                 }
             ]
         }
     ], 
     "reference_sequence": {
-        "location": "juno:///data/depot/resources/genomes/GRCh37/bwa_fasta/b37.fasta", 
+        "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/bwa_fasta/b37.fasta", 
         "class": "File", 
         "secondaryFiles": [
             {
-                "location": "juno:///data/depot/resources/genomes/GRCh37/bwa_fasta/b37.fasta.amb", 
+                "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/bwa_fasta/b37.fasta.amb", 
                 "class": "File"
             }, 
             {
-                "location": "juno:///data/depot/resources/genomes/GRCh37/bwa_fasta/b37.fasta.ann", 
+                "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/bwa_fasta/b37.fasta.ann", 
                 "class": "File"
             }, 
             {
-                "location": "juno:///data/depot/resources/genomes/GRCh37/bwa_fasta/b37.fasta.bwt", 
+                "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/bwa_fasta/b37.fasta.bwt", 
                 "class": "File"
             }, 
             {
-                "location": "juno:///data/depot/resources/genomes/GRCh37/bwa_fasta/b37.fasta.fai", 
+                "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/bwa_fasta/b37.fasta.fai", 
                 "class": "File"
             }, 
             {
-                "location": "juno:///data/depot/resources/genomes/GRCh37/bwa_fasta/b37.fasta.pac", 
+                "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/bwa_fasta/b37.fasta.pac", 
                 "class": "File"
             }, 
             {
-                "location": "juno:///data/depot/resources/genomes/GRCh37/bwa_fasta/b37.fasta.sa", 
+                "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/bwa_fasta/b37.fasta.sa", 
                 "class": "File"
             }, 
             {
-                "location": "juno:///data/depot/resources/genomes/GRCh37/bwa_fasta/b37.dict", 
+                "location": "juno:///ifs/depot/pi/resources/genomes/GRCh37/bwa_fasta/b37.dict", 
                 "class": "File"
             }
         ]
