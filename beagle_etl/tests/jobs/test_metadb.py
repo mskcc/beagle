@@ -3,9 +3,10 @@ Tests for METADB ETL jobs
 """
 
 import os
-from mock import patch
 import json
+from mock import patch
 from deepdiff import DeepDiff
+from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase, override_settings
@@ -156,6 +157,46 @@ class TestSmileMessages(TestCase):
 
         msg.refresh_from_db()
         self.assertEqual(msg.status, SmileMessageStatus.COMPLETED)
+
+    @patch("os.access")
+    @patch("notifier.tasks.notifier_start")
+    @patch("notifier.tasks.send_notification.delay")
+    @patch("notifier.models.JobGroupNotifier.objects.get")
+    @patch("file_system.tasks.populate_job_group_notifier_metadata.delay")
+    @patch("os.path.exists")
+    @patch("beagle_etl.jobs.helper_jobs.calculate_checksum.delay")
+    @override_settings(IMPORT_FILE_GROUP="1a1b29cf-3bc2-4f6c-b376-d4c5d701166a")
+    def test_retry_permission_denied(
+        self,
+        calculate_checksum,
+        path_exists,
+        populate_job_group_notifier_metadata,
+        job_group_notifier_get,
+        send_notification,
+        notifier_start,
+        access,
+    ):
+        calculate_checksum.return_value = None
+        path_exists.return_value = True
+        populate_job_group_notifier_metadata.return_value = None
+        job_group_notifier_get.return_value = self.job_group_notifier
+        notifier_start.return_value = True
+        send_notification.return_value = True
+        access.return_value = False
+        msg = SMILEMessage.objects.create(
+            topic="new-request", request_id="08944_B", gene_panel="", message=self.new_request_str
+        )
+        scheduled_before_retry = msg.scheduled
+        msg.in_progress()
+        new_request(str(msg.id))
+        msg.refresh_from_db()
+        files = FileRepository.filter(
+            metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"}, file_group=self.file_group_id
+        )
+        self.assertEqual(files.count(), 0)
+        self.assertEqual(msg.status, SmileMessageStatus.RETRY)
+        self.assertEqual(msg.retry_count, 1)
+        self.assertEqual(msg.scheduled, (scheduled_before_retry + timedelta(hours=24)))
 
     @patch("notifier.models.JobGroupNotifier.objects.get")
     @patch("notifier.tasks.send_notification.delay")

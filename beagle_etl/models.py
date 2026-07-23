@@ -1,8 +1,10 @@
 import uuid
 import logging
 from enum import IntEnum
+from datetime import timedelta
 from django.db import models
 from django.db.models import JSONField
+from django.utils import timezone
 from django.contrib.postgres.fields import ArrayField
 from notifier.tasks import notifier_start
 from notifier.models import Notifier, JobGroup, JobGroupNotifier
@@ -45,6 +47,7 @@ class SmileMessageStatus(IntEnum):
     COMPLETED = 3
     NOT_SUPPORTED = 4
     FAILED = 5
+    RETRY = 6
 
 
 class SMILEMessage(BaseModel):
@@ -61,14 +64,22 @@ class SMILEMessage(BaseModel):
         default=SmileMessageStatus.PENDING,
         db_index=True,
     )
+    scheduled = models.DateTimeField(default=timezone.now, editable=True)
+    retry_count = models.IntegerField(default=0)
 
     def in_progress(self):
         self.status = SmileMessageStatus.IN_PROGRESS
-        job_group = JobGroup.objects.create()
-        self.job_group = job_group
-        job_group_notifier_id = notifier_start(job_group, self.request_id)
-        job_group_notifier = JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
-        self.job_group_notifier = job_group_notifier
+        # Retries re-enter in_progress() with a job_group already set from the first
+        # attempt; skip creating another one so retries update the original ticket
+        # instead of opening a new one each pass.
+        if not self.job_group:
+            job_group = JobGroup.objects.create()
+            self.job_group = job_group
+            job_group_notifier_id = notifier_start(job_group, self.request_id)
+            job_group_notifier = (
+                JobGroupNotifier.objects.get(id=job_group_notifier_id) if job_group_notifier_id else None
+            )
+            self.job_group_notifier = job_group_notifier
         self.save(update_fields=["job_group", "job_group_notifier", "status"])
 
     def complete(self, request_metadata=None):
@@ -82,6 +93,17 @@ class SMILEMessage(BaseModel):
         self.save(update_fields=["status"])
         if self.job_group_notifier and request_metadata:
             self._generate_description(request_metadata)
+
+    def retry(self):
+        if self.retry_count >= 2:
+            # Fail after 2 retries
+            self.status = SmileMessageStatus.FAILED
+        else:
+            # Retry import after 24 hours
+            self.status = SmileMessageStatus.RETRY
+            self.scheduled = self.scheduled + timedelta(hours=24)
+        self.retry_count += 1
+        self.save(update_fields=["scheduled", "status", "retry_count"])
 
     def not_supported(self):
         self.status = SmileMessageStatus.NOT_SUPPORTED

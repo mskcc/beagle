@@ -30,7 +30,8 @@ class SMILEMessagesAdmin(AdminAdvancedFiltersMixin, ModelAdmin):
     list_filter = ("request_id", "topic", "status")
     advanced_filter_fields = ("request_id", "topic", "status")
     ordering = ("-created_date",)
-    list_display = ("created_date", "request_id", "topic", "status")
+    list_display = ("created_date", "request_id", "gene_panel", "topic", "status")
+    search_fields = ("request_id", "gene_panel")
 
 
 class RequestCallbackJobAdmin(ModelAdmin):
