@@ -64,6 +64,20 @@ def check_genotype_list(genotyping_bams, genotyping_bams_ids):
     return True
 
 
+def _ensure_bam_readable(bam_path):
+    """
+    Matched normal fallback bams can come from DMP/IMPACT archive shares owned by a
+    different service account/group than the pipeline runs as, leaving them and their
+    .bai unreadable and causing a "missing secondary file" error deep in cwltool.
+    """
+    bai_path = os.path.splitext(bam_path)[0] + ".bai"
+    for path in (bam_path, bai_path):
+        try:
+            os.chmod(path, 0o777)
+        except Exception as e:
+            LOGGER.warning(f"Could not chmod {path}: {e}")
+
+
 def register_file(file):
     fname = os.path.basename(file)
     file_group = FileGroup.objects.get(id=DMP_FILE_GROUP)
@@ -539,6 +553,8 @@ class AccessV2LegacySNV(Operator):
         matched_normal_unfiltered_bam, matched_normal_unfiltered_id = get_unfiltered_matched_normal(
             patient_id, fillout_unfiltered_normals, request_id
         )
+        if matched_normal_unfiltered_bam:
+            _ensure_bam_readable(matched_normal_unfiltered_bam.path)
 
         # Get genotyping bams for Unfiltered Normal samples from the same Study
         geno_samples_normal_unfiltered, geno_samples_normal_unfiltered_sample_ids = get_normal_geno_samples(
