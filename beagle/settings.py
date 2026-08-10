@@ -471,8 +471,7 @@ ASSAYS_ADMIN_HOLD_ONLY_NORMALS = os.environ.get(
     "IMPACT341,IMPACT+ (341 genes plus custom content),IMPACT468,HemePACT_v4,HemePACT_v3,IMPACT505,IMPACT410",
 ).split(",")
 
-PERMISSION_DENIED_CC = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_CC", "{}"))
-PERMISSION_DENIED_EMAILS = json.loads(os.environ.get("BEAGLE_PERMISSION_DENIED_EMAIL", "{}"))
+PERMISSION_DENIED_EMAILS = os.environ.get("BEAGLE_PERMISSION_DENIED_EMAIL", "").split(",")
 JOB_HANGING_ALERT_EMAILS = os.environ.get("BEAGLE_JOB_HANGING_ALERT_EMAILS", "").split(",")
 
 # Tempo
