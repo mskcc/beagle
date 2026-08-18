@@ -516,9 +516,22 @@ class SampleMetadata:
             log = self._process_validation_results(validation_results, log, redelivery)
         except Exception as e:
             if isinstance(e, ETLExceptions):
-                sample_status = SampleStatus(
-                    sample_id=self.primaryId, igocomplete=self.igoComplete, code=e.code, status="FAILED", message=str(e)
-                )
+                if isinstance(e, FailedToCopyFilePermissionDeniedException):
+                    sample_status = SampleStatus(
+                        sample_id=self.primaryId,
+                        igocomplete=self.igoComplete,
+                        code=e.code,
+                        status="RETRY",
+                        message=str(e),
+                    )
+                else:
+                    sample_status = SampleStatus(
+                        sample_id=self.primaryId,
+                        igocomplete=self.igoComplete,
+                        code=e.code,
+                        status="FAILED",
+                        message=str(e),
+                    )
             else:
                 sample_status = SampleStatus(
                     sample_id=self.primaryId, igocomplete=self.igoComplete, code=None, status="FAILED", message=str(e)

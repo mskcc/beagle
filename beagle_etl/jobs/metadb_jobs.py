@@ -29,10 +29,18 @@ from notifier.events import (
     WESJobFailedEvent,
     VoyagerCantProcessRequestAllNormalsEvent,
     SMILEUpdateEvent,
+    ErrorImportingFilesEvent,
 )
 from notifier.tasks import send_notification
 from notifier.helper import get_emails_to_notify
-from beagle_etl.models import Operator, ETLConfiguration, SMILEMessage, RequestCallbackJob, RequestCallbackJobStatus
+from beagle_etl.models import (
+    Operator,
+    ETLConfiguration,
+    SMILEMessage,
+    RequestCallbackJob,
+    RequestCallbackJobStatus,
+    SmileMessageStatus,
+)
 from file_system.serializers import UpdateFileSerializer
 from file_system.repository.file_repository import FileRepository
 from file_system.models import File
@@ -202,6 +210,7 @@ def new_request(message_id, force_import=False):
 
     # Validate samples and fastqs
     log, status = data.validate_all_samples()
+    logger.info(f"Request validation log for SMILEMessage id:{message_id}: {log}")
     message.add_log(log)
 
     jgn_id = None
@@ -214,6 +223,38 @@ def new_request(message_id, force_import=False):
     study, _ = Study.objects.get_or_create(study_id=StudyObject.generate_study_id(data.labHeadName))
 
     valid_samples = {k for k, v in status.items() if v.status == "COMPLETED"}
+
+    retry_samples = {k for k, v in status.items() if v.status == "RETRY"}
+
+    if retry_samples:
+        sample_status = sorted([sample.to_dict() for sample in status.values()], key=lambda d: d["sample"])
+        message.set_sample_status(sample_status)
+        message.add_log(f"Permission Denied error during import for igoRequestId:{message.request_id} id:{message_id}")
+        logger.error(f"Permission Denied error during import for igoRequestId:{message.request_id} id:{message_id}")
+        message.retry()
+        message.refresh_from_db()
+        if message.status in (SmileMessageStatus.RETRY,):
+            logger.info(
+                f"Retrying import for igoRequestId:{message.request_id} id:{message_id}, "
+                f"attempt {message.retry_count} of 2, next attempt scheduled at {message.scheduled}"
+            )
+        elif message.status in (SmileMessageStatus.FAILED,):
+            logger.error(
+                f"Import failed for igoRequestId:{message.request_id} id:{message_id} "
+                f"after {message.retry_count - 1} retries due to permission errors"
+            )
+        for email in settings.PERMISSION_DENIED_EMAILS:
+            e = ErrorImportingFilesEvent(
+                job_notifier=settings.BEAGLE_NOTIFIER_EMAIL_GROUP,
+                email_to=email,
+                subject=f"VOYAGER: Permission Denied error during import for igoRequestId:{message.request_id} id:{message_id}",
+                email_from=settings.BEAGLE_NOTIFIER_EMAIL_FROM,
+                request_id=message.request_id,
+                msg=f"Samples {', '.join(sorted(retry_samples))} failed to import because fastqs don't have correct permissions",
+            )
+            send_notification.delay(e.to_dict())
+        return
+
     request_metadata = data.request_metadata()
 
     import_status = True
