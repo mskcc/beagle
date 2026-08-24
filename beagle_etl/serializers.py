@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ETLConfiguration
+from .models import ETLConfiguration, SMILEMessage, SmileMessageStatus
 
 
 def ValidateDict(value):
@@ -29,3 +29,21 @@ class AssayUpdateSerializer(serializers.Serializer):
 class RequestIdLimsPullSerializer(serializers.Serializer):
     request_ids = serializers.ListField(child=serializers.CharField(max_length=30))
     redelivery = serializers.BooleanField(default=False)
+
+
+class SMILEMessageSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SMILEMessage
+        fields = "__all__"
+
+    def get_status(self, obj):
+        return SmileMessageStatus(obj.status).name
+
+
+class SMILEMessageListSerializer(serializers.Serializer):
+    request_id = serializers.CharField(required=False)
+    topic = serializers.CharField(required=False)
+    gene_panel = serializers.CharField(required=False)
+    status = serializers.ChoiceField([(s.name, s.value) for s in SmileMessageStatus], allow_blank=True, required=False)
