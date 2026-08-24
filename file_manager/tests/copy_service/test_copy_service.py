@@ -11,12 +11,12 @@ class CopyServiceTest(TestCase):
 
     def test_remap(self):
         old_path = "/path/to/file/file1.fastq"
-        new_path = CopyService.remap(self.recipe, old_path, self.mapping)
+        new_path = CopyService.remap(self.recipe, old_path, mapping=self.mapping)
         self.assertEqual(new_path, "/new/path/to/file/file1.fastq")
 
     def test_remap_no_mapping(self):
         old_path = "/some/other/path/to/file/file1.fastq"
-        new_path = CopyService.remap(self.recipe, old_path, self.mapping)
+        new_path = CopyService.remap(self.recipe, old_path, mapping=self.mapping)
         self.assertEqual(new_path, old_path)
 
     def test_remap_multiple_prefixes(self):
@@ -29,11 +29,11 @@ class CopyServiceTest(TestCase):
         }
 
         path1 = "/path/to/source1/file1.fastq"
-        new_path1 = CopyService.remap(self.recipe, path1, mapping)
+        new_path1 = CopyService.remap(self.recipe, path1, mapping=mapping)
         self.assertEqual(new_path1, "/staging/dest1/file1.fastq")
 
         path2 = "/path/to/source2/file2.fastq"
-        new_path2 = CopyService.remap(self.recipe, path2, mapping)
+        new_path2 = CopyService.remap(self.recipe, path2, mapping=mapping)
         self.assertEqual(new_path2, "/staging/dest2/file2.fastq")
 
     def test_remap_different_recipe(self):
@@ -44,21 +44,21 @@ class CopyServiceTest(TestCase):
         }
 
         path = "/path/to/file.fastq"
-        new_path_impact = CopyService.remap("IMPACT468", path, mapping)
+        new_path_impact = CopyService.remap("IMPACT468", path, mapping=mapping)
         self.assertEqual(new_path_impact, "/staging/impact/file.fastq")
 
-        new_path_heme = CopyService.remap("HEMEPACT", path, mapping)
+        new_path_heme = CopyService.remap("HEMEPACT", path, mapping=mapping)
         self.assertEqual(new_path_heme, "/staging/heme/file.fastq")
 
     def test_get_mapping(self):
         """Test internal _get_mapping method"""
-        prefix, dst = CopyService._get_mapping(self.recipe, "/path/to/file.fastq", self.mapping)
+        prefix, dst = CopyService._get_mapping(self.recipe, "/path/to/file.fastq", mapping=self.mapping)
         self.assertEqual(prefix, "/path/to")
         self.assertEqual(dst, "/new/path/to")
 
     def test_get_mapping_no_match(self):
         """Test _get_mapping when no prefix matches"""
-        prefix, dst = CopyService._get_mapping(self.recipe, "/other/path/file.fastq", self.mapping)
+        prefix, dst = CopyService._get_mapping(self.recipe, "/other/path/file.fastq", mapping=self.mapping)
         self.assertIsNone(prefix)
         self.assertIsNone(dst)
 
@@ -81,7 +81,7 @@ class CopyServiceTest(TestCase):
         original_path = "/path/to/subdir/file.fastq"
 
         # Forward mapping
-        staged_path = CopyService.remap(self.recipe, original_path, self.mapping)
+        staged_path = CopyService.remap(self.recipe, original_path, mapping=self.mapping)
         self.assertEqual(staged_path, "/new/path/to/subdir/file.fastq")
 
         # Reverse mapping should give us back the components
