@@ -115,9 +115,9 @@
       "file": "2f77f3ac-ab25-4a02-90bd-86542401ac82",
       "version": 0,
       "metadata": {
-        "primaryId": "06302_AG_2",
+        "primaryId": "99907_AG_2",
         "cmoPatientId": "DONOR22-TP",
-        "igoRequestId": "06302_AB",
+        "igoRequestId": "99907_AB",
         "cmoSampleName": "DONOR22-TP",
         "genePanel": "-",
         "dataAnalystName": "-",
@@ -146,9 +146,9 @@
       "file": "2f77f3ac-ab25-4a02-90bd-86542401ac99",
       "version": 0,
       "metadata": {
-        "primaryId": "06302_AG_2",
+        "primaryId": "99907_AG_2",
         "cmoPatientId": "DONOR22-TP",
-        "igoRequestId": "06302_AB",
+        "igoRequestId": "99907_AB",
         "cmoSampleName": "DONOR22-TP",
         "genePanel": "-",
         "dataAnalystName": "-",
@@ -177,11 +177,11 @@
       "file": "2f77f3ac-ab25-4a02-90bd-86542401ac2d",
       "version": 0,
       "metadata": {
-        "primaryId": "06302_AB_1",
-        "cmoPatientId": "C-000884",
-        "cmoSampleName": "C-000884-L011-d",
-        "igoRequestId": "06302_AB",
-        "captureName": "Pool-06302_AH-D1_1",
+        "primaryId": "99907_AB_1",
+        "cmoPatientId": "C-PPPP19",
+        "cmoSampleName": "C-PPPP19-L011-d",
+        "igoRequestId": "99907_AB",
+        "captureName": "Pool-99997_AH-D1_1",
         "genePanel": "-",
         "dataAnalystName": "-",
         "dataAnalystEmail": "-",
@@ -212,7 +212,7 @@
       "metadata": {
         "type": "T",
         "patient": {
-          "cmo": "000884",
+          "cmo": "PPPP19",
           "dmp": "P-0021500"
         },
         "cmo_assay": "ACCESS_V1_0"
@@ -232,7 +232,7 @@
       "metadata": {
         "type": "T",
         "patient": {
-          "cmo": "000884",
+          "cmo": "PPPP19",
           "dmp": "P-0021500"
         },
         "cmo_assay": "ACCESS_V1_0"
@@ -252,7 +252,7 @@
       "metadata": {
         "type": "N",
         "patient": {
-          "cmo": "000884",
+          "cmo": "PPPP19",
           "dmp": "P-0021500"
         },
         "cmo_assay": "ACCESS_V1_0"
@@ -270,11 +270,11 @@
       "file": "2f77f3ac-ab25-4a02-90bd-86542401ac8e",
       "version": 0,
       "metadata": {
-        "primaryId": "06302_AB_2",
-        "cmoPatientId": "C-000884",
-        "cmoSampleName": "C-000884-N004-d",
-        "igoRequestId": "06302_AB",
-        "captureName": "Pool-06302_AH-D1_1",
+        "primaryId": "99907_AB_2",
+        "cmoPatientId": "C-PPPP19",
+        "cmoSampleName": "C-PPPP19-N004-d",
+        "igoRequestId": "99907_AB",
+        "captureName": "Pool-99997_AH-D1_1",
         "genePanel": "-",
         "dataAnalystName": "-",
         "dataAnalystEmail": "-",
@@ -329,11 +329,11 @@
       "file": "2f77f3ac-ab25-4a02-90bd-86542401ac37",
       "version": 0,
       "metadata": {
-        "primaryId": "06302_AB_1",
-        "cmoPatientId": "C-000884",
-        "cmoSampleName": "C-000884-L010-d",
-        "igoRequestId": "06302_AB",
-        "captureName": "Pool-06302_AH-D1_1",
+        "primaryId": "99907_AB_1",
+        "cmoPatientId": "C-PPPP19",
+        "cmoSampleName": "C-PPPP19-L010-d",
+        "igoRequestId": "99907_AB",
+        "captureName": "Pool-99997_AH-D1_1",
         "genePanel": "-",
         "dataAnalystName": "-",
         "dataAnalystEmail": "-",

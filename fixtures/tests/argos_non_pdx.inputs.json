@@ -1,32 +1,32 @@
 [
   {
     "tumor": {
-      "ID": "s_C_V5AJEY_P001_d01",
+      "ID": "s_C_PPPP18_P001_d01",
       "CN": "MSKCC",
-      "LB": "16342_B_1",
+      "LB": "99909_B_1",
       "PL": "Illumina",
       "PU": [
-        "HLYCVDSXC",
-        "HLYCVDSXC"
+        "FCELLAAAA9",
+        "FCELLAAAA9"
       ],
       "R1": [
         {
           "class": "File",
-          "location": "juno:///igo/delivery/FASTQ/DIANA_0737_BHLYCVDSXC/Project_16342_B/Sample_MSK-OBX-023_IGO_16342_B_1/MSK-OBX-023_IGO_16342_B_1_S35_L002_R1_001.fastq.gz"
+          "location": "juno:///igo/delivery/FASTQ/SEQRUN_0002_BFCELLAAAA9/Project_99909_B/Sample_TEST-OBX-023_IGO_99909_B_1/TEST-OBX-023_IGO_99909_B_1_S35_L002_R1_001.fastq.gz"
         },
         {
           "class": "File",
-          "location": "juno:///igo/delivery/FASTQ/DIANA_0737_BHLYCVDSXC/Project_16342_B/Sample_MSK-OBX-023_IGO_16342_B_1/MSK-OBX-023_IGO_16342_B_1_S35_L001_R1_001.fastq.gz"
+          "location": "juno:///igo/delivery/FASTQ/SEQRUN_0002_BFCELLAAAA9/Project_99909_B/Sample_TEST-OBX-023_IGO_99909_B_1/TEST-OBX-023_IGO_99909_B_1_S35_L001_R1_001.fastq.gz"
         }
       ],
       "R2": [
         {
           "class": "File",
-          "location": "juno:///igo/delivery/FASTQ/DIANA_0737_BHLYCVDSXC/Project_16342_B/Sample_MSK-OBX-023_IGO_16342_B_1/MSK-OBX-023_IGO_16342_B_1_S35_L002_R2_001.fastq.gz"
+          "location": "juno:///igo/delivery/FASTQ/SEQRUN_0002_BFCELLAAAA9/Project_99909_B/Sample_TEST-OBX-023_IGO_99909_B_1/TEST-OBX-023_IGO_99909_B_1_S35_L002_R2_001.fastq.gz"
         },
         {
           "class": "File",
-          "location": "juno:///igo/delivery/FASTQ/DIANA_0737_BHLYCVDSXC/Project_16342_B/Sample_MSK-OBX-023_IGO_16342_B_1/MSK-OBX-023_IGO_16342_B_1_S35_L001_R2_001.fastq.gz"
+          "location": "juno:///igo/delivery/FASTQ/SEQRUN_0002_BFCELLAAAA9/Project_99909_B/Sample_TEST-OBX-023_IGO_99909_B_1/TEST-OBX-023_IGO_99909_B_1_S35_L001_R2_001.fastq.gz"
         }
       ],
       "zR1": [],
@@ -34,19 +34,19 @@
       "bam": [],
       "zBam": [],
       "RG_ID": [
-        "s_C_V5AJEY_P001_d01_HLYCVDSXC",
-        "s_C_V5AJEY_P001_d01_HLYCVDSXC"
+        "s_C_PPPP18_P001_d01_FCELLAAAA9",
+        "s_C_PPPP18_P001_d01_FCELLAAAA9"
       ],
       "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
       "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-      "bwa_output": "s_C_V5AJEY_P001_d01.bam",
-      "request_id": "16342_B",
+      "bwa_output": "s_C_PPPP18_P001_d01.bam",
+      "request_id": "99909_B",
       "specimen_type": "Non-PDX"
     },
     "normal": {
-      "ID": "s_C_V5AJEY_N901_dZ_IM7",
+      "ID": "s_C_PPPP18_N901_dZ_IM7",
       "CN": "MSKCC",
-      "LB": "C-V5AJEY-N901-dZ-IM7_1",
+      "LB": "C-PPPP18-N901-dZ-IM7_1",
       "PL": "Illumina",
       "PU": [
         "DMP_FCID_DMP_BARCODEIDX"
@@ -63,18 +63,18 @@
       ],
       "zBam": [],
       "RG_ID": [
-        "s_C_V5AJEY_N901_dZ_IM7_DMP_FCID_DMP_BARCODEIDX"
+        "s_C_PPPP18_N901_dZ_IM7_DMP_FCID_DMP_BARCODEIDX"
       ],
       "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
       "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-      "bwa_output": "s_C_V5AJEY_N901_dZ_IM7.bam",
+      "bwa_output": "s_C_PPPP18_N901_dZ_IM7.bam",
       "request_id": null,
       "specimen_type": "DMP"
     },
     "assay": "IMPACT505_BAITS",
-    "pi": "Adam Schoenfeld",
+    "pi": "Lab Head D",
     "pi_email": "",
-    "patient_id": "C-V5AJEY",
+    "patient_id": "C-PPPP18",
     "curated_bams": [
       {
         "class": "File",
@@ -356,7 +356,7 @@
       "num_threads": 10,
       "assay": "IMPACT505_BAITS",
       "tmp_dir": "/scratch",
-      "project_prefix": "16342_B",
+      "project_prefix": "99909_B",
       "opt_dup_pix_dist": "2500",
       "delly_type": [
         "DUP",
@@ -371,7 +371,7 @@
       "complex_tn": 0.5,
       "scripts_bin": "/usr/bin",
       "gatk_jar_path": "/usr/bin/gatk.jar",
-      "pi": "Adam Schoenfeld",
+      "pi": "Lab Head D",
       "pi_email": ""
     }
   }
