@@ -40,7 +40,10 @@ class CopyService(object):
                 if path.startswith(prefix):
                     return prefix, dst
         else:
-            return settings.FASTQ_IRIS_LOCATION_PREFIX, os.path.join(settings.FASTQ_DEFAULT_STAGING_PATH, file_group)
+            return (
+                settings.FASTQ_IRIS_LOCATION_PREFIX,
+                os.path.join(settings.FASTQ_DEFAULT_STAGING_PATH, file_group) + "/",
+            )
         return None, None
 
     @staticmethod

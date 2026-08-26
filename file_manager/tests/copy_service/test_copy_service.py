@@ -1,4 +1,7 @@
-from django.test import TestCase
+import os
+
+from django.test import TestCase, override_settings
+
 from file_manager.copy_service.copy_service import CopyService
 
 
@@ -61,6 +64,27 @@ class CopyServiceTest(TestCase):
         prefix, dst = CopyService._get_mapping(self.recipe, "/other/path/file.fastq", mapping=self.mapping)
         self.assertIsNone(prefix)
         self.assertIsNone(dst)
+
+    @override_settings(FASTQ_IRIS_LOCATION_PREFIX="/igo/delivery", FASTQ_DEFAULT_STAGING_PATH="/staging")
+    def test_get_mapping_other_file_group(self):
+        """Test _get_mapping when file_group is not IMPORT_FILE_GROUP: it should stage under
+        FASTQ_DEFAULT_STAGING_PATH/<file_group>, regardless of the recipe mapping."""
+        other_file_group = "some-other-file-group-id"
+        prefix, dst = CopyService._get_mapping(
+            self.recipe, "/test/delivery/file.fastq", file_group=other_file_group, mapping=self.mapping
+        )
+        self.assertEqual(prefix, "/igo/delivery")
+        self.assertEqual(dst, os.path.join("/staging", other_file_group) + "/")
+
+    @override_settings(FASTQ_IRIS_LOCATION_PREFIX="/igo/delivery", FASTQ_DEFAULT_STAGING_PATH="/staging")
+    def test_remap_other_file_group(self):
+        """Test that remap stages a file under FASTQ_DEFAULT_STAGING_PATH/<file_group>
+        when file_group is different from IMPORT_FILE_GROUP."""
+        other_file_group = "some-other-file-group-id"
+        old_path = "/test/delivery/file/file1.fastq"
+        new_path = CopyService.remap(self.recipe, old_path, file_group=other_file_group, mapping=self.mapping)
+        expected_dst = os.path.join("/staging", other_file_group + "/")
+        self.assertEqual(new_path, old_path.replace("/igo/delivery", expected_dst))
 
     def test_get_reverse_mapping(self):
         """Test reverse mapping to convert staged path back to original"""
