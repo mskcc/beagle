@@ -131,3 +131,54 @@ BEAGLE_AUTH_LDAP_SERVER_URI
 ```
 
 Beagle can run without these, but it will not be able to access SMILE and LDAP server for authentication.
+
+# Development Instance using Podman
+
+In macOS:
+
+```
+brew install podman
+podman machine init
+sudo /opt/homebrew/Cellar/podman/5.7.1/bin/podman-mac-helper install # installs system helper to use default Docker API socket
+podman machine start
+```
+
+Run with
+
+```
+podman compose -f compose.dev.yml down && podman compose -f compose.dev.yml up
+```
+
+## Initial configuration of the database is required.
+
+```
+python3 manage.py loaddata \
+  beagle_etl.operator.json \
+  file_system.filegroup.json \
+  file_system.filetype.json \
+  file_system.storage.json \
+  runner.pipeline.json
+
+python3 manage.py createsuperuser # use prompts to create a super user for dev admin panel
+
+mkdir static
+python3 manage.py collectstatic # for django admin panel themes
+```
+
+## Basic podman commands
+
+```
+podman ps # see running podman containers
+podman exec -it <container_id> /bin/bash # enter podman container
+
+# While in beagle container_id
+python3 manage.py <command> # run tests and other manage.py commands 
+```
+
+By default, admin panel for dev env is accessible at http://localhost:5007/admin
+
+## TODO 
+
+This is for basic, local development only. No connection to SMILE or RIDGEBACK services yet.
+
+Useful for developing new Django apps and running local tests for operators. Database entries beyond what's included above are left up to the developer.
