@@ -1,0 +1,139 @@
+name: "Beagle Local Dev"
+
+services:
+  beagle_postgres:
+    image: postgres:17-trixie
+    restart: on-failure
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: beagle
+      POSTGRES_PASSWORD: beagle123
+      POSTGRES_DB: beagle
+    ports:
+      - "5432:5432"
+    command:
+      - -c
+      - max_connections=100
+      - -c
+      - shared_buffers=256MB
+      - -c
+      - effective_cache_size=512MB
+      - -c
+      - work_mem=4MB
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U beagle -d beagle"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  beagle_memcached:
+    image: memcached:1.6-alpine
+    restart: on-failure
+    expose:
+      - "11211"
+    healthcheck:
+      test: ["CMD-SHELL", "echo stats | nc localhost 11211"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  beagle_rabbitmq:
+    image: rabbitmq:4.0.6-management-alpine
+    restart: on-failure
+    hostname: beagle_rabbitmq
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+      - ./conf/rabbitmq.conf:/etc/rabbitmq/conf.d/20-beagle.conf:ro
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_NODENAME: rabbitmq_beagle
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  beagle:
+    build: .
+    restart: on-failure
+    env_file: .env.local
+    environment:
+      BEAGLE_DB_URL: beagle_postgres
+      BEAGLE_DB_PORT: "5432"
+      BEAGLE_MEMCACHED_HOST: beagle_memcached
+      BEAGLE_MEMCACHED_PORT: "11211"
+      BEAGLE_RABBITMQ_URL: beagle_rabbitmq
+      BEAGLE_RABBITMQ_PORT: "5672"
+      BEAGLE_URL: http://localhost:8000
+      BEAGLE_LOG_PATH: /tmp/django_server.log
+    volumes:
+      - .:/app/beagle
+    ports:
+      - "8000:8000"
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        python3 /app/beagle/manage.py migrate --noinput
+        echo "User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin','admin@localhost.com','admin')" | python3 /app/beagle/manage.py shell_plus
+        python3 /app/beagle/manage.py collectstatic --noinput --clear 2>/dev/null || true
+        gunicorn beagle.wsgi --log-file /tmp/django_server.log --bind 0.0.0.0:8000 --threads 4 --reload --pythonpath /app/beagle
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sSf http://localhost:8000/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      beagle_postgres:
+        condition: service_healthy
+      beagle_memcached:
+        condition: service_healthy
+      beagle_rabbitmq:
+        condition: service_healthy
+
+  beagle_celery:
+    build: .
+    restart: on-failure
+    env_file: .env.local
+    environment:
+      BEAGLE_DB_URL: beagle_postgres
+      BEAGLE_DB_PORT: "5432"
+      BEAGLE_MEMCACHED_HOST: beagle_memcached
+      BEAGLE_MEMCACHED_PORT: "11211"
+      BEAGLE_RABBITMQ_URL: beagle_rabbitmq
+      BEAGLE_RABBITMQ_PORT: "5672"
+      BEAGLE_URL: http://beagle:8000
+      BEAGLE_LOG_PATH: /tmp/celery.log
+    volumes:
+      - .:/app/beagle
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        celery --workdir /app/beagle \
+          -A beagle_etl worker \
+          -B \
+          -l info \
+          -Q beagle_default_queue,beagle_runner_queue,beagle_check_files_queue,beagle_job_scheduler_queue,beagle_file_manager_queue \
+          --concurrency=4
+    healthcheck:
+      test: "celery --workdir /app/beagle -A beagle_etl status || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      beagle_postgres:
+        condition: service_healthy
+      beagle_memcached:
+        condition: service_healthy
+      beagle_rabbitmq:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
