@@ -25,19 +25,25 @@ class CopyService(object):
         os.chmod(path_to, settings.COPY_FILE_PERMISSION)
 
     @staticmethod
-    def remap(gene_panel, path, mapping=settings.DEFAULT_MAPPING):
-        prefix, dst = CopyService._get_mapping(gene_panel, path, mapping)
+    def remap(gene_panel, path, file_group=settings.IMPORT_FILE_GROUP, mapping=settings.DEFAULT_MAPPING):
+        prefix, dst = CopyService._get_mapping(gene_panel, path, file_group, mapping)
         if prefix and dst:
             path = path.replace(prefix, dst)
         logger.info("New path {path}".format(path=path))
         return path
 
     @staticmethod
-    def _get_mapping(gene_panel, path, mapping=settings.DEFAULT_MAPPING):
-        recipe_mapping = mapping.get(gene_panel, {})
-        for prefix, dst in recipe_mapping.items():
-            if path.startswith(prefix):
-                return prefix, dst
+    def _get_mapping(gene_panel, path, file_group=settings.IMPORT_FILE_GROUP, mapping=settings.DEFAULT_MAPPING):
+        if file_group == settings.IMPORT_FILE_GROUP:
+            recipe_mapping = mapping.get(gene_panel, {})
+            for prefix, dst in recipe_mapping.items():
+                if path.startswith(prefix):
+                    return prefix, dst
+        else:
+            return (
+                settings.FASTQ_IRIS_LOCATION_PREFIX,
+                os.path.join(settings.FASTQ_DEFAULT_STAGING_PATH, file_group) + "/",
+            )
         return None, None
 
     @staticmethod

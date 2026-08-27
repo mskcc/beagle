@@ -592,6 +592,14 @@ services:
       beagle_pgbouncer:
         condition: service_healthy
         restart: false
+  postfix:
+    image: boky/postfix:5.1.0-debian
+    container_name: ${BEAGLE_DEPLOYMENT}-postfix
+    restart: always
+    networks:
+      - voyager_net
+    environment:
+      - ALLOWED_SENDER_DOMAINS=mskcc.org
 volumes:
   postgres_path:
     driver: local
