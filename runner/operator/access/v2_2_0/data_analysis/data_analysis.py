@@ -276,8 +276,7 @@ class AccessV2DataAnalysisOperator(Operator):
             snv_runs, _ = get_request_id_runs(SNV_APP_NAMES, [], self.request_id)
         except Exception as e:
             LOGGER.warning(
-                "ACCESS Data Analysis: could not find an SNV run for request %s (%s); "
-                "MAF column will be empty",
+                "ACCESS Data Analysis: could not find an SNV run for request %s (%s); " "MAF column will be empty",
                 self.request_id,
                 e,
             )
@@ -335,9 +334,7 @@ class AccessV2DataAnalysisOperator(Operator):
         rows = []
         for (dmp_cmo, sample_key), fms in sorted(groups.items(), key=lambda kv: str(kv[0])):
             cmo_patient_id = dmp_cmo_to_cmo[dmp_cmo]
-            row = self._build_clinical_row(
-                cmo_patient_id, fms, research_maf_by_patient.get(cmo_patient_id, "")
-            )
+            row = self._build_clinical_row(cmo_patient_id, fms, research_maf_by_patient.get(cmo_patient_id, ""))
             if row:
                 rows.append(row)
         return rows
