@@ -22,14 +22,12 @@ NUCLEO_APP_NAMES = ["access v2 nucleo", "access nucleo"]
 SNV_APP_NAMES = ["access v2 legacy snv"]
 
 # ~~~ Nucleo output ports ~~~
+# NOTE: the nucleo port names are legacy/misleading. The nf-core "standard" bam is
+# {sample}_cl_aln_srt_MD_IR_FX_BR.bam, which nucleo emits on the `uncollapsed_bam`
+# port (NOT `fgbio_collapsed_bam`, which carries {sample}_..._BR__aln_srt_IR_FX.bam).
 NUCLEO_DUPLEX_PORT = "fgbio_filter_consensus_reads_duplex_bam"
 NUCLEO_SIMPLEX_PORT = "fgbio_postprocessing_simplex_bam"
-NUCLEO_STANDARD_PORT = "fgbio_collapsed_bam"
-
-# Nucleo bam filename stems, used to recover the sample id from a bam filename
-DUPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
-SIMPLEX_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
-STANDARD_BAM_STEM = "_cl_aln_srt_MD_IR_FX_BR.bam"
+NUCLEO_STANDARD_PORT = "uncollapsed_bam"
 
 # accessanalysis samplesheet assay_type values
 ASSAY_RESEARCH_ACCESS = "research_access"
@@ -100,8 +98,17 @@ class AccessV2DataAnalysisOperator(Operator):
         pipeline = Pipeline.objects.get(id=app)
         run_date = datetime.now().strftime("%Y%m%d_%H:%M:%f")
 
-        # Resolve the request and its most recent completed nucleo runs
-        nucleo_runs, self.request_id = get_request_id_runs(NUCLEO_APP_NAMES, self.run_ids, self.request_id)
+        # Resolve the request and its most recent completed nucleo runs.
+        # get_request_id_runs raises a bare AttributeError when nothing matches
+        # (its .first() is None), so translate that into a clear message.
+        try:
+            nucleo_runs, self.request_id = get_request_id_runs(NUCLEO_APP_NAMES, self.run_ids, self.request_id)
+        except AttributeError:
+            raise Exception(
+                "ACCESS Data Analysis: no completed nucleo run ({}) found for request {} / run_ids {}".format(
+                    " / ".join(NUCLEO_APP_NAMES), self.request_id, self.run_ids
+                )
+            )
 
         # fastq-derived per-sample metadata, keyed by cmoSampleName
         sample_meta = self.get_research_sample_metadata()
@@ -221,22 +228,27 @@ class AccessV2DataAnalysisOperator(Operator):
     def get_nucleo_bams(self, nucleo_runs):
         """
         Collect duplex / simplex / standard bams from the request's nucleo runs.
-        Nucleo is run per-sample, so each run contributes one bam per port.
+        Nucleo is run per-sample, so each run contributes one bam per port. The
+        sample id is taken from the run's output_metadata (cmoSampleName), which
+        matches the fastq-derived key in get_research_sample_metadata().
 
         Returns a dict keyed by sample id: {sample_id: {duplex, simplex, standard}}
         """
         bams = {}
         for run in nucleo_runs:
-            for port_name, stem, key in (
-                (NUCLEO_DUPLEX_PORT, DUPLEX_BAM_STEM, "duplex"),
-                (NUCLEO_SIMPLEX_PORT, SIMPLEX_BAM_STEM, "simplex"),
-                (NUCLEO_STANDARD_PORT, STANDARD_BAM_STEM, "standard"),
+            sample_id = (run.output_metadata or {}).get(settings.CMO_SAMPLE_NAME_METADATA_KEY)
+            if not sample_id:
+                LOGGER.warning("ACCESS Data Analysis: nucleo run %s has no cmoSampleName; skipping", run.pk)
+                continue
+            entry = bams.setdefault(sample_id, {})
+            for port_name, key in (
+                (NUCLEO_DUPLEX_PORT, "duplex"),
+                (NUCLEO_SIMPLEX_PORT, "simplex"),
+                (NUCLEO_STANDARD_PORT, "standard"),
             ):
                 bam = self._parse_nucleo_output_port(run, port_name)
-                if not bam:
-                    continue
-                sample_id = bam.file_name.replace(stem, "")
-                bams.setdefault(sample_id, {})[key] = bam.path
+                if bam:
+                    entry[key] = bam.path
         return bams
 
     @staticmethod
