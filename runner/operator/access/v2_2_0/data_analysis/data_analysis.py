@@ -19,7 +19,7 @@ LOGGER = logging.getLogger(__name__)
 # BAM-generation pipeline (duplex / simplex / standard bams)
 NUCLEO_APP_NAMES = ["access v2 nucleo", "access nucleo"]
 # Small-variant pipeline (research mutations MAF)
-SNV_APP_NAMES = ["access v2 legacy snv"]
+SNV_APP_NAMES = ["access v2 legacy SNV"]
 
 # ~~~ Nucleo output ports ~~~
 # NOTE: the nucleo port names are legacy/misleading. The nf-core "standard" bam is
