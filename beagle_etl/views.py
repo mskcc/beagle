@@ -1,13 +1,66 @@
-from rest_framework import status
+from django.conf import settings
+from rest_framework import mixins, status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from beagle_etl.models import ETLConfiguration
+from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.permissions import IsAuthenticated
+from beagle_etl.models import ETLConfiguration, SMILEMessage, SmileMessageStatus
+from beagle_etl.jobs.metadb_jobs import new_request
 from drf_yasg.utils import swagger_auto_schema
 from .serializers import (
     AssaySerializer,
     AssayElementSerializer,
     AssayUpdateSerializer,
+    SMILEMessageSerializer,
+    SMILEMessageListSerializer,
 )
+
+
+class ForceImportView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, _request, request_id):
+        message = (
+            SMILEMessage.objects.filter(request_id=request_id, topic=settings.METADB_NATS_NEW_REQUEST)
+            .order_by("-created_date")
+            .first()
+        )
+        if not message:
+            return Response(
+                {"detail": f"No new-request SMILEMessage found for request_id {request_id}."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        new_request.delay(str(message.id), force_import=True)
+        return Response(
+            {"detail": f"Force import triggered for request {request_id} (message {message.id})."},
+            status=status.HTTP_202_ACCEPTED,
+        )
+
+
+class SMILEMessageViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = SMILEMessage.objects.order_by("-created_date").all()
+    serializer_class = SMILEMessageListSerializer
+    permission_classes = (IsAuthenticated,)
+
+    @swagger_auto_schema(query_serializer=SMILEMessageListSerializer)
+    def list(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.query_params)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        validated = serializer.validated_data
+        queryset = self.queryset
+        if validated.get("request_id"):
+            queryset = queryset.filter(request_id=validated["request_id"])
+        if validated.get("topic"):
+            queryset = queryset.filter(topic=validated["topic"])
+        if validated.get("gene_panel"):
+            queryset = queryset.filter(gene_panel=validated["gene_panel"])
+        if validated.get("status"):
+            queryset = queryset.filter(status=SmileMessageStatus[validated["status"]].value)
+        page = self.paginate_queryset(queryset)
+        serializer = SMILEMessageSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class AssayViewSet(GenericAPIView):

@@ -56,7 +56,7 @@ def stage_files_for_operator(
 ):
     staging_tasks = []
     try:
-        staging_tasks, sample_jobs = stage_files(request_id, pairing, job_group_id)
+        staging_tasks, sample_jobs = stage_files(request_id, pairing, job_group_id, file_group_id)
     except Exception as e:
         logger.warning(format_log(f"Failed to stage files: {str(e)}", job_group_id=job_group_id))
 
@@ -251,7 +251,7 @@ def create_operator_run_from_jobs(
     operator_run.save()
 
 
-def stage_files(request_id=None, pairing=None, job_group_id=None):
+def stage_files(request_id=None, pairing=None, job_group_id=None, file_group_id=None):
     """
     Stage files and return list of staging task signatures.
     Returns (staging_tasks, sample_jobs) where:
@@ -278,7 +278,7 @@ def stage_files(request_id=None, pairing=None, job_group_id=None):
         logger.info(format_log("No samples to stage", job_group_id=job_group_id))
         return staging_tasks, sample_jobs
 
-    file_manager = FileManager()
+    file_manager = FileManager(file_group_id) if file_group_id else FileManager()
     for sample in samples:
         logger.info(format_log(f"Staging files for sample {sample}", request_id=request_id, job_group_id=job_group_id))
         sample_job, task_sigs = file_manager.stage_sample(sample)

@@ -5,6 +5,8 @@ from string import Template
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+from django.conf import settings
+
 
 class EmailClient(object):
     logger = logging.getLogger(__name__)
@@ -15,12 +17,13 @@ class EmailClient(object):
         self.content = content
         self.email_from = email_from
         self.domain = "mskcc.org"
-        self.SMTP_server = "localhost"
+        self.SMTP_server = settings.SMTP_HOST
+        self.SMTP_port = settings.SMTP_PORT
 
     def send(self):
         server = None
         try:
-            server = smtplib.SMTP(self.SMTP_server)
+            server = smtplib.SMTP(self.SMTP_server, self.SMTP_port)
             msg = MIMEMultipart("alternative")
             msg["Subject"] = self.subject
             msg["From"] = self.email_from

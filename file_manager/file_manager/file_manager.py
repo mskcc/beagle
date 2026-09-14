@@ -29,7 +29,7 @@ class FileManager(object):
         files_to_stage = 0
         for f in files:
             if not f.file.is_available:
-                new_path = CopyService.remap(gene_panel, f.file.path)
+                new_path = CopyService.remap(gene_panel, f.file.path, str(f.file.file_group.id))
                 if new_path != f.file.path:
                     files_to_stage += 1
 
@@ -55,7 +55,7 @@ class FileManager(object):
         Returns: Task signature or None
         """
         if not file_obj.is_available:
-            new_path = CopyService.remap(gene_panel, file_obj.path)
+            new_path = CopyService.remap(gene_panel, file_obj.path, str(file_obj.file_group.id))
             if new_path != file_obj.path:
                 fp_job, created = FileProviderJob.objects.provide_file(
                     file_obj, file_obj.path, new_path, sample_job=sample_job
