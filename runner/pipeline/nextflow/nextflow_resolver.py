@@ -16,12 +16,6 @@ class NextflowResolver(PipelineResolver):
             with open(os.path.join(location, "nextflow_schema.json"), "r") as f:
                 nextflow_schema = json.load(f)
                 inputs = self.schemas2template(nextflow_schema, location)
-                # Ridgeback's NextflowJobSubmitter.get_outputs() always reports a
-                # run's outputs under a single flat "outputs" key (whether it read
-                # manifest.json or the legacy outputs text file) -- there's no
-                # per-port resolution on that side. So a pipeline's own declared
-                # output ids in nextflow_schema.json would never actually get
-                # populated if we used them; always declare the one port that can.
                 outputs = [{"id": "outputs", "schema": {"type": {"items": "File", "type": "array"}}}]
                 pipeline = {"inputs": inputs, "outputs": outputs}
         else:
