@@ -16,7 +16,8 @@ class NextflowResolver(PipelineResolver):
             with open(os.path.join(location, "nextflow_schema.json"), "r") as f:
                 nextflow_schema = json.load(f)
                 inputs = self.schemas2template(nextflow_schema, location)
-                pipeline = {"inputs": inputs}
+                outputs = [{"id": "outputs", "schema": {"type": {"items": "File", "type": "array"}}}]
+                pipeline = {"inputs": inputs, "outputs": outputs}
         else:
             with open(os.path.join(location, "inputs.template.json"), "r") as f:
                 pipeline = json.load(f)
