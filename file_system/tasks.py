@@ -26,26 +26,6 @@ def populate_job_group_notifier_metadata(request_id, pi, investigator, assay):
         job_group_notifier.save()
 
 
-@shared_task
-def check_fastq_files():
-    File = apps.get_model(app_label="file_system", model_name="File")
-    files = File.objects.filter(file_group=settings.IMPORT_FILE_GROUP)
-    current_date = datetime.now().strftime("%m_%d_%Y")
-    file_name = f"missing_files_report_{current_date}.txt"
-    report_file = open(os.path.join(settings.MISSING_FILES_REPORT_PATH, file_name), "w")
-    for f in files:
-        if not os.path.exists(f.path):
-            f.available = False
-            f.save()
-            report_file.write(f"{f.path}\n")
-        else:
-            if not f.available:
-                f.available = True
-                f.save()
-    report_file.close()
-    remove_oldest_file(settings.MISSING_FILES_REPORT_PATH)
-
-
 def remove_oldest_file(directory):
     oldest_date = None
     oldest_file = None
