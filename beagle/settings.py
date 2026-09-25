@@ -403,7 +403,6 @@ BEAGLE_URL = os.environ.get("BEAGLE_URL", "http://silo:5001")
 BEAGLE_NATS_UPSERT_REQUEST_QUEUE = os.environ.get("BEAGLE_NATS_UPSERT_REQUEST_QUEUE", "beagle_nats_queue")
 BEAGLE_RUNNER_QUEUE = os.environ.get("BEAGLE_RUNNER_QUEUE", "beagle_runner_queue")
 BEAGLE_DEFAULT_QUEUE = os.environ.get("BEAGLE_DEFAULT_QUEUE", "beagle_default_queue")
-BEAGLE_CHECK_FILES_QUEUE = os.environ.get("BEAGLE_CHECK_FILES_QUEUE", "beagle_check_files_queue")
 BEAGLE_JOB_SCHEDULER_QUEUE = os.environ.get("BEAGLE_JOB_SCHEDULER_QUEUE", "beagle_job_scheduler_queue")
 BEAGLE_FILE_MANAGER_QUEUE = os.environ.get("BEAGLE_FILE_MANAGER_QUEUE", "beagle_file_manager_queue")
 BEAGLE_SHARED_TMPDIR = os.environ.get("BEAGLE_SHARED_TMPDIR", "/juno/work/ci/temp")
@@ -514,9 +513,6 @@ DEFAULT_RESUME_COUNT = os.environ.get("DEFAULT_RESUME_COUNT", 3)
 
 MANUAL_RESTART_REPORT_THRESHOLD = os.environ.get("MANUAL_RESTART_REPORT_THRESHOLD", 4)
 MANUAL_RESTART_REPORT_PATH = os.environ.get("MANUAL_RESTART_REPORT_PATH", "/tmp/report.txt")
-
-MISSING_FILES_REPORT_PATH = os.environ.get("BEAGLE_MISSING_FILES_REPORT_PATH")
-MISSING_FILES_REPORT_COUNT = int(os.environ.get("BEAGLE_MISSING_FILES_REPORT_COUNT", 10))
 
 GENE_PANEL_TABLE = {
     "IMPACT341": {
