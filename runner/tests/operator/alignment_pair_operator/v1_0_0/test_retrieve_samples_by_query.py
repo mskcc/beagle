@@ -57,9 +57,9 @@ class TestRetrieveSamplesByQuery(TestCase):
 
         # load some fixtures
         # Load fixtures:
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D.file.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D.filemetadata.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D.filemetadata.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         # test lookup again with some Files loaded; should still be None since it doesnt match anything yet
@@ -69,13 +69,13 @@ class TestRetrieveSamplesByQuery(TestCase):
         self.assertEqual(dmp_normal, None)
 
         # test with a patient ID taken from fixtures but non-matching bait set; no DMP bams loaded yet
-        patient_id = "C-8VK0V7"
+        patient_id = "C-PPPPP3"
         bait_set = "bar"
         dmp_normal = get_dmp_normal(patient_id, bait_set)
         self.assertEqual(dmp_normal, None)
 
         # test with a patient ID taken from fixtures and matching bait_set; no DMP bams loaded yet
-        patient_id = "C-8VK0V7"
+        patient_id = "C-PPPPP3"
         bait_set = "IMPACT468_BAITS"
         dmp_normal = get_dmp_normal(patient_id, bait_set)
         self.assertEqual(dmp_normal, None)
@@ -84,19 +84,19 @@ class TestRetrieveSamplesByQuery(TestCase):
         file_group_instance = FileGroup.objects.get(name="DMP BAMs")
         filetype_instance = FileType.objects.get(name="bam")
         file_instance = File.objects.create(
-            file_type=filetype_instance, file_group=file_group_instance, file_name="C-8VK0V7.bam", path="/C-8VK0V7.bam"
+            file_type=filetype_instance, file_group=file_group_instance, file_name="C-PPPPP3.bam", path="/C-PPPPP3.bam"
         )
         FileMetadata.objects.create_or_update(
             file=file_instance,
             metadata={
-                "bai": "/C-8VK0V7.bai",
-                "bam": "/C-8VK0V7.bam",
+                "bai": "/C-PPPPP3.bai",
+                "bam": "/C-PPPPP3.bam",
                 "type": "N",
                 "assay": "IM6",
                 "sample": "P-1234567-N01-IM6",
                 "anon_id": "ABCDEF-N",
                 "patient": {
-                    "cmo": "8VK0V7",
+                    "cmo": "PPPPP3",
                     "dmp": "P-1234567",
                     "updated": "2020-03-19T23:57:51.941963Z",
                     "imported": "2020-03-19T23:57:51.941945Z",
@@ -109,7 +109,7 @@ class TestRetrieveSamplesByQuery(TestCase):
                 "tumor_type": "MBC",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
-                "external_id": "s_C_8VK0V7_N901_dZ_IM6",
+                "external_id": "s_C_PPPPP3_N901_dZ_IM6",
                 "sample_type": "0",
                 "tissue_type": "Breast",
                 "primary_site": "Breast",
@@ -124,7 +124,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
 
         # test with a patient ID taken from fixtures but non-matching bait_set
-        patient_id = "C-8VK0V7"
+        patient_id = "C-PPPPP3"
         bait_set = "foo"
         dmp_normal = get_dmp_normal(patient_id, bait_set)
         self.assertEqual(dmp_normal, None)
@@ -136,7 +136,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         self.assertEqual(dmp_normal, None)
 
         # test with a patient ID taken from fixtures and a matching bait_set
-        patient_id = "C-8VK0V7"
+        patient_id = "C-PPPPP3"
         bait_set = "IMPACT468_BAITS"
         dmp_normal = get_dmp_normal(patient_id, bait_set)
 
@@ -144,26 +144,26 @@ class TestRetrieveSamplesByQuery(TestCase):
             "CN": "MSKCC",
             "PL": "Illumina",
             "PU": ["DMP_FCID_DMP_BARCODEIDX"],
-            "LB": "s_C_8VK0V7_N901_dZ_IM6_1",
+            "LB": "s_C_PPPPP3_N901_dZ_IM6_1",
             "tumor_type": "Normal",
-            "ID": ["s_C_8VK0V7_N901_dZ_IM6_DMP_FCID_DMP_BARCODEIDX"],
-            "SM": "s_C_8VK0V7_N901_dZ_IM6",
+            "ID": ["s_C_PPPPP3_N901_dZ_IM6_DMP_FCID_DMP_BARCODEIDX"],
+            "SM": "s_C_PPPPP3_N901_dZ_IM6",
             "species": "",
-            "patient_id": "C-8VK0V7",
+            "patient_id": "C-PPPPP3",
             "bait_set": "IMPACT468_BAITS",
-            "sample_id": "s_C_8VK0V7_N901_dZ_IM6",
+            "sample_id": "s_C_PPPPP3_N901_dZ_IM6",
             "run_date": [""],
             "specimen_type": "DMP Normal",
             "R1": [],
             "R2": [],
             "R1_bid": [],
             "R2_bid": [],
-            "bam": ["/C-8VK0V7.bam"],
+            "bam": ["/C-PPPPP3.bam"],
             "bam_bid": [
                 # mock the UUID for testing since it will be different every time
                 "deletemeplease"
             ],
-            "request_id": "s_C_8VK0V7_N901_dZ_IM6",
+            "request_id": "s_C_PPPPP3_N901_dZ_IM6",
             "pi": "",
             "pi_email": "",
             "run_id": [""],
@@ -384,7 +384,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
             metadata={
-                "runId": "PITT_0439",
+                "runId": "SEQRUN_0008",
                 settings.RECIPE_METADATA_KEY: "IMPACT468",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
@@ -401,7 +401,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         FileMetadata.objects.create_or_update(
             file=poolednormal_R2_file_instance,
             metadata={
-                "runId": "PITT_0439",
+                "runId": "SEQRUN_0008",
                 settings.RECIPE_METADATA_KEY: "IMPACT468",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
@@ -411,7 +411,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids=["PITT_0439"], preservation_types=["Frozen"], bait_set="IMPACT468_BAITS"
+            run_ids=["SEQRUN_0008"], preservation_types=["Frozen"], bait_set="IMPACT468_BAITS"
         )
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -422,14 +422,14 @@ class TestRetrieveSamplesByQuery(TestCase):
             "CN": "MSKCC",
             "PL": "Illumina",
             "PU": ["PN_FCID_FROZENPOOLEDNORMAL"],
-            "LB": "FROZENPOOLEDNORMAL_PITT_0439_1",
+            "LB": "FROZENPOOLEDNORMAL_SEQRUN_0008_1",
             "tumor_type": "Normal",
-            "ID": ["FROZENPOOLEDNORMAL_PITT_0439_PN_FCID_FROZENPOOLEDNORMAL"],
-            "SM": "FROZENPOOLEDNORMAL_PITT_0439",
+            "ID": ["FROZENPOOLEDNORMAL_SEQRUN_0008_PN_FCID_FROZENPOOLEDNORMAL"],
+            "SM": "FROZENPOOLEDNORMAL_SEQRUN_0008",
             "species": "",
             "patient_id": "PN_PATIENT_ID",
             "bait_set": "IMPACT468",
-            "sample_id": "FROZENPOOLEDNORMAL_PITT_0439",
+            "sample_id": "FROZENPOOLEDNORMAL_SEQRUN_0008",
             "run_date": [""],
             "specimen_type": "Pooled Normal",
             "R1": ["/FROZENPOOLEDNORMAL.R1.fastq"],
@@ -438,7 +438,7 @@ class TestRetrieveSamplesByQuery(TestCase):
             "R2_bid": [],  # UUID('ec9817d1-d6f5-4f1d-9c0a-c82fc22d4daa')
             "bam": [],
             "bam_bid": [],
-            "request_id": "FROZENPOOLEDNORMAL_PITT_0439",
+            "request_id": "FROZENPOOLEDNORMAL_SEQRUN_0008",
             "pi": "",
             "pi_email": "",
             "run_id": [""],

@@ -15,7 +15,7 @@ class TestSmileMessageDeserialization(TestCase):
             "genePanel": "TestPanel500",
             "projectManagerName": "Smith, John",
             "piEmail": "pi@example.org",
-            "labHeadName": "Jane Doe",
+            "labHeadName": "Test Scientist",
             "labHeadEmail": "labhead@example.org",
             "investigatorName": "Bob Researcher",
             "investigatorEmail": "researcher@example.org",
@@ -183,7 +183,7 @@ class TestSmileMessageDeserialization(TestCase):
         self.assertEqual(request.genePanel, "TestPanel500")
         self.assertEqual(request.projectManagerName, "Smith, John")
         self.assertEqual(request.piEmail, "pi@example.org")
-        self.assertEqual(request.labHeadName, "Jane Doe")
+        self.assertEqual(request.labHeadName, "Test Scientist")
         self.assertEqual(request.labHeadEmail, "labhead@example.org")
         self.assertEqual(request.investigatorName, "Bob Researcher")
         self.assertEqual(request.investigatorEmail, "researcher@example.org")

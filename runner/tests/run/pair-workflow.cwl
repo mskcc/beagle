@@ -1655,11 +1655,11 @@
                                                                     }
                                                                 ],
                                                                 "dct:contributor": {
-                                                                    "foaf:mbox": "mailto:bolipatc@mskcc.org",
+                                                                    "foaf:mbox": "mailto:dev1@example.org",
                                                                     "foaf:name": "C. Allan Bolipata"
                                                                 },
                                                                 "dct:creator": {
-                                                                    "foaf:mbox": "mailto:bolipatc@mskcc.org",
+                                                                    "foaf:mbox": "mailto:dev1@example.org",
                                                                     "foaf:name": "C. Allan Bolipata"
                                                                 }
                                                             }
@@ -3312,11 +3312,11 @@
                                                                     }
                                                                 ],
                                                                 "dct:contributor": {
-                                                                    "foaf:mbox": "mailto:bolipatc@mskcc.org",
+                                                                    "foaf:mbox": "mailto:dev1@example.org",
                                                                     "foaf:name": "C. Allan Bolipata"
                                                                 },
                                                                 "dct:creator": {
-                                                                    "foaf:mbox": "mailto:bolipatc@mskcc.org",
+                                                                    "foaf:mbox": "mailto:dev1@example.org",
                                                                     "foaf:name": "C. Allan Bolipata"
                                                                 }
                                                             }

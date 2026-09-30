@@ -281,7 +281,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         FileMetadata.objects.create_or_update(
             file=poolednormal_R1_file_instance,
             metadata={
-                "runId": "PITT_0439",
+                "runId": "SEQRUN_0008",
                 settings.RECIPE_METADATA_KEY: "IMPACT468",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
@@ -298,7 +298,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         FileMetadata.objects.create_or_update(
             file=poolednormal_R2_file_instance,
             metadata={
-                "runId": "PITT_0439",
+                "runId": "SEQRUN_0008",
                 settings.RECIPE_METADATA_KEY: "IMPACT468",
                 "sequencingCenter": "MSKCC",
                 "platform": "Illumina",
@@ -308,7 +308,7 @@ class TestRetrieveSamplesByQuery(TestCase):
         )
 
         pooled_normals = get_pooled_normals(
-            run_ids=["PITT_0439"], preservation_types=["Frozen"], bait_set="IMPACT468_BAITS", sample_origin=[""]
+            run_ids=["SEQRUN_0008"], preservation_types=["Frozen"], bait_set="IMPACT468_BAITS", sample_origin=[""]
         )
         # remove the R1_bid and R2_bid for testing because they are non-deterministic
         # TODO: mock this ^^
@@ -319,14 +319,14 @@ class TestRetrieveSamplesByQuery(TestCase):
             "CN": "MSKCC",
             "PL": "Illumina",
             "PU": ["PN_FCID_FROZENPOOLEDNORMAL"],
-            "LB": "FROZENPOOLEDNORMAL_PITT_0439_1",
+            "LB": "FROZENPOOLEDNORMAL_SEQRUN_0008_1",
             "tumor_type": "Normal",
-            "ID": ["FROZENPOOLEDNORMAL_PITT_0439_PN_FCID_FROZENPOOLEDNORMAL"],
-            "SM": "FROZENPOOLEDNORMAL_PITT_0439",
+            "ID": ["FROZENPOOLEDNORMAL_SEQRUN_0008_PN_FCID_FROZENPOOLEDNORMAL"],
+            "SM": "FROZENPOOLEDNORMAL_SEQRUN_0008",
             "species": "",
             "patient_id": "PN_PATIENT_ID",
             "bait_set": "IMPACT468",
-            "sample_id": "FROZENPOOLEDNORMAL_PITT_0439",
+            "sample_id": "FROZENPOOLEDNORMAL_SEQRUN_0008",
             "run_date": [""],
             "specimen_type": "Pooled Normal",
             "R1": ["/FROZENPOOLEDNORMAL.R1.fastq"],
@@ -335,11 +335,11 @@ class TestRetrieveSamplesByQuery(TestCase):
             "R2_bid": [],  # UUID('ec9817d1-d6f5-4f1d-9c0a-c82fc22d4daa')
             "bam": [],
             "bam_bid": [],
-            "request_id": "FROZENPOOLEDNORMAL_PITT_0439",
+            "request_id": "FROZENPOOLEDNORMAL_SEQRUN_0008",
             "pi": "",
             "pi_email": "",
             "sample_origin": [[""]],
-            "run_id": ["PITT_0439"],
+            "run_id": ["SEQRUN_0008"],
             "preservation_type": [["Frozen"]],
             "run_mode": "",
         }
