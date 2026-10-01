@@ -215,6 +215,7 @@ def get_unfiltered_matched_normal(patient_id, fillout_unfiltered_normals, reques
             unfiltered_matched_normal_bam = unfiltered_matched_normal_bam
             unfiltered_matched_normal_sample_id = unfiltered_matched_normal_bam.file_name.rstrip(".bam")
     # Case 3
+    #TODO try to match assay first
     if not request_id or not unfiltered_matched_normal_bam:
         unfiltered_matched_normal_bam = (
             File.objects.filter(file_name__startswith=patient_normals_search, file_name__endswith=IGO_UNFILTERED_REGEX)
