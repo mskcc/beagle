@@ -26,8 +26,8 @@ GEN_XS2 = "XS2"
 # XS2 ("nucleo") is one run per sample. Some XS1 runs were bulk-imported from
 # Juno with a "JUNO PIPELINE: " app-name prefix -- both forms appear in prod.
 NUCLEO_APP_NAMES = {
-    "GEN_XS2": ["access v2 nucleo", "JUNO PIPELINE: access v2 nucleo"],
-    "GEN_XS1": ["access legacy", "JUNO PIPELINE: access legacy"],
+    GEN_XS2 : ["access v2 nucleo", "JUNO PIPELINE: access v2 nucleo"],
+    GEN_XS1: ["access legacy", "JUNO PIPELINE: access legacy"],
 }
 
 ALL_NUCLEO_APP_NAMES = [name for names in NUCLEO_APP_NAMES.values() for name in names]
