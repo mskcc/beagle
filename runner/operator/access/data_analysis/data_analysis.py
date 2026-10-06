@@ -33,19 +33,19 @@ NUCLEO_APP_NAMES = {
 ALL_NUCLEO_APP_NAMES = [name for names in NUCLEO_APP_NAMES.values() for name in names]
 
 SNV_APP_NAMES = {
-    GEN_XS2: ["access v2 legacy SNV"],
+    GEN_XS2: ["access v2 legacy SNV", "JUNO PIPELINE: access v2 legacy SNV"],
     GEN_XS1: ["access legacy SNV", "JUNO PIPELINE: access legacy SNV"],
 }
 CNV_APP_NAMES = {
-    GEN_XS2: ["access v2 legacy CNV"],
+    GEN_XS2: ["access v2 legacy CNV", "JUNO PIPELINE: access v2 legacy CNV"],
     GEN_XS1: ["access legacy CNV", "JUNO PIPELINE: access legacy CNV"],
 }
 SV_APP_NAMES = {
-    GEN_XS2: ["access v2 legacy SV"],
+    GEN_XS2: ["access v2 legacy SV", "JUNO PIPELINE: access v2 legacy SV"],
     GEN_XS1: ["access legacy SV", "JUNO PIPELINE: access legacy SV"],
 }
 MSI_APP_NAMES = {
-    GEN_XS2: ["access v2 legacy MSI"],
+    GEN_XS2: ["access v2 legacy MSI", "JUNO PIPELINE: access v2 legacy MSI"],
     GEN_XS1: ["access legacy MSI", "JUNO PIPELINE: access legacy MSI"],
 }
 
