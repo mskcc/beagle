@@ -183,8 +183,9 @@ class AccessV2DataAnalysisOperator(Operator):
         are included (they never have SNV/CNV/SV/MSI runs to find them by):
         XS1 sample ids come from the bam-generation run's own cmoSampleIds tag,
         XS2 from output_metadata.cmoSampleName
-      - tumor_normal  <- that sample's own fastq metadata, unscoped by request
-        (sample-level, so it can't be borrowed from the current request)
+      - tumor_normal  <- inferred from the sample id's timepoint segment ('N'
+        -> normal, else tumor; same convention as access.is_tumor_bam), not
+        fastq (sample-level, so it can't be borrowed from the current request)
       - sex           <- the patient's current-request research `sex`
         (patient-level and invariant, reused rather than re-queried per sample)
       - maf / cna_file / sv_file / msi_file  <- matched by sample id against
@@ -535,25 +536,22 @@ class AccessV2DataAnalysisOperator(Operator):
         is bam-anchored (not variant-calling-anchored) so normals are included
         too, since normals never have SNV/CNV/SV/MSI runs to find them by.
 
-        tumor_normal is looked up per discovered sample (it's sample-level, so
-        it can't be borrowed from the current request). sex is patient-level
+        tumor_normal is sample-level, so it can't be borrowed from the current
+        request; it's inferred directly from the sample id's timepoint segment
+        (same convention as runner.operator.access.is_tumor_bam: 'N' -> normal,
+        anything else -> tumor) rather than queried from fastq metadata, which
+        isn't reliably available for historical samples. sex is patient-level
         and doesn't change across a patient's samples, so it's reused from
         sex_by_patient (the current request's own fastq-derived map, same one
-        get_clinical_rows uses) rather than queried again per sample -- fewer
-        queries and one single source of truth instead of two.
+        get_clinical_rows uses) rather than queried again per sample. Neither
+        path touches fastq metadata for samples outside the current request.
         """
         rows = []
         for cmo_patient_id in cmo_patient_ids:
             for sample_id, generation in self._find_patient_bam_samples(cmo_patient_id).items():
                 if sample_id in exclude_sample_ids:
                     continue
-                tumor_normal = self._fastq_tumor_normal(sample_id)
-                if tumor_normal is None:
-                    LOGGER.warning(
-                        "ACCESS Data Analysis: no fastq tumor/normal for patient-history sample %s; skipping",
-                        sample_id,
-                    )
-                    continue
+                tumor_normal = self._tumor_normal_from_sample_id(sample_id)
                 row = self._build_patient_history_row(
                     cmo_patient_id, sample_id, generation, tumor_normal, sex_by_patient.get(cmo_patient_id, "")
                 )
@@ -562,12 +560,23 @@ class AccessV2DataAnalysisOperator(Operator):
         return rows
 
     @staticmethod
+    def _tumor_normal_from_sample_id(sample_id):
+        """
+        'C-XXXXXX-N001-d' -> 'normal'; anything else (e.g. '-L001-d', '-T001-d')
+        -> 'tumor'. Same convention as runner.operator.access.is_tumor_bam.
+        """
+        parts = sample_id.split("-")
+        if len(parts) < 3 or not parts[2]:
+            return "tumor"
+        return "normal" if parts[2][0] == "N" else "tumor"
+
+    @staticmethod
     def _find_patient_bam_samples(cmo_patient_id):
         """
         Every sample for this CMO patient found on a completed bam-generation
         run, across both generations. Returns {sample_id: generation}. This is
-        discovery only (which samples exist); tumor_normal/sex are looked up
-        separately per sample from fastq metadata.
+        discovery only (which samples exist); tumor_normal/sex are derived
+        separately, without touching fastq metadata (see get_patient_history_rows).
 
         XS1 ("access legacy") batches many samples into one run; the sample ids
         come from the run's own (now-fixed) cmoSampleIds tag. XS2 (nucleo) is
@@ -593,19 +602,6 @@ class AccessV2DataAnalysisOperator(Operator):
                 found[sample_id] = GEN_XS2
 
         return found
-
-    @staticmethod
-    def _fastq_tumor_normal(sample_id):
-        """tumor/normal for one sample from its own fastq metadata, unscoped by request."""
-        files = FileRepository.filter(
-            metadata={settings.CMO_SAMPLE_NAME_METADATA_KEY: sample_id, settings.IGO_COMPLETE_METADATA_KEY: True},
-            filter_redact=True,
-        )
-        f = next(iter(files), None)
-        if not f:
-            return None
-        tumor_normal = (f.metadata.get(settings.TUMOR_OR_NORMAL_METADATA_KEY) or "").strip().lower()
-        return "tumor" if tumor_normal.startswith("t") else "normal"
 
     def _build_patient_history_row(self, cmo_patient_id, sample_id, generation, tumor_normal, sex):
         bams = self._patient_history_bams(sample_id, generation)
