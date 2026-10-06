@@ -295,6 +295,13 @@ class RunIdsOperatorSerializer(serializers.Serializer):
     for_each = serializers.BooleanField(default=False)
 
 
+class SampleIdsOperatorSerializer(serializers.Serializer):
+    sample_ids = serializers.ListField(child=serializers.CharField(max_length=64), allow_empty=False)
+    pipeline = serializers.CharField(max_length=30, allow_null=False, allow_blank=False)
+    pipeline_version = serializers.CharField(max_length=30, required=False, allow_null=True, allow_blank=True)
+    job_group_id = serializers.UUIDField(required=False, help_text="Optional job group id")
+
+
 class PairOperatorSerializer(serializers.Serializer):
     pairs = serializers.ListField(child=serializers.JSONField(), allow_empty=True)
     pipelines = serializers.ListField(child=serializers.CharField(max_length=30), allow_empty=True)
