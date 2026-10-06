@@ -272,8 +272,7 @@ class AccessV2DataAnalysisOperator(Operator):
 
         if not rows:
             raise Exception(
-                "ACCESS Data Analysis: no research_access samples found for request {} "
-                "(fastq metadata may not be imported into IMPORT_FILE_GROUP for this request)".format(
+                "ACCESS Data Analysis: no research_access samples found for request {} ".format(
                     self.request_id
                 )
             )
