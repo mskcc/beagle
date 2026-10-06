@@ -172,8 +172,12 @@ class AccessV2DataAnalysisOperator(Operator):
       - clinical_access tumor  -> duplex_bam + simplex_bam + standard_bam
       - clinical_access normal -> unfilter_bam + standard_bam
       - clinical_impact (any)  -> standard_bam (plain "{anon_id}.bam")
-      - maf   <- the patient's research MAF (so the MAF-merge step picks it up)
-      - cna_file / sv_file / msi_file  <- blank (research-only columns)
+      - maf / cna_file / sv_file / msi_file  <- blank (research-only columns;
+        the pipeline reads clinical mutations from its own dmp_mutations_file
+        param, keyed by dmp_id, never from this samplesheet column -- and the
+        samplesheet is per-sample anyway, so there's no single "the patient's
+        research MAF" to borrow when a patient has more than one research
+        tumor sample)
 
     Patient-history rows (research_access, same shape as the request's own
     research rows), for every CMO patient in the research set, from any OTHER
@@ -225,8 +229,7 @@ class AccessV2DataAnalysisOperator(Operator):
         sv_files = self.get_variant_files(SV_APP_NAMES[generation], SV_FILE_SUFFIX, "sv_file")
         msi_files = self.get_variant_files(MSI_APP_NAMES[generation], MSI_FILE_SUFFIX, "msi_file")
 
-        # Per-patient rollups for the clinical rows
-        research_maf_by_patient = self._first_by_patient(snv_mafs, "research MAF")
+        # Per-patient rollup for the clinical rows
         sex_by_patient = {}
         for m in sample_meta.values():
             if m["cmo_patient_id"] and m["sex"]:
@@ -279,7 +282,7 @@ class AccessV2DataAnalysisOperator(Operator):
 
         # Clinical (DMP) samples for every CMO patient seen in the research set
         cmo_patient_ids = {m["cmo_patient_id"] for m in sample_meta.values() if m["cmo_patient_id"]}
-        rows.extend(self.get_clinical_rows(cmo_patient_ids, research_maf_by_patient, sex_by_patient))
+        rows.extend(self.get_clinical_rows(cmo_patient_ids, sex_by_patient))
 
         # Patient history: other completed ACCESS research samples for these
         # patients, from any other request, either generation -- a fully
@@ -505,25 +508,6 @@ class AccessV2DataAnalysisOperator(Operator):
             return file_name[: -len(filename_suffix)]
         return None
 
-    @staticmethod
-    def _first_by_patient(by_sample, label):
-        """Collapse {sample_id: path} to {cmo_patient_id: path}, first wins."""
-        by_patient = {}
-        for sample_id, path in by_sample.items():
-            patient = "-".join(sample_id.split("-")[:2])
-            existing = by_patient.get(patient)
-            if existing and existing != path:
-                LOGGER.warning(
-                    "ACCESS Data Analysis: patient %s has multiple %ss; keeping %s, ignoring %s",
-                    patient,
-                    label,
-                    existing,
-                    path,
-                )
-                continue
-            by_patient[patient] = path
-        return by_patient
-
     # ~~~ Patient history (other requests, either generation) ~~~
 
     def get_patient_history_rows(self, cmo_patient_ids, exclude_sample_ids, sex_by_patient):
@@ -717,7 +701,7 @@ class AccessV2DataAnalysisOperator(Operator):
 
     # ~~~ Clinical (DMP) samples ~~~
 
-    def get_clinical_rows(self, cmo_patient_ids, research_maf_by_patient, sex_by_patient):
+    def get_clinical_rows(self, cmo_patient_ids, sex_by_patient):
         """
         Build samplesheet rows for the clinical_access / clinical_impact samples of
         every CMO patient in ``cmo_patient_ids``. DMP bams + metadata come from the
@@ -754,14 +738,13 @@ class AccessV2DataAnalysisOperator(Operator):
             row = self._build_clinical_row(
                 cmo_patient_id,
                 fms,
-                research_maf_by_patient.get(cmo_patient_id, ""),
                 sex_by_patient.get(cmo_patient_id, ""),
             )
             if row:
                 rows.append(row)
         return rows
 
-    def _build_clinical_row(self, cmo_patient_id, fms, research_maf, sex):
+    def _build_clinical_row(self, cmo_patient_id, fms, sex):
         """
         One clinical sample's DMP bam File entries -> a samplesheet row.
         Returns None (and logs) if the assay can't be classified.
@@ -800,7 +783,6 @@ class AccessV2DataAnalysisOperator(Operator):
                 "tumor_normal": tumor_normal,
                 "anon_id": anon_id,
                 "access_version": "",
-                "maf": _create_file_object(research_maf) if research_maf else "",
             }
         )
 
