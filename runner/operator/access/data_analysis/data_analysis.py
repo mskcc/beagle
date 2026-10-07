@@ -26,7 +26,7 @@ GEN_XS2 = "XS2"
 # XS2 ("nucleo") is one run per sample. Some XS1 runs were bulk-imported from
 # Juno with a "JUNO PIPELINE: " app-name prefix -- both forms appear in prod.
 NUCLEO_APP_NAMES = {
-    GEN_XS2 : ["access v2 nucleo", "JUNO PIPELINE: access v2 nucleo"],
+    GEN_XS2: ["access v2 nucleo", "JUNO PIPELINE: access v2 nucleo"],
     GEN_XS1: ["access legacy", "JUNO PIPELINE: access legacy"],
 }
 
@@ -275,9 +275,7 @@ class AccessV2DataAnalysisOperator(Operator):
 
         if not rows:
             raise Exception(
-                "ACCESS Data Analysis: no research_access samples found for request {} ".format(
-                    self.request_id
-                )
+                "ACCESS Data Analysis: no research_access samples found for request {} ".format(self.request_id)
             )
 
         # Clinical (DMP) samples for every CMO patient seen in the research set
@@ -368,9 +366,7 @@ class AccessV2DataAnalysisOperator(Operator):
         resolve it once from which app name Beagle actually matched, rather than
         per-sample from fastq baitSet (baitSet is per-sample and can be missing).
         """
-        generations = {
-            gen for run in nucleo_runs for gen, names in NUCLEO_APP_NAMES.items() if run.app.name in names
-        }
+        generations = {gen for run in nucleo_runs for gen, names in NUCLEO_APP_NAMES.items() if run.app.name in names}
         if not generations:
             raise Exception(
                 "ACCESS Data Analysis: could not resolve ACCESS generation from bam-generation run app names {}".format(
@@ -589,9 +585,7 @@ class AccessV2DataAnalysisOperator(Operator):
     def _build_patient_history_row(self, cmo_patient_id, sample_id, generation, tumor_normal, sex):
         bams = self._patient_history_bams(sample_id, generation)
         if not bams:
-            LOGGER.warning(
-                "ACCESS Data Analysis: no bams resolved for patient-history sample %s; skipping", sample_id
-            )
+            LOGGER.warning("ACCESS Data Analysis: no bams resolved for patient-history sample %s; skipping", sample_id)
             return None
 
         row = _blank_row()
