@@ -219,7 +219,7 @@ class AccessV2DataAnalysisOperator(Operator):
                 request_id=self.request_id, run_date=run_date
             ),
             "app": app,
-            "inputs": {"input": rows},
+            "inputs": {"input": rows, "request_id": self.request_id},
             "tags": {
                 settings.REQUEST_ID_METADATA_KEY: self.request_id,
                 "pipeline": pipeline.name,
