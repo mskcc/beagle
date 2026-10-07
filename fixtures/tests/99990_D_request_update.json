@@ -1,0 +1,20 @@
+[
+  {
+    "igoRequestId": "99990_D_2",
+    "requestMetadataJson": "{\"requestId\":\"99990_D_2\",\"recipe\":\"IMPACT468\",\"projectManagerName\":\"\",\"piEmail\":\"\",\"labHeadName\":\"Lab Head C\",\"labHeadEmail\":\"analyst14@example.org\",\"investigatorName\":\"Investigator E\",\"investigatorEmail\":\"analyst10@example.org\",\"dataAnalystName\":\"\",\"dataAnalystEmail\":\"\",\"otherContactEmails\":\"\",\"dataAccessEmails\":\"analyst7@example.org,analyst4@example.org\",\"qcAccessEmails\":\"analyst7@example.org,analyst4@example.org\",\"strand\":null,\"libraryType\":null,\"isCmoRequest\":true,\"bicAnalysis\":true,\"pooledNormals\":null,\"projectId\":\"10075\"}",
+    "importDate": "2023-03-08",
+    "status": {
+      "validationStatus": true,
+      "validationReport": ""
+    }
+  },
+  {
+    "igoRequestId": "99990_D_2",
+    "requestMetadataJson": "{\"requestId\":\"99990_D_2\",\"recipe\":\"IMPACT468\",\"projectManagerName\":\"\",\"piEmail\":\"\",\"labHeadName\":\"Lab Head C\",\"labHeadEmail\":\"analyst14@example.org\",\"investigatorName\":\"Investigator E\",\"investigatorEmail\":\"analyst10@example.org\",\"dataAnalystName\":\"\",\"dataAnalystEmail\":\"\",\"otherContactEmails\":\"analyst7@example.org,analyst4@example.org,analyst7@example.org,analyst4@example.org\",\"dataAccessEmails\":\"analyst7@example.org,analyst4@example.org\",\"qcAccessEmails\":\"analyst7@example.org,analyst4@example.org\",\"strand\":null,\"libraryType\":null,\"isCmoRequest\":true,\"bicAnalysis\":true,\"pooledNormals\":[],\"projectId\":\"10075\",\"status\":{\"validationReport\":[],\"validationStatus\":true}}",
+    "importDate": "2023-03-22",
+    "status": {
+      "validationStatus": true,
+      "validationReport": "[]"
+    }
+  }
+]

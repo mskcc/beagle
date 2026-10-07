@@ -23,9 +23,9 @@ class TestConstructPair(TestCase):
         Test that Argos jobs are correctly created
         """
         # Load fixtures
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.file.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.filemetadata.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.filemetadata.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         request_id_metadata_key = settings.REQUEST_ID_METADATA_KEY
@@ -33,7 +33,7 @@ class TestConstructPair(TestCase):
 
         files = File.objects.filter(
             **{
-                "filemetadata__metadata__{}".format(request_id_metadata_key): "10075_D",
+                "filemetadata__metadata__{}".format(request_id_metadata_key): "99990_D",
                 "filemetadata__metadata__{}".format(igo_complete_metadata_key): True,
             }
         ).all()
@@ -59,7 +59,7 @@ class TestConstructPair(TestCase):
 
         argos_inputs, error_samples = construct_argos_jobs(samples)
         expected_inputs = json.load(
-            open(os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.argos.input.json"))
+            open(os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.argos.input.json"))
         )
         print("Running test_construct_argos_jobs1")
         self.assertTrue(argos_inputs == expected_inputs)
