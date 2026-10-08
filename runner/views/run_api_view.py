@@ -575,7 +575,7 @@ class SamplesOperatorViewSet(GenericAPIView):
             job_group_notifier_id = str(job_group_notifier.id)
         except JobGroupNotifier.DoesNotExist:
             job_group_notifier_id = notifier_start(
-                job_group, "Samples: {}".format(", ".join(sample_ids)), operator=pipeline.operator
+                job_group, "{} Sample(s)".format(len(sample_ids)), operator=pipeline.operator
             )
 
         logging.info("Submitting %d sample(s) to pipeline %s" % (len(sample_ids), pipeline))
