@@ -42,6 +42,7 @@ from runner.serializers import (
     RunSerializerCWLOutput,
     RunSerializerFull,
     RunSerializerPartial,
+    SampleIdsOperatorSerializer,
     TempoMPGenOperatorSerializer,
     TerminateRunSerializer,
 )
@@ -525,6 +526,69 @@ class PairsOperatorViewSet(GenericAPIView):
         body = {
             "details": "Operator Job submitted to pipelines %s, job group id %s, with pairs %s"
             % (pipeline_names, job_group_id, str(pairs))
+        }
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
+
+class SamplesOperatorViewSet(GenericAPIView):
+    """
+    Submit an operator run against an explicit list of sample ids, rather than
+    an IGO request id (e.g. STRiDE, which runs ad hoc against a chosen cohort
+    of DMP clinical ACCESS samples). ``sample_ids`` is passed straight through
+    to the operator's ``get_jobs(sample_ids=...)``.
+    """
+
+    serializer_class = SampleIdsOperatorSerializer
+
+    def post(self, request):
+        sample_ids = request.data.get("sample_ids")
+        pipeline_name = request.data.get("pipeline")
+        pipeline_version = request.data.get("pipeline_version", None)
+        job_group_id = request.data.get("job_group_id", None)
+
+        errors = []
+        if not sample_ids:
+            errors.append("sample_ids needs to be specified")
+        if not pipeline_name:
+            errors.append("pipeline needs to be specified")
+        if job_group_id and not JobGroup.objects.filter(id=job_group_id).exists():
+            errors.append("job group id does not exist, this field is optional")
+        if errors:
+            return Response({"details": errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        if pipeline_version:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
+        else:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, default=True)
+
+        if not job_group_id:
+            job_group = JobGroup()
+            job_group.save()
+            job_group_id = str(job_group.id)
+        else:
+            job_group = JobGroup.objects.get(id=job_group_id)
+
+        try:
+            job_group_notifier = JobGroupNotifier.objects.get(
+                job_group_id=job_group_id, notifier_type_id=pipeline.operator.notifier_id
+            )
+            job_group_notifier_id = str(job_group_notifier.id)
+        except JobGroupNotifier.DoesNotExist:
+            job_group_notifier_id = notifier_start(
+                job_group, "{} Sample(s)".format(len(sample_ids)), operator=pipeline.operator
+            )
+
+        logging.info("Submitting %d sample(s) to pipeline %s" % (len(sample_ids), pipeline))
+        create_operator_run_from_jobs.delay(
+            pipeline.operator_id,
+            job_group_id=job_group_id,
+            job_group_notifier_id=job_group_notifier_id,
+            sample_ids=sample_ids,
+        )
+
+        body = {
+            "details": "Operator Job submitted to pipeline %s, job group id %s, with samples %s"
+            % (pipeline_name, job_group_id, str(sample_ids))
         }
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
