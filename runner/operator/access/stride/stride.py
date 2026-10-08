@@ -129,7 +129,6 @@ class StrideOperator(Operator):
                 metadata__assay__in=CLINICAL_ACCESS_ASSAYS,
                 **metadata_filters,
             )
-            .exclude(metadata__active=False)
             .order_by("file__file_name")
             .first()
         )
