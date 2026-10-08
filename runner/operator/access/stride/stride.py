@@ -1,3 +1,4 @@
+import re
 import logging
 from datetime import datetime
 
@@ -16,6 +17,11 @@ LOGGER = logging.getLogger(__name__)
 DMP_BAM_FILE_GROUP = "d4775633-f53f-412f-afa5-46e9a86b654b"
 CLINICAL_ACCESS_ASSAYS = ("XS1", "XS2")
 STANDARD_BAM_SUFFIX = "-standard.bam"
+
+# DMP patient id prefix of a sample id, e.g. "P-0109895-T03-XS2" -> "P-0109895-".
+# Some DMP samples are clinical-only and have no metadata.patient.cmo/dmp, so the
+# normal match keys off this instead -- it's always present on every sample.
+DMP_PATIENT_ID_RE = re.compile(r"^(P-\d+)-")
 
 SAMPLESHEET_COLUMNS = ["sample_id", "tumor_bam", "normal_bam", "matched_norm_sample_barcode"]
 
@@ -40,10 +46,11 @@ class StrideOperator(Operator):
     "dmp-bams" file group.
 
     Each tumor is paired with its matched normal from the same patient/batch
-    -- same metadata.project_name + metadata.patient.cmo + metadata.patient.dmp
-    + metadata.assay, type Normal -- picking the first such match. Only the
-    standard bam is used for either side of the pair (STRiDE runs on standard
-    ACCESS bams, not duplex/simplex/unfilter).
+    -- same metadata.project_name + DMP patient id prefix (from the sample id
+    itself, not metadata.patient.cmo/dmp, since clinical-only samples don't
+    always have those) + metadata.assay, type Normal -- picking the first such
+    match. Only the standard bam is used for either side of the pair (STRiDE
+    runs on standard ACCESS bams, not duplex/simplex/unfilter).
     """
 
     def get_jobs(self, sample_ids=None):
@@ -85,22 +92,25 @@ class StrideOperator(Operator):
             LOGGER.warning("STRiDE: tumor sample %s has no standard bam; skipping", sample_id)
             return None
 
-        patient = tumor_meta.get("patient") or {}
+        patient_prefix = DMP_PATIENT_ID_RE.match(sample_id)
+        if not patient_prefix:
+            LOGGER.warning("STRiDE: sample %s does not look like a DMP sample id; skipping", sample_id)
+            return None
+        patient_prefix = patient_prefix.group(1) + "-"
+
         normal_meta, normal_bam = self._clinical_standard_bam(
             metadata__project_name=tumor_meta.get("project_name"),
-            metadata__patient__cmo=patient.get("cmo"),
-            metadata__patient__dmp=patient.get("dmp"),
+            metadata__sample__startswith=patient_prefix,
             metadata__assay=tumor_meta.get("assay"),
             metadata__type="N",
         )
         if not normal_meta or not normal_bam:
             LOGGER.warning(
-                "STRiDE: no matched normal standard bam for tumor %s (project_name=%r, patient.cmo=%r, "
-                "patient.dmp=%r, assay=%r); skipping",
+                "STRiDE: no matched normal standard bam for tumor %s (project_name=%r, patient_prefix=%r, "
+                "assay=%r); skipping",
                 sample_id,
                 tumor_meta.get("project_name"),
-                patient.get("cmo"),
-                patient.get("dmp"),
+                patient_prefix,
                 tumor_meta.get("assay"),
             )
             return None
