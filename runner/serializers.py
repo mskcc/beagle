@@ -302,6 +302,15 @@ class SampleIdsOperatorSerializer(serializers.Serializer):
     job_group_id = serializers.UUIDField(required=False, help_text="Optional job group id")
 
 
+class BulkSamplesOperatorSerializer(serializers.Serializer):
+    pipeline = serializers.CharField(max_length=30, allow_null=False, allow_blank=False)
+    pipeline_version = serializers.CharField(max_length=30, required=False, allow_null=True, allow_blank=True)
+    job_group_id = serializers.UUIDField(required=False, help_text="Optional job group id")
+    limit = serializers.IntegerField(
+        required=False, min_value=1, help_text="Optional cap on how many discovered samples to submit, e.g. for testing"
+    )
+
+
 class PairOperatorSerializer(serializers.Serializer):
     pairs = serializers.ListField(child=serializers.JSONField(), allow_empty=True)
     pipelines = serializers.ListField(child=serializers.CharField(max_length=30), allow_empty=True)
