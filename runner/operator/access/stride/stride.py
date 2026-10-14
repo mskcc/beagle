@@ -1,12 +1,16 @@
+import os
 import re
+import json
 import logging
 from datetime import datetime
+from jinja2 import Template
 
 from runner.models import Pipeline
 from runner.operator.operator import Operator
 from runner.run.objects.run_creator_object import RunCreator
 from file_system.repository.file_repository import FileRepository
 
+WORKDIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER = logging.getLogger(__name__)
 
 # "dmp-bams" file group -- same DMP clinical bam metadata + files that ACCESS
@@ -70,7 +74,7 @@ class StrideOperator(Operator):
         job_json = {
             "name": "STRiDE: {} sample(s), {}".format(len(rows), run_date),
             "app": app,
-            "inputs": {"input": rows},
+            "inputs": self._construct_inputs(rows),
             "tags": {
                 "pipeline": pipeline.name,
                 "pipeline_version": pipeline.version,
@@ -79,6 +83,18 @@ class StrideOperator(Operator):
             "output_metadata": {},
         }
         return [RunCreator(**job_json)]
+
+    @staticmethod
+    def _construct_inputs(rows):
+        """
+        Render input_template.json.jinja2 with the samplesheet rows. The template
+        also holds the fixed pipeline params (model_joblib, threshold).
+        model_joblib is a plain path string rather than a File object so it
+        doesn't need to be registered as a File in beagle.
+        """
+        with open(os.path.join(WORKDIR, "input_template.json.jinja2")) as file:
+            template = Template(file.read())
+        return json.loads(template.render(input=json.dumps(rows)))
 
     def _build_row(self, sample_id):
         tumor_meta, tumor_bam = self._clinical_standard_bam(metadata__sample=sample_id)
