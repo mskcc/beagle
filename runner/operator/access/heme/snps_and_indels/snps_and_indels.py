@@ -47,7 +47,7 @@ ACCESS_DEFAULT_NORMAL_FILENAME_DUPLEX = (
     "Donor3F41c2207-TPH01_ACCESSHv1-VAL-20220007_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
 )
 ACCESS_DEFAULT_NORMAL_FILENAME_SIMPLEX = (
-    "Donor3F41c2207-TPH01_ACCESSHv1-VAL-20220007_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam"
+    "Donor3F41c2207-TPH01_ACCESSHv1-VAL-20220007_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam"
 )
 
 
@@ -57,7 +57,7 @@ def check_genotype_list(genotyping_bams, genotyping_bams_ids):
             f"list of genotyping bams: {genotyping_bams} is a different length from list of genotyping ids {genotyping_bams_ids}"
         )
     for ix in range(len(genotyping_bams_ids)):
-        id = genotyping_bams_ids[ix].replace("-CURATED", "").replace("-DUPLEX", "").replace("-SIMPLEX", "")
+        id = genotyping_bams_ids[ix].replace("-CURATED", "").replace("-DUPLEX", "").replace("-SIMPLEX", "").replace("-NORMAL", "")
         bam = genotyping_bams[ix]["location"]
         if id not in bam:
             raise Exception(f"Sample ID, {id} does not match bam path: {bam}")
@@ -603,7 +603,7 @@ class AccessHemeLegacySNV(Operator):
                 matched_normal_id = [""]
             else:
                 matched_normal = [_create_cwl_bam_object(sample_info["matched_normal_unfiltered"][0].path)]
-                matched_normal_id = [sample_info["matched_normal_unfiltered"][0].file_name.split("_")[0]]
+                matched_normal_id = [sample_info["matched_normal_unfiltered"][0].file_name.split("_")[0] + "-NORMAL"]
                 genotyping_bams_ids += matched_normal_id
                 genotyping_bams += matched_normal
 
