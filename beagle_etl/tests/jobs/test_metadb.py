@@ -49,15 +49,15 @@ class TestSmileMessages(TestCase):
         self.job_group = JobGroup.objects.create()
         self.job_group_notifier = JobGroupNotifier.objects.create(job_group=self.job_group, notifier_type=self.notifier)
         self.file_keys = ["R"]
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "etl/10075_D_2.file.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "etl/99990_D_2.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "etl/10075_D_2.filemetadata.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "etl/99990_D_2.filemetadata.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        new_request_json_path = os.path.join(settings.TEST_FIXTURE_DIR, "etl/10075_D_2.update.json")
+        new_request_json_path = os.path.join(settings.TEST_FIXTURE_DIR, "etl/99990_D_2.update.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        update_sample_json_path = os.path.join(settings.TEST_FIXTURE_DIR, "etl/10075_D_2.update_sample.json")
+        update_sample_json_path = os.path.join(settings.TEST_FIXTURE_DIR, "etl/99990_D_2.update_sample.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        update_request_json_path = os.path.join(settings.TEST_FIXTURE_DIR, "etl/10075_D_request_update.json")
+        update_request_json_path = os.path.join(settings.TEST_FIXTURE_DIR, "etl/99990_D_request_update.json")
         with open(update_sample_json_path) as new_sample_json_file:
             self.new_sample_data = json.load(new_sample_json_file)
         self.new_sample_data_str = json.dumps(self.new_sample_data)
@@ -69,29 +69,29 @@ class TestSmileMessages(TestCase):
             self.update_request_data = json.load(update_request_json_file)
         self.update_request_str = json.dumps(self.update_request_data)
 
-        test_new_request_08944_B = os.path.join(settings.TEST_FIXTURE_DIR, "08944_B_new_request.json")
-        with open(test_new_request_08944_B) as new_request_08944_B:
-            self.new_request = json.load(new_request_08944_B)
+        test_new_request_99991_B = os.path.join(settings.TEST_FIXTURE_DIR, "99991_B_new_request.json")
+        with open(test_new_request_99991_B) as new_request_99991_B:
+            self.new_request = json.load(new_request_99991_B)
         self.new_request_str = json.dumps(self.new_request)
 
-        test_new_request_14269_C = os.path.join(settings.TEST_FIXTURE_DIR, "14269_C_new_request.json")
-        with open(test_new_request_14269_C) as new_request_14269_C:
-            self.new_request_14269_C = json.load(new_request_14269_C)
-        self.new_request_14269_C_str = json.dumps(self.new_request_14269_C)
+        test_new_request_99908_C = os.path.join(settings.TEST_FIXTURE_DIR, "99908_C_new_request.json")
+        with open(test_new_request_99908_C) as new_request_99908_C:
+            self.new_request_99908_C = json.load(new_request_99908_C)
+        self.new_request_99908_C_str = json.dumps(self.new_request_99908_C)
 
-        test_14269_C_1_update_sample = os.path.join(settings.TEST_FIXTURE_DIR, "14269_C_1_update_sample.json")
-        with open(test_14269_C_1_update_sample) as update_sample_14269_C_1:
-            self.update_sample_14269_C_1 = json.load(update_sample_14269_C_1)
-        self.update_sample_14269_C_1_str = json.dumps(self.update_sample_14269_C_1)
+        test_99908_C_1_update_sample = os.path.join(settings.TEST_FIXTURE_DIR, "99908_C_1_update_sample.json")
+        with open(test_99908_C_1_update_sample) as update_sample_99908_C_1:
+            self.update_sample_99908_C_1 = json.load(update_sample_99908_C_1)
+        self.update_sample_99908_C_1_str = json.dumps(self.update_sample_99908_C_1)
 
-        test_14269_C_1_update_sample_new_files = os.path.join(
-            settings.TEST_FIXTURE_DIR, "14269_C_1_update_sample_new_files.json"
+        test_99908_C_1_update_sample_new_files = os.path.join(
+            settings.TEST_FIXTURE_DIR, "99908_C_1_update_sample_new_files.json"
         )
-        with open(test_14269_C_1_update_sample_new_files) as update_sample_14269_C_1_new_files:
-            self.update_sample_14269_C_1_new_files = json.load(update_sample_14269_C_1_new_files)
-        self.update_sample_14269_C_1_new_files_str = json.dumps(self.update_sample_14269_C_1_new_files)
+        with open(test_99908_C_1_update_sample_new_files) as update_sample_99908_C_1_new_files:
+            self.update_sample_99908_C_1_new_files = json.load(update_sample_99908_C_1_new_files)
+        self.update_sample_99908_C_1_new_files_str = json.dumps(self.update_sample_99908_C_1_new_files)
 
-        self.etl_user = User.objects.create_superuser("ETL", "voyager-etl@mskcc.org", "password")
+        self.etl_user = User.objects.create_superuser("ETL", "etl@example.org", "password")
         self.file_group_id = "1a1b29cf-3bc2-4f6c-b376-d4c5d701166a"
         settings.ETL_USER = self.etl_user.username
         settings.NOTIFIER_ACTIVE = False
@@ -122,18 +122,18 @@ class TestSmileMessages(TestCase):
         send_notification.return_value = True
         access.return_value = os.R_OK
         msg = SMILEMessage.objects.create(
-            topic="new-request", request_id="08944_B", gene_panel="", message=self.new_request_str
+            topic="new-request", request_id="99991_B", gene_panel="", message=self.new_request_str
         )
         msg.in_progress()
         new_request(str(msg.id))
         msg.refresh_from_db()
-        request = Request.objects.filter(request_id="08944_B")
-        sample_1 = Sample.objects.filter(sample_id="08944_B_1")
-        sample_2 = Sample.objects.filter(sample_id="08944_B_2")
-        sample_3 = Sample.objects.filter(sample_id="08944_B_3")
-        sample_4 = Sample.objects.filter(sample_id="08944_B_4")
-        patient_1 = Patient.objects.filter(patient_id="C-MP76JR")
-        patient_2 = Patient.objects.filter(patient_id="C-4LM16H")
+        request = Request.objects.filter(request_id="99991_B")
+        sample_1 = Sample.objects.filter(sample_id="99991_B_1")
+        sample_2 = Sample.objects.filter(sample_id="99991_B_2")
+        sample_3 = Sample.objects.filter(sample_id="99991_B_3")
+        sample_4 = Sample.objects.filter(sample_id="99991_B_4")
+        patient_1 = Patient.objects.filter(patient_id="C-PPPP10")
+        patient_2 = Patient.objects.filter(patient_id="C-PPPPP1")
         self.assertEqual(request.count(), 1)
         self.assertEqual(sample_1.count(), 1)
         self.assertEqual(sample_2.count(), 1)
@@ -141,16 +141,16 @@ class TestSmileMessages(TestCase):
         self.assertEqual(sample_4.count(), 1)
         self.assertTrue(patient_1.count(), 1)
         self.assertTrue(patient_2.count(), 1)
-        study = StudyObject.get_by_request("08944_B")
+        study = StudyObject.get_by_request("99991_B")
         self.assertIsNotNone(study)
         self.assertListEqual(list(study[0].requests), list(request.all()))
         files = FileRepository.filter(
-            metadata={settings.REQUEST_ID_METADATA_KEY: "08944_B"}, file_group=self.file_group_id
+            metadata={settings.REQUEST_ID_METADATA_KEY: "99991_B"}, file_group=self.file_group_id
         )
         self.assertEqual(msg.status, SmileMessageStatus.COMPLETED)
         self.assertEqual(files.count(), 8)
         request = request.first()
-        samples = Sample.objects.filter(sample_id__startswith="08944_B").order_by("created_date").all()
+        samples = Sample.objects.filter(sample_id__startswith="99991_B").order_by("created_date").all()
         for sample in samples:
             self.assertEqual(sample.request_id, request.request_id)
         self.assertListEqual(study[0].samples, list(samples))
@@ -239,7 +239,7 @@ class TestSmileMessages(TestCase):
             msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
             msg.in_progress()
             update_request_job(str(msg.id))
-            files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D"})
+            files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "99990_D"})
             for file in files:
                 self.assertEqual(
                     file.metadata[settings.REQUEST_ID_METADATA_KEY],
@@ -290,7 +290,7 @@ class TestSmileMessages(TestCase):
             msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
             msg.in_progress()
             update_request_job(str(msg.id))
-            files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
+            files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "99990_D_2"})
             sample_names = []
             for file in files:
                 sample_name = file.metadata[settings.SAMPLE_ID_METADATA_KEY]
@@ -318,7 +318,7 @@ class TestSmileMessages(TestCase):
             jobGroupNotifierObjectGet.return_value = None
             send_notification.return_value = None
             sample_metadata = {}
-            sample_files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
+            sample_files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "99990_D_2"})
             for single_file in sample_files:
                 sample_name = single_file.metadata[settings.SAMPLE_ID_METADATA_KEY]
                 if sample_name not in sample_metadata:
@@ -326,7 +326,7 @@ class TestSmileMessages(TestCase):
             msg = SMILEMessage.objects.create(topic="update_request", message=self.update_request_str)
             msg.in_progress()
             update_request_job(str(msg.id))
-            files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "10075_D_2"})
+            files = FileRepository.filter(metadata={settings.REQUEST_ID_METADATA_KEY: "99990_D_2"})
             for file in files:
                 metadata_keys = file.metadata.keys()
                 sample_name = file.metadata[settings.SAMPLE_ID_METADATA_KEY]
@@ -390,7 +390,7 @@ class TestSmileMessages(TestCase):
             msg = SMILEMessage.objects.create(topic="update_sample", message=self.new_sample_data_str)
             msg.in_progress()
             update_sample_job(str(msg.id))
-            sample_files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "10075_D_2"})
+            sample_files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "99990_D_2"})
             for f in sample_files:
                 self.assertEqual(f.metadata["sampleName"], "TestSample001")
 
@@ -428,25 +428,25 @@ class TestSmileMessages(TestCase):
         access.return_value = os.R_OK
         settings.NOTIFIER_ACTIVE = False
 
-        new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
+        new_request_msg = SMILEMessage.objects.create(request_id="99908_C", message=self.new_request_99908_C_str)
         new_request_msg.in_progress()
         update_sample_msg = SMILEMessage.objects.create(
-            request_id="14269_C_1", message=self.update_sample_14269_C_1_str
+            request_id="99908_C_1", message=self.update_sample_99908_C_1_str
         )
         new_request(new_request_msg.id)
         tumor_or_normal = FileRepository.filter(
-            metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "99908_C_1"},
             values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
         ).first()
         self.assertEqual(tumor_or_normal, "Normal")
         update_sample_job(update_sample_msg.id)
         tumor_or_normal = FileRepository.filter(
-            metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "99908_C_1"},
             values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
         ).first()
         self.assertEqual(tumor_or_normal, "Tumor")
 
-        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"})
+        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "99908_C_1"})
         self.assertEqual(len(files), 2)
 
         for file in files:
@@ -490,26 +490,26 @@ class TestSmileMessages(TestCase):
         settings.NOTIFIER_ACTIVE = False
         path_exists.return_value = True
 
-        new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
+        new_request_msg = SMILEMessage.objects.create(request_id="99908_C", message=self.new_request_99908_C_str)
         new_request_msg.in_progress()
         update_sample_msg = SMILEMessage.objects.create(
-            request_id="14269_C_1", message=self.update_sample_14269_C_1_new_files_str
+            request_id="99908_C_1", message=self.update_sample_99908_C_1_new_files_str
         )
         update_sample_msg.in_progress()
         new_request(new_request_msg.id)
         tumor_or_normal = FileRepository.filter(
-            metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "99908_C_1"},
             values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
         ).first()
         self.assertEqual(tumor_or_normal, "Normal")
         update_sample_job(update_sample_msg.id)
         tumor_or_normal = FileRepository.filter(
-            metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"},
+            metadata={settings.SAMPLE_ID_METADATA_KEY: "99908_C_1"},
             values_metadata=settings.TUMOR_OR_NORMAL_METADATA_KEY,
         ).first()
         self.assertEqual(tumor_or_normal, "Tumor")
 
-        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "14269_C_1"})
+        files = FileRepository.filter(metadata={settings.SAMPLE_ID_METADATA_KEY: "99908_C_1"})
         self.assertEqual(len(files), 2)
 
         for file in files:
@@ -550,16 +550,16 @@ class TestSmileMessages(TestCase):
         path_exists.return_value = True
         calculate_checksum.return_value = None
 
-        new_request_msg = SMILEMessage.objects.create(request_id="14269_C", message=self.new_request_14269_C_str)
+        new_request_msg = SMILEMessage.objects.create(request_id="99908_C", message=self.new_request_99908_C_str)
         new_request(new_request_msg.id)
-        test_14269_C_1_update_sample = os.path.join(settings.TEST_FIXTURE_DIR, "14269_C_1_update_sample.json")
-        with open(test_14269_C_1_update_sample) as update_sample_14269_C_1:
-            self.update_sample_14269_C_1 = json.load(update_sample_14269_C_1)
-        self.update_sample_14269_C_1_str = json.dumps(self.update_sample_14269_C_1)
+        test_99908_C_1_update_sample = os.path.join(settings.TEST_FIXTURE_DIR, "99908_C_1_update_sample.json")
+        with open(test_99908_C_1_update_sample) as update_sample_99908_C_1:
+            self.update_sample_99908_C_1 = json.load(update_sample_99908_C_1)
+        self.update_sample_99908_C_1_str = json.dumps(self.update_sample_99908_C_1)
         msg = SMILEMessage.objects.create(
             topic="MDB_STREAM.server.cpt-gateway.cmo-sample-update",
-            request_id="14269_C",
-            message=self.update_sample_14269_C_1_str,
+            request_id="99908_C",
+            message=self.update_sample_99908_C_1_str,
             status=SmileMessageStatus.PENDING,
         )
         update_sample_job(str(msg.id))

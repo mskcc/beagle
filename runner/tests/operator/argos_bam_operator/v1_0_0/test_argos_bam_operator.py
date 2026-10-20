@@ -42,9 +42,9 @@ class TestArgosBamOperator(TestCase):
         This test loads some Argos fixtures and checks the number of Files available to the Operator
         """
         # Load fixtures; 4 fastq files for 2 patient samples
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.file.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.filemetadata.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.filemetadata.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         request_id = "bar"
@@ -62,9 +62,9 @@ class TestArgosBamOperator(TestCase):
         Test that a Argos operator has access to all files in the database, even non-Argos files
         """
         # Load fixtures; 4 fastq files for 2 patient samples
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.file.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.file.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
-        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "10075_D_single_TN_pair.filemetadata.json")
+        test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.filemetadata.json")
         call_command("loaddata", test_files_fixture, verbosity=0)
 
         self.assertEqual(len(File.objects.all()), 4)

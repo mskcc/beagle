@@ -9,10 +9,10 @@ from runner.operator.operator_factory import OperatorFactory
 
 
 FIXTURES = [
-    "fixtures/tests/access_fastq_to_bam/10151_F.file.json",
-    "fixtures/tests/access_fastq_to_bam/10151_F.filemetadata.json",
-    "fixtures/tests/access_fastq_to_bam/10151_F.port.json",
-    "fixtures/tests/access_fastq_to_bam/10151_F.run.json",
+    "fixtures/tests/access_fastq_to_bam/99996_F.file.json",
+    "fixtures/tests/access_fastq_to_bam/99996_F.filemetadata.json",
+    "fixtures/tests/access_fastq_to_bam/99996_F.port.json",
+    "fixtures/tests/access_fastq_to_bam/99996_F.run.json",
 ]
 
 COMMON_FIXTURES = [

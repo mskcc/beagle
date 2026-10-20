@@ -12,8 +12,8 @@ from django.core.management import call_command
 
 
 FIXTURES = [
-    "fixtures/tests/merge_fastqs/10151_F_13.file.json",
-    "fixtures/tests/merge_fastqs/10151_F_13.filemetadata.json",
+    "fixtures/tests/merge_fastqs/99996_F_13.file.json",
+    "fixtures/tests/merge_fastqs/99996_F_13.filemetadata.json",
 ]
 
 COMMON_FIXTURES = [
@@ -40,7 +40,7 @@ class TestCMOCHNucleoOperator(TestCase):
         self.assertEqual(len(File.objects.all()), operator_files_count)
         self.assertEqual(len(FileMetadata.objects.all()), operator_files_count)
 
-        request_id = "10151_F"
+        request_id = "99996_F"
 
         operator_model = Operator.objects.get(id=26)
         operator = OperatorFactory.get_by_model(operator_model, request_id=request_id)

@@ -39,7 +39,7 @@ class TestFetchSamples(TestCase):
     #     self.assertTrue(len(files_metadata) == 0)
     #     self.assertTrue(len(jobs) == 0)
     #
-    #     request_id = "10075_D"
+    #     request_id = "99990_D"
     #     # child_jobs = fetch_samples(request_id=request_id)
     #
     #     # check that jobs were created successfully

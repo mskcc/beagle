@@ -109,7 +109,7 @@
     "genome": "GRCh37",
     "facets_pcval": 500,
     "project_prefix": [
-      "09670_D"
+      "99906_D"
     ],
     "facets_cval": 100,
     "mutect_dcov": 50000,

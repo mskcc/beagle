@@ -295,7 +295,7 @@
       "facets_pcval": 500,
       "gatk_jar_path": "/usr/bin/gatk.jar",
       "project_prefix": [
-        "09670_D"
+        "99906_D"
       ],
       "opt_dup_pix_dist": "2500",
       "emit_original_quals": true,
@@ -304,8 +304,8 @@
     "pair": [
       {
         "CN": "MSKCC",
-        "ID": "10075_D_5",
-        "LB": "10075_D_5_1_1_1",
+        "ID": "99990_D_5",
+        "LB": "99990_D_5_1_1_1",
         "PL": "Illumina",
         "PU": [
         ],
@@ -322,12 +322,12 @@
         ],
         "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
         "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-        "bwa_output": "10075_D_5.bam"
+        "bwa_output": "99990_D_5.bam"
       },
       {
         "CN": "MSKCC",
-        "ID": "10075_D_3",
-        "LB": "10075_D_3",
+        "ID": "99990_D_3",
+        "LB": "99990_D_3",
         "PL": "Illumina",
         "PU": [
         ],
@@ -344,7 +344,7 @@
         ],
         "adapter": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCACATGAGCATCTCGTATGCCGTCTTCTGCTTG",
         "adapter2": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-        "bwa_output": "10075_D_3.bam"
+        "bwa_output": "99990_D_3.bam"
       }
     ]
   }

@@ -5,9 +5,9 @@
     "fields": {
       "created_date": "2020-10-07T16:03:56.488Z",
       "modified_date": "2022-04-27T19:58:14.058Z",
-      "sample_id": "08944_B_4",
-      "sample_name": "C-4LM16H-N001-d",
-      "cmo_sample_name": "s_C_4LM16H_N001_d",
+      "sample_id": "99991_B_4",
+      "sample_name": "C-PPPPP1-N001-d",
+      "cmo_sample_name": "s_C_PPPPP1_N001_d",
       "latest": true,
       "version": 0,
       "redact": false
@@ -19,9 +19,9 @@
     "fields": {
       "created_date": "2020-10-07T16:03:56.493Z",
       "modified_date": "2022-04-27T19:24:43.595Z",
-      "sample_id": "08944_B_3",
-      "sample_name": "C-4LM16H-X001-d",
-      "cmo_sample_name": "s_C_4LM16H_X001_d",
+      "sample_id": "99991_B_3",
+      "sample_name": "C-PPPPP1-X001-d",
+      "cmo_sample_name": "s_C_PPPPP1_X001_d",
       "latest": true,
       "version": 0,
       "redact": false

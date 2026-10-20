@@ -5,7 +5,7 @@ from runner.models import Run, Port, PortType, Pipeline, RunStatus
 from runner.operator.access import get_unfiltered_matched_normal, DMP_IMPACT_ASSAYS, ACCESS_ASSAY
 
 
-TEST_PATIENT_ID = "C-000884"
+TEST_PATIENT_ID = "C-PPPP19"
 REQUEST_ID = "access_legacy_test_request"
 
 
@@ -14,7 +14,7 @@ class TestMatchedNormalSearch(TestCase):
         """
         Test a matching unfiltered normal, same request ID
         """
-        file_name = "C-000884-N001-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam"
+        file_name = "C-PPPP19-N001-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam"
         file_path = "/test/" + file_name
 
         fg = FileGroup.objects.create(name="test", slug="test")
@@ -38,7 +38,7 @@ class TestMatchedNormalSearch(TestCase):
         """
         Test a matching unfiltered normal, different request ID
         """
-        file_name = "C-000884-N001-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam"
+        file_name = "C-PPPP19-N001-d_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam"
         file_path = "/test/" + file_name
 
         fg = FileGroup.objects.create(name="test", slug="test")
@@ -62,7 +62,7 @@ class TestMatchedNormalSearch(TestCase):
         """
         Test matching unfiltered normal DMP ACCESS
         """
-        file_name = "000884-unfilter.bam"
+        file_name = "PPPP19-unfilter.bam"
         file_path = "/test/" + file_name
 
         fg = FileGroup.objects.create(name="test", slug="test")
@@ -80,7 +80,7 @@ class TestMatchedNormalSearch(TestCase):
         """
         Test matching unfiltered normal DMP IMPACT
         """
-        file_name = "C-000884.bam"
+        file_name = "C-PPPP19.bam"
         file_path = "/test/" + file_name
 
         fg = FileGroup.objects.create(name="test", slug="test")
@@ -91,13 +91,13 @@ class TestMatchedNormalSearch(TestCase):
             metadata={"cmo_assay": DMP_IMPACT_ASSAYS[0], "type": "N", "patient": {"cmo": TEST_PATIENT_ID.lstrip("C-")}},
         )
 
-        normal, sample_id = get_unfiltered_matched_normal("C-000884", REQUEST_ID)
+        normal, sample_id = get_unfiltered_matched_normal("C-PPPP19", REQUEST_ID)
         self.assertEqual(normal.file_name, file_name)
 
     def test_empty_genotyping_result(self):
         """
         Test no matching normal found
         """
-        normal, sample_id = get_unfiltered_matched_normal("C-000884", REQUEST_ID)
+        normal, sample_id = get_unfiltered_matched_normal("C-PPPP19", REQUEST_ID)
         self.assertIsNone(normal)
         self.assertEqual(sample_id, "")
