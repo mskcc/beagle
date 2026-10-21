@@ -59,9 +59,7 @@ class StrideOperator(Operator):
 
     def get_jobs(self, sample_ids=None):
         if not sample_ids:
-            raise Exception(
-                "STRiDE: no sample_ids given; this operator requires an explicit list of tumor sample ids"
-            )
+            raise Exception("STRiDE: no sample_ids given; this operator requires an explicit list of tumor sample ids")
 
         app = self.get_pipeline_id()
         pipeline = Pipeline.objects.get(id=app)

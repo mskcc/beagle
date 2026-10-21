@@ -659,9 +659,7 @@ class BulkSamplesOperatorViewSet(GenericAPIView):
                 job_group, "{} DMP XS sample(s)".format(len(sample_ids)), operator=pipeline.operator
             )
 
-        logging.info(
-            "Submitting %d DMP XS sample(s) to pipeline %s, one Run each" % (len(sample_ids), pipeline)
-        )
+        logging.info("Submitting %d DMP XS sample(s) to pipeline %s, one Run each" % (len(sample_ids), pipeline))
         for sample_id in sample_ids:
             create_operator_run_from_jobs.delay(
                 pipeline.operator_id,
