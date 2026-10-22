@@ -57,7 +57,13 @@ def check_genotype_list(genotyping_bams, genotyping_bams_ids):
             f"list of genotyping bams: {genotyping_bams} is a different length from list of genotyping ids {genotyping_bams_ids}"
         )
     for ix in range(len(genotyping_bams_ids)):
-        id = genotyping_bams_ids[ix].replace("-CURATED", "").replace("-DUPLEX", "").replace("-SIMPLEX", "").replace("-NORMAL", "")
+        id = (
+            genotyping_bams_ids[ix]
+            .replace("-CURATED", "")
+            .replace("-DUPLEX", "")
+            .replace("-SIMPLEX", "")
+            .replace("-NORMAL", "")
+        )
         bam = genotyping_bams[ix]["location"]
         if id not in bam:
             raise Exception(f"Sample ID, {id} does not match bam path: {bam}")
