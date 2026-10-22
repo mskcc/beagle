@@ -24,9 +24,11 @@ from notifier.tasks import notifier_start, send_notification
 from runner.models import Operator, OperatorErrors, OperatorRun, Pipeline, Port, Run, RunStatus
 from runner.operator.operator_factory import OperatorFactory
 from runner.run.objects.run_creator_object import RunCreator
+from runner.operator.access.dmp_samples import find_all_clinical_access_tumor_sample_ids
 from runner.serializers import (
     AionOperatorSerializer,
     ArgosPairingSerializer,
+    BulkSamplesOperatorSerializer,
     CWLJsonSerializer,
     OperatorErrorSerializer,
     OperatorLatestSamplesQuerySerializer,
@@ -42,6 +44,7 @@ from runner.serializers import (
     RunSerializerCWLOutput,
     RunSerializerFull,
     RunSerializerPartial,
+    SampleIdsOperatorSerializer,
     TempoMPGenOperatorSerializer,
     TerminateRunSerializer,
 )
@@ -525,6 +528,149 @@ class PairsOperatorViewSet(GenericAPIView):
         body = {
             "details": "Operator Job submitted to pipelines %s, job group id %s, with pairs %s"
             % (pipeline_names, job_group_id, str(pairs))
+        }
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
+
+class SamplesOperatorViewSet(GenericAPIView):
+    """
+    Submit an operator run against an explicit list of sample ids, rather than
+    an IGO request id (e.g. STRiDE, which runs ad hoc against a chosen cohort
+    of DMP clinical ACCESS samples). ``sample_ids`` is passed straight through
+    to the operator's ``get_jobs(sample_ids=...)``.
+    """
+
+    serializer_class = SampleIdsOperatorSerializer
+
+    def post(self, request):
+        sample_ids = request.data.get("sample_ids")
+        pipeline_name = request.data.get("pipeline")
+        pipeline_version = request.data.get("pipeline_version", None)
+        job_group_id = request.data.get("job_group_id", None)
+
+        errors = []
+        if not sample_ids:
+            errors.append("sample_ids needs to be specified")
+        if not pipeline_name:
+            errors.append("pipeline needs to be specified")
+        if job_group_id and not JobGroup.objects.filter(id=job_group_id).exists():
+            errors.append("job group id does not exist, this field is optional")
+        if errors:
+            return Response({"details": errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        if pipeline_version:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
+        else:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, default=True)
+
+        if not job_group_id:
+            job_group = JobGroup()
+            job_group.save()
+            job_group_id = str(job_group.id)
+        else:
+            job_group = JobGroup.objects.get(id=job_group_id)
+
+        try:
+            job_group_notifier = JobGroupNotifier.objects.get(
+                job_group_id=job_group_id, notifier_type_id=pipeline.operator.notifier_id
+            )
+            job_group_notifier_id = str(job_group_notifier.id)
+        except JobGroupNotifier.DoesNotExist:
+            job_group_notifier_id = notifier_start(
+                job_group, "{} Sample(s)".format(len(sample_ids)), operator=pipeline.operator
+            )
+
+        logging.info("Submitting %d sample(s) to pipeline %s" % (len(sample_ids), pipeline))
+        create_operator_run_from_jobs.delay(
+            pipeline.operator_id,
+            job_group_id=job_group_id,
+            job_group_notifier_id=job_group_notifier_id,
+            sample_ids=sample_ids,
+        )
+
+        body = {
+            "details": "Operator Job submitted to pipeline %s, job group id %s, with samples %s"
+            % (pipeline_name, job_group_id, str(sample_ids))
+        }
+        return Response(body, status=status.HTTP_202_ACCEPTED)
+
+
+class BulkSamplesOperatorViewSet(GenericAPIView):
+    """
+    Submit every currently-active clinical ACCESS (XS1/XS2) tumor sample in
+    the "dmp-bams" file group through the given pipeline -- one sample per
+    Run, not chunked. Each sample gets its own isolated output directory, so
+    a later rerun of just one sample (e.g. its data or sample id changed)
+    never shares a directory with unrelated samples (see STRIDE_RUN's shared
+    publishDir, which is what makes chunking a real footgun for this use
+    case). Works with any operator whose get_jobs accepts sample_ids=[...],
+    same mechanism as SamplesOperatorViewSet -- not specific to STRiDE.
+    """
+
+    serializer_class = BulkSamplesOperatorSerializer
+
+    def post(self, request):
+        pipeline_name = request.data.get("pipeline")
+        pipeline_version = request.data.get("pipeline_version", None)
+        job_group_id = request.data.get("job_group_id", None)
+        limit = request.data.get("limit", None)
+
+        errors = []
+        if not pipeline_name:
+            errors.append("pipeline needs to be specified")
+        if job_group_id and not JobGroup.objects.filter(id=job_group_id).exists():
+            errors.append("job group id does not exist, this field is optional")
+        if limit is not None and (not isinstance(limit, int) or limit < 1):
+            errors.append("limit must be a positive integer, this field is optional")
+        if errors:
+            return Response({"details": errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        if pipeline_version:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, version=pipeline_version)
+        else:
+            pipeline = get_object_or_404(Pipeline, name=pipeline_name, default=True)
+
+        sample_ids = find_all_clinical_access_tumor_sample_ids()
+        if not sample_ids:
+            return Response(
+                {"details": "No active clinical ACCESS tumor samples found in dmp-bams"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if limit:
+            # e.g. for testing against a handful of samples before submitting the full backlog
+            sample_ids = sample_ids[:limit]
+
+        if not job_group_id:
+            job_group = JobGroup()
+            job_group.save()
+            job_group_id = str(job_group.id)
+        else:
+            job_group = JobGroup.objects.get(id=job_group_id)
+
+        try:
+            job_group_notifier = JobGroupNotifier.objects.get(
+                job_group_id=job_group_id, notifier_type_id=pipeline.operator.notifier_id
+            )
+            job_group_notifier_id = str(job_group_notifier.id)
+        except JobGroupNotifier.DoesNotExist:
+            # Bounded label, not a join of every sample id -- JobGroupNotifier.request_id
+            # is CharField(max_length=100) (see the SamplesOperatorViewSet fix above).
+            job_group_notifier_id = notifier_start(
+                job_group, "{} DMP XS sample(s)".format(len(sample_ids)), operator=pipeline.operator
+            )
+
+        logging.info("Submitting %d DMP XS sample(s) to pipeline %s, one Run each" % (len(sample_ids), pipeline))
+        for sample_id in sample_ids:
+            create_operator_run_from_jobs.delay(
+                pipeline.operator_id,
+                job_group_id=job_group_id,
+                job_group_notifier_id=job_group_notifier_id,
+                sample_ids=[sample_id],
+            )
+
+        body = {
+            "details": "Operator job submitted to pipeline %s, job group id %s, for %d sample(s), one Run each"
+            % (pipeline_name, job_group_id, len(sample_ids))
         }
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
