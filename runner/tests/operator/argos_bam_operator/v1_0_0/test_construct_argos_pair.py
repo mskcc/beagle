@@ -15,7 +15,6 @@ from django.core.management import call_command
 class TestConstructPair(TestCase):
     # load fixtures for the test case temp db
     fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
-    maxDiff = None
 
     def setUp(self):
         os.environ["TMPDIR"] = ""
@@ -64,4 +63,4 @@ class TestConstructPair(TestCase):
             open(os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.argos_bam_1_0_0.input.json"))
         )
         print("Running test_construct_argos_jobs1")
-        self.assertEqual(argos_inputs, expected_inputs)
+        self.assertTrue(argos_inputs == expected_inputs)

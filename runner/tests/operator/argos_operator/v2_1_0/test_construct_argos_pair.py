@@ -14,7 +14,6 @@ from runner.operator.argos_operator.v2_1_0.construct_argos_pair import construct
 class TestConstructPair(TestCase):
     # load fixtures for the test case temp db
     fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
-    maxDiff = None
 
     def setUp(self):
         os.environ["TMPDIR"] = ""
@@ -64,7 +63,7 @@ class TestConstructPair(TestCase):
         )
 
         print("Running test_construct_argos_jobs1")
-        self.assertEqual(argos_inputs, expected_inputs)
+        self.assertTrue(argos_inputs == expected_inputs)
 
     def test_construct_argos_jobs_pdx(self):
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99991_B.fixtures.json")
@@ -102,7 +101,7 @@ class TestConstructPair(TestCase):
         argos_inputs, error_samples = construct_argos_jobs(samples)
         expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "99991_B.argos.input.json")))
         print("Running test_construct_argos_jobs_pdx")
-        self.assertEqual(argos_inputs, expected_inputs)
+        self.assertTrue(argos_inputs == expected_inputs)
 
     def test_construct_argos_jobs_bam_pdx(self):
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99909_B.fixtures_pdx.json")
@@ -142,7 +141,7 @@ class TestConstructPair(TestCase):
         argos_inputs, error_samples = construct_argos_jobs(samples)
         expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "argos_pdx.inputs.json")))
         print("Running test_construct_argos_jobs_pdx")
-        self.assertEqual(argos_inputs, expected_inputs)
+        self.assertTrue(argos_inputs == expected_inputs)
 
     def test_construct_argos_jobs_bam_non_pdx(self):
         test_files_fixture = os.path.join(settings.TEST_FIXTURE_DIR, "99909_B.fixtures_non_pdx.json")
@@ -182,4 +181,4 @@ class TestConstructPair(TestCase):
         argos_inputs, error_samples = construct_argos_jobs(samples)
         expected_inputs = json.load(open(os.path.join(settings.TEST_FIXTURE_DIR, "argos_non_pdx.inputs.json")))
         print("Running test_construct_argos_jobs_bam_non_pdx")
-        self.assertEqual(argos_inputs, expected_inputs)
+        self.assertTrue(argos_inputs == expected_inputs)

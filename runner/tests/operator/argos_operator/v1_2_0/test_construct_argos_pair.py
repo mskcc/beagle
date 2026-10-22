@@ -14,7 +14,6 @@ from runner.operator.argos_operator.v1_2_0.construct_argos_pair import construct
 class TestConstructPair(TestCase):
     # load fixtures for the test case temp db
     fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
-    maxDiff = None
 
     def setUp(self):
         os.environ["TMPDIR"] = ""
@@ -63,4 +62,4 @@ class TestConstructPair(TestCase):
             open(os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.argos.input.json"))
         )
         print("Running test_construct_argos_jobs1")
-        self.assertEqual(argos_inputs, expected_inputs)
+        self.assertTrue(argos_inputs == expected_inputs)
