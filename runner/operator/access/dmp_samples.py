@@ -35,15 +35,18 @@ def find_all_clinical_access_tumor_sample_ids():
 def find_submitted_sample_ids(sample_ids, pipeline):
     """
     The subset of sample_ids that already have a Run for this pipeline (exact
-    version) that isn't FAILED/TERMINATED. Matched through Run.samples, which
-    is filled in from the run's input files when the run becomes ready.
+    version) that isn't FAILED/TERMINATED. Checks both Run.samples (filled in
+    from the run's registered input files) and the run's tags["sample_ids"].
+    The tag is what catches STRiDE: its bams go in through a rendered
+    samplesheet rather than as File inputs, and DMP bam files key the sample
+    under metadata["sample"] rather than primaryId, so Run.samples stays empty.
     """
-    return set(
-        Run.objects.filter(
-            app=pipeline,
-            samples__sample_id__in=sample_ids,
-            status__in=SUBMITTED_RUN_STATUSES,
-        )
-        .values_list("samples__sample_id", flat=True)
-        .distinct()
+    sample_ids = set(sample_ids)
+    runs = Run.objects.filter(app=pipeline, status__in=SUBMITTED_RUN_STATUSES)
+    submitted = set(
+        runs.filter(samples__sample_id__in=sample_ids).values_list("samples__sample_id", flat=True).distinct()
     )
+    for tagged_ids in runs.filter(tags__has_key="sample_ids").values_list("tags__sample_ids", flat=True):
+        if isinstance(tagged_ids, list):
+            submitted.update(sample_ids.intersection(tagged_ids))
+    return submitted
