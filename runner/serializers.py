@@ -309,6 +309,12 @@ class BulkSamplesOperatorSerializer(serializers.Serializer):
     limit = serializers.IntegerField(
         required=False, min_value=1, help_text="Optional cap on how many discovered samples to submit, e.g. for testing"
     )
+    skip_existing = serializers.BooleanField(
+        required=False,
+        default=True,
+        help_text="Skip samples that already have a non-failed Run for this pipeline version (default true), "
+        "so repeated calls with limit submit the next chunk",
+    )
 
 
 class PairOperatorSerializer(serializers.Serializer):
