@@ -24,7 +24,7 @@ from notifier.tasks import notifier_start, send_notification
 from runner.models import Operator, OperatorErrors, OperatorRun, Pipeline, Port, Run, RunStatus
 from runner.operator.operator_factory import OperatorFactory
 from runner.run.objects.run_creator_object import RunCreator
-from runner.operator.access.dmp_samples import find_all_clinical_access_tumor_sample_ids
+from runner.operator.access.dmp_samples import find_all_clinical_access_tumor_sample_ids, find_submitted_sample_ids
 from runner.serializers import (
     AionOperatorSerializer,
     ArgosPairingSerializer,
@@ -605,6 +605,12 @@ class BulkSamplesOperatorViewSet(GenericAPIView):
     publishDir, which is what makes chunking a real footgun for this use
     case). Works with any operator whose get_jobs accepts sample_ids=[...],
     same mechanism as SamplesOperatorViewSet -- not specific to STRiDE.
+
+    By default (skip_existing=true) samples that already have a non-failed Run
+    for this pipeline version are left out, so calling repeatedly with limit
+    walks through the backlog one chunk at a time. Wait for the previous
+    chunk's Runs to be created before sending the next one -- they're created
+    asynchronously, and until they exist those samples aren't skipped.
     """
 
     serializer_class = BulkSamplesOperatorSerializer
@@ -614,6 +620,7 @@ class BulkSamplesOperatorViewSet(GenericAPIView):
         pipeline_version = request.data.get("pipeline_version", None)
         job_group_id = request.data.get("job_group_id", None)
         limit = request.data.get("limit", None)
+        skip_existing = request.data.get("skip_existing", True)
 
         errors = []
         if not pipeline_name:
@@ -622,6 +629,8 @@ class BulkSamplesOperatorViewSet(GenericAPIView):
             errors.append("job group id does not exist, this field is optional")
         if limit is not None and (not isinstance(limit, int) or limit < 1):
             errors.append("limit must be a positive integer, this field is optional")
+        if not isinstance(skip_existing, bool):
+            errors.append("skip_existing must be a boolean, this field is optional")
         if errors:
             return Response({"details": errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -636,9 +645,25 @@ class BulkSamplesOperatorViewSet(GenericAPIView):
                 {"details": "No active clinical ACCESS tumor samples found in dmp-bams"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        total_count = len(sample_ids)
+        skipped_count = 0
+        if skip_existing:
+            submitted = find_submitted_sample_ids(sample_ids, pipeline)
+            sample_ids = [sample_id for sample_id in sample_ids if sample_id not in submitted]
+            skipped_count = total_count - len(sample_ids)
+            if not sample_ids:
+                return Response(
+                    {
+                        "details": "All %d active clinical ACCESS tumor samples already have a Run for pipeline %s"
+                        % (total_count, pipeline_name)
+                    },
+                    status=status.HTTP_200_OK,
+                )
         if limit:
-            # e.g. for testing against a handful of samples before submitting the full backlog
+            # e.g. for testing against a handful of samples before submitting the full backlog,
+            # or, with skip_existing, submitting the backlog one chunk at a time
             sample_ids = sample_ids[:limit]
+        remaining_count = total_count - skipped_count - len(sample_ids)
 
         if not job_group_id:
             job_group = JobGroup()
@@ -670,7 +695,11 @@ class BulkSamplesOperatorViewSet(GenericAPIView):
 
         body = {
             "details": "Operator job submitted to pipeline %s, job group id %s, for %d sample(s), one Run each"
-            % (pipeline_name, job_group_id, len(sample_ids))
+            % (pipeline_name, job_group_id, len(sample_ids)),
+            "submitted": len(sample_ids),
+            "skipped_existing": skipped_count,
+            "remaining": remaining_count,
+            "total": total_count,
         }
         return Response(body, status=status.HTTP_202_ACCEPTED)
 
