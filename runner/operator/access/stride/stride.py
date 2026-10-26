@@ -95,7 +95,7 @@ class StrideOperator(Operator):
         return json.loads(template.render(input=json.dumps(rows)))
 
     def _build_row(self, sample_id):
-        tumor_meta, tumor_bam = self._clinical_standard_bam(metadata__sample=sample_id)
+        tumor_meta, tumor_bam = self._clinical_standard_bam(metadata__contains={"sample": sample_id})
         if not tumor_meta:
             LOGGER.warning("STRiDE: no clinical ACCESS sample found for %s; skipping", sample_id)
             return None
@@ -113,10 +113,12 @@ class StrideOperator(Operator):
         patient_prefix = patient_prefix.group(1) + "-"
 
         normal_meta, normal_bam = self._clinical_standard_bam(
-            metadata__project_name=tumor_meta.get("project_name"),
+            metadata__contains={
+                "project_name": tumor_meta.get("project_name"),
+                "assay": tumor_meta.get("assay"),
+                "type": "N",
+            },
             metadata__sample__startswith=patient_prefix,
-            metadata__assay=tumor_meta.get("assay"),
-            metadata__type="N",
         )
         if not normal_meta or not normal_bam:
             LOGGER.warning(
@@ -145,6 +147,10 @@ class StrideOperator(Operator):
         same metadata, so filtering straight to the standard bam's row gives
         both the metadata and its path in one query. Returns (None, None) if
         nothing matches.
+
+        Pass exact-match metadata keys as metadata__contains={...} rather than
+        metadata__<key>=...: only containment (@>) can use the metadata_gin
+        index, the plain key lookups scan every dmp-bams row (~0.4s vs ~5ms).
         """
         fm = (
             FileRepository.filter(file_group=DMP_BAM_FILE_GROUP)
