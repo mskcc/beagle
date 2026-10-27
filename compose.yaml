@@ -185,6 +185,9 @@ services:
       - DB_PASSWORD=${BEAGLE_DB_PASSWORD}
       - DB_PORT=5432
       - AUTH_TYPE=plain
+      - POOL_MODE=transaction
+      - DEFAULT_POOL_SIZE=60
+      - MAX_CLIENT_CONN=500
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -393,7 +396,7 @@ services:
           -Q ${BEAGLE_DEFAULT_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_DEFAULT_QUEUE}.log \
           --pidfile $$PIDFILE \
-          --concurrency=100 \
+          --concurrency=50 \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE}
     healthcheck:
       test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE} || exit 1"
