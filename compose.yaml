@@ -396,7 +396,7 @@ services:
           -Q ${BEAGLE_DEFAULT_QUEUE} \
           -f /beagle/celery/logs/${BEAGLE_DEFAULT_QUEUE}.log \
           --pidfile $$PIDFILE \
-          --concurrency=50 \
+          --concurrency=100 \
           -n beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE}
     healthcheck:
       test: "celery --workdir ${BEAGLE_PATH} -A beagle_etl status -d celery@beagle.${BEAGLE_DEPLOYMENT}.${BEAGLE_DEFAULT_QUEUE} || exit 1"
