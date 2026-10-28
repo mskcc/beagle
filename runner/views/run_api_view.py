@@ -672,24 +672,13 @@ class BulkSamplesOperatorViewSet(GenericAPIView):
         else:
             job_group = JobGroup.objects.get(id=job_group_id)
 
-        try:
-            job_group_notifier = JobGroupNotifier.objects.get(
-                job_group_id=job_group_id, notifier_type_id=pipeline.operator.notifier_id
-            )
-            job_group_notifier_id = str(job_group_notifier.id)
-        except JobGroupNotifier.DoesNotExist:
-            # Bounded label, not a join of every sample id -- JobGroupNotifier.request_id
-            # is CharField(max_length=100) (see the SamplesOperatorViewSet fix above).
-            job_group_notifier_id = notifier_start(
-                job_group, "{} DMP XS sample(s)".format(len(sample_ids)), operator=pipeline.operator
-            )
-
+        # No notifier: one Run per sample would send thousands of updates to a single ticket.
         logging.info("Submitting %d DMP XS sample(s) to pipeline %s, one Run each" % (len(sample_ids), pipeline))
         for sample_id in sample_ids:
             create_operator_run_from_jobs.delay(
                 pipeline.operator_id,
                 job_group_id=job_group_id,
-                job_group_notifier_id=job_group_notifier_id,
+                job_group_notifier_id=None,
                 sample_ids=[sample_id],
             )
 

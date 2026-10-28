@@ -25,7 +25,8 @@ def find_all_clinical_access_tumor_sample_ids():
             metadata__assay__in=CLINICAL_ACCESS_ASSAYS,
             metadata__type="T",
         )
-        .exclude(metadata__active=False)
+        # contains, not metadata__active=False: that exclude also drops samples with no "active" key
+        .exclude(metadata__contains={"active": False})
         .values_list("metadata__sample", flat=True)
         .distinct()
     )

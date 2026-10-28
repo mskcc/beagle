@@ -67,7 +67,8 @@ class StrideOperator(Operator):
 
         rows = [row for row in (self._build_row(sample_id) for sample_id in sample_ids) if row]
         if not rows:
-            raise Exception("STRiDE: no samplesheet rows could be built for sample_ids {}".format(sample_ids))
+            LOGGER.warning("STRiDE: no samplesheet rows could be built for sample_ids %s; no run created", sample_ids)
+            return []
 
         job_json = {
             "name": "STRiDE: {} sample(s), {}".format(len(rows), run_date),
@@ -159,6 +160,7 @@ class StrideOperator(Operator):
                 metadata__assay__in=CLINICAL_ACCESS_ASSAYS,
                 **metadata_filters,
             )
+            .exclude(metadata__contains={"active": False})
             .order_by("file__file_name")
             .first()
         )
