@@ -185,6 +185,9 @@ services:
       - DB_PASSWORD=${BEAGLE_DB_PASSWORD}
       - DB_PORT=5432
       - AUTH_TYPE=plain
+      - POOL_MODE=transaction
+      - DEFAULT_POOL_SIZE=60
+      - MAX_CLIENT_CONN=500
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |

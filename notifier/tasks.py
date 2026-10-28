@@ -65,8 +65,11 @@ def notifier_start(job_group, request_id, operator=None, metadata={}):
     return None
 
 
-@shared_task
+@shared_task(ignore_result=True)
 def send_notification(event):
+    if not event.get("job_notifier"):
+        logger.debug("Skipping %s: no job_notifier", event.get("class"))
+        return
     if settings.NOTIFIER_ACTIVE:
         logger.info(event)
         eh = event_handler(event["job_notifier"])
