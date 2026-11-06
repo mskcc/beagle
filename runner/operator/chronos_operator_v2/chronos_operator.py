@@ -265,8 +265,8 @@ class ChronosOperatorV2(Operator):
 
         samples_to_process = []
         for sample in samples:
-            ci_tag = self.get_cmo_sample_name(sample)
-            check_bam_path = os.path.join(DESTINATION_DIRECTORY, f"{ci_tag}", f"{ci_tag}.bam")
+            cmo_sample_name = self.get_cmo_sample_name(sample)
+            check_bam_path = os.path.join(DESTINATION_DIRECTORY, f"{cmo_sample_name}")
             if os.path.exists(check_bam_path):
                 LOGGER.info(f"{sample} already generated, {check_bam_path} exist. Skip")
                 continue
