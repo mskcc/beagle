@@ -295,7 +295,7 @@ class TempoMPGenOperator(Operator):
         return self.write_to_file("sample_conflict.txt", conflict_string)
 
     def create_pairing_file(self):
-        pairing_string = "NORMAL_ID\tTUMOR_ID\n"
+        pairing_string = "NORMAL_ID\tTUMOR_ID\tNORMAL_PRIMARY_ID\tTUMOR_PRIMARY_ID\n"
         for patient_id in self.patients:
             pairing_string += self.patients[patient_id].create_pairing_string()
         self.write_historical_pairing_file(pairing_string)

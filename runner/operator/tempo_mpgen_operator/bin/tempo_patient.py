@@ -151,7 +151,10 @@ class Patient:
             for pair in self.sample_pairing:
                 tumor = pair[0].cmo_sample_name
                 normal = pair[1].cmo_sample_name
-                pairing += "%s\t%s\n" % (normal, tumor)
+                tumor_primary = pair[0].primary_id
+                normal_primary = pair[1].primary_id
+                pairing += "%s\t%s\t%s\t%s\n" % (
+                    normal, tumor, normal_primary, tumor_primary)
         return pairing
 
     def create_unpaired_string(self, fields):
