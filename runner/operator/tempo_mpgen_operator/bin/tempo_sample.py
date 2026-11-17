@@ -24,6 +24,7 @@ class TempoSample(Sample):
         self.cmo_sample_name = ""
         self.run_mode = ""
         self.patient_id = ""
+        self.primary_id = ""
         # _find_conflict_fields() did not discrepancies in fields it checked
         if not self.conflict:
             self.bait_set = self._get_bait_sets().pop()
@@ -32,6 +33,7 @@ class TempoSample(Sample):
             self.cmo_sample_name = self.metadata[settings.CMO_SAMPLE_NAME_METADATA_KEY][0]
             self.run_mode = self.remapped_run_mode.pop()
             self.patient_id = self.metadata[settings.PATIENT_ID_METADATA_KEY][0]
+            self.primary_id = self.metadata[settings.SAMPLE_ID_METADATA_KEY][0]
 
     def _resolve_target(self, bait_set):
         """ """
