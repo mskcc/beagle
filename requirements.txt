@@ -33,3 +33,4 @@ ddtrace==4.17.1
 python-dateutil==2.9.0
 ipython==8.37.0
 smile_client @ git+https://github.com/mskcc/smile-client.git@feature/django_upgrade
+voyager_sdk

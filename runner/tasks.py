@@ -116,7 +116,9 @@ def create_operator_run_from_jobs(
     )
     jobs = []
     try:
+        # TODO: Get jobs needs to run SDK Operator or regular Operator
         jobs = operator.get_jobs(**kwargs)
+
         if operator.logger.message:
             event = OperatorErrorEvent(job_group_notifier_id, operator.logger.message)
             send_notification.delay(event.to_dict())

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "file_manager.apps.FileManagerConfig",
     "notifier.apps.NotifierConfig",
     "study.apps.StudyConfig",
+    "operator_manager.apps.OperatorManagerConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
