@@ -1,0 +1,320 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .trigger-graph { display: flex; gap: 16px; margin: 0 0 20px; }
+  .trigger-graph__canvas-wrap { position: relative; flex: 1 1 auto; min-width: 0; }
+  .trigger-graph__canvas {
+    height: 520px; border: 1px solid var(--hairline-color); border-radius: 6px; background: var(--darkened-bg);
+  }
+  .trigger-graph__toolbar { position: absolute; top: 10px; left: 10px; z-index: 1; display: flex; gap: 6px; }
+  .trigger-graph__legend {
+    position: absolute; bottom: 10px; left: 10px; z-index: 1; display: flex; gap: 14px; align-items: center;
+    padding: 6px 10px; border-radius: 4px; background: var(--body-bg); border: 1px solid var(--hairline-color);
+    font-size: 11px; color: var(--body-quiet-color);
+  }
+  .trigger-graph__legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .trigger-graph__line { display: inline-block; width: 24px; border-top: 2px solid var(--body-quiet-color); }
+  .trigger-graph__line--dashed { border-top-style: dashed; }
+  .trigger-graph__swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 2px solid; }
+  .trigger-graph__panel {
+    flex: 0 0 300px; max-height: 520px; overflow-y: auto; box-sizing: border-box; padding: 14px 16px;
+    border: 1px solid var(--hairline-color); border-radius: 6px; background: var(--body-bg);
+  }
+  .trigger-graph__panel h3 { margin: 0 0 4px; font-size: 15px; color: var(--body-fg); }
+  .trigger-graph__panel h4 {
+    margin: 16px 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--body-quiet-color); background: none; padding: 0;
+  }
+  .trigger-graph__panel ul { margin: 0; padding: 0; list-style: none; }
+  .trigger-graph__panel li { padding: 4px 0; border-bottom: 1px solid var(--hairline-color); }
+  .trigger-graph__panel li:last-child { border-bottom: 0; }
+  .trigger-graph__meta { color: var(--body-quiet-color); font-size: 12px; }
+  .trigger-graph__tag {
+    display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 8px; font-size: 10px;
+    background: var(--primary); color: var(--primary-fg); vertical-align: middle;
+  }
+  .trigger-graph__tag--muted { background: var(--hairline-color); color: var(--body-fg); }
+  .trigger-graph__empty { color: var(--body-quiet-color); }
+  @media (max-width: 1024px) {
+    .trigger-graph { flex-direction: column; }
+    .trigger-graph__panel { flex-basis: auto; max-height: none; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ trigger_graph|json_script:"trigger-graph-data" }}
+<div class="trigger-graph">
+  <div class="trigger-graph__canvas-wrap">
+    <div class="trigger-graph__toolbar">
+      <button type="button" class="button" id="trigger-graph-fit">Fit</button>
+      <button type="button" class="button" id="trigger-graph-reset">Show all</button>
+    </div>
+    <div id="trigger-graph-canvas" class="trigger-graph__canvas"></div>
+    <div class="trigger-graph__legend">
+      <span><i class="trigger-graph__line"></i>aggregate</span>
+      <span><i class="trigger-graph__line trigger-graph__line--dashed"></i>each run</span>
+      <span>★ default pipeline</span>
+      <span><i class="trigger-graph__swatch" style="border-style: dashed"></i>inactive</span>
+    </div>
+  </div>
+  <aside class="trigger-graph__panel" id="trigger-graph-panel">
+    <p class="trigger-graph__empty">Click an operator, or use <em>Show</em> on a trigger row below, to see only the operators
+      connected to it along with its pipelines and triggers. <em>Show all</em> brings the full network back.</p>
+  </aside>
+</div>
+{{ block.super }}
+
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+<script>
+(function () {
+  const data = JSON.parse(document.getElementById("trigger-graph-data").textContent);
+  const container = document.getElementById("trigger-graph-canvas");
+  const panel = document.getElementById("trigger-graph-panel");
+  const MAX_PIPELINES_IN_NODE = 3;
+  const LAYOUT = { name: "dagre", rankDir: "LR", nodeSep: 30, rankSep: 110, edgeSep: 20 };
+
+  if (!data.nodes.length) {
+    container.innerHTML = '<p class="trigger-graph__empty" style="padding: 16px">No operator triggers yet.</p>';
+    return;
+  }
+
+  const operators = Object.fromEntries(data.nodes.map((n) => [n.id, n]));
+  const humanize = (s) => (s || "").toLowerCase().replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase());
+
+  function nodeLabel(op) {
+    const lines = [op.name + (op.version ? "  " + op.version : "")];
+    if (!op.pipelines.length) {
+      lines.push("no pipeline");
+    } else {
+      op.pipelines.slice(0, MAX_PIPELINES_IN_NODE).forEach((p) =>
+        lines.push((p.default ? "★ " : "   ") + p.name + (p.version ? " " + p.version : ""))
+      );
+      if (op.pipelines.length > MAX_PIPELINES_IN_NODE) {
+        lines.push("+" + (op.pipelines.length - MAX_PIPELINES_IN_NODE) + " more");
+      }
+    }
+    return lines.join("\n");
+  }
+
+  function edgeLabel(edge) {
+    if (edge.run_type === "INDIVIDUAL") return "each run";
+    return edge.condition === "NINTY_PERCENT_SUCCEEDED" ? "≥ 90% succeeded" : humanize(edge.condition || "aggregate");
+  }
+
+  // Colors come from the Django admin theme variables so the graph follows light/dark mode
+  function theme() {
+    const css = getComputedStyle(document.documentElement);
+    const v = (name, fallback) => css.getPropertyValue(name).trim() || fallback;
+    return {
+      fg: v("--body-fg", "#333"),
+      quiet: v("--body-quiet-color", "#666"),
+      bg: v("--body-bg", "#fff"),
+      primary: v("--primary", "#79aec8"),
+      accent: v("--secondary", "#417690"),
+      selected: v("--selected-bg", "#e4e4e4"),
+      border: v("--border-color", "#ccc"),
+      font: v("--font-family-primary", "") || "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+    };
+  }
+
+  function style(t) {
+    return [
+      {
+        selector: "node",
+        style: {
+          shape: "round-rectangle",
+          label: "data(label)",
+          "text-wrap": "wrap",
+          "text-valign": "center",
+          "text-halign": "center",
+          "text-justification": "left",
+          "font-size": 11,
+          "font-family": t.font,
+          "line-height": 1.4,
+          color: t.fg,
+          "background-color": t.bg,
+          "border-width": 2,
+          "border-color": t.primary,
+          width: "label",
+          height: "label",
+          padding: "12px",
+          "transition-property": "opacity, border-color, background-color",
+          "transition-duration": "150ms",
+        },
+      },
+      { selector: "node.v2", style: { "border-color": t.accent } },
+      { selector: "node.inactive", style: { "border-style": "dashed", color: t.quiet } },
+      { selector: "node:selected", style: { "border-width": 3, "background-color": t.selected } },
+      {
+        selector: "edge",
+        style: {
+          width: 2,
+          "curve-style": "bezier",
+          "line-color": t.quiet,
+          "target-arrow-color": t.quiet,
+          "target-arrow-shape": "triangle",
+          "arrow-scale": 1.1,
+          label: "data(label)",
+          "font-size": 10,
+          color: t.quiet,
+          "text-background-color": t.bg,
+          "text-background-opacity": 1,
+          "text-background-padding": "2px",
+          "text-rotation": "autorotate",
+        },
+      },
+      { selector: "edge.individual", style: { "line-style": "dashed" } },
+      { selector: ".highlight", style: { "line-color": t.primary, "target-arrow-color": t.primary, color: t.fg } },
+      { selector: "node.highlight", style: { "border-width": 3 } },
+      { selector: ".hidden", style: { display: "none" } },
+    ];
+  }
+
+  const cy = cytoscape({
+    container,
+    elements: [
+      ...data.nodes.map((op) => ({
+        data: { id: op.id, label: nodeLabel(op) },
+        classes: [op.type === "V2" ? "v2" : "", op.active ? "" : "inactive"].join(" "),
+      })),
+      ...data.edges.map((e) => ({
+        data: { id: e.id, source: e.source, target: e.target, label: edgeLabel(e) },
+        classes: e.run_type === "INDIVIDUAL" ? "individual" : "aggregate",
+      })),
+    ],
+    style: style(theme()),
+    layout: { ...LAYOUT, padding: 30 },
+    minZoom: 0.2,
+    maxZoom: 2.5,
+    wheelSensitivity: 0.3,
+    selectionType: "single",
+    boxSelectionEnabled: false,
+    autoungrabify: false,
+  });
+
+  // Follow the admin's theme toggle
+  new MutationObserver(() => cy.style(style(theme()))).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => cy.style(style(theme())));
+
+  function el(tag, attrs, ...children) {
+    const node = document.createElement(tag);
+    Object.entries(attrs || {}).forEach(([k, v]) => (k === "class" ? (node.className = v) : node.setAttribute(k, v)));
+    children.forEach((c) => node.append(c));
+    return node;
+  }
+
+  function link(href, text) {
+    return el("a", { href }, text);
+  }
+
+  function triggerList(edges, otherEnd) {
+    if (!edges.length) return el("p", { class: "trigger-graph__meta" }, "None");
+    return el(
+      "ul",
+      {},
+      ...edges.map((e) => {
+        const other = operators[e[otherEnd]];
+        return el(
+          "li",
+          {},
+          link(e.url, other ? other.name + (other.version ? " " + other.version : "") : "unknown"),
+          el("div", { class: "trigger-graph__meta" }, edgeLabel(e))
+        );
+      })
+    );
+  }
+
+  function showDetails(opId) {
+    const op = operators[opId];
+    const tags = [el("span", { class: "trigger-graph__tag" }, op.type)];
+    if (!op.active) tags.push(el("span", { class: "trigger-graph__tag trigger-graph__tag--muted" }, "inactive"));
+
+    const pipelines = op.pipelines.length
+      ? el(
+          "ul",
+          {},
+          ...op.pipelines.map((p) =>
+            el(
+              "li",
+              {},
+              link(p.url, p.name),
+              p.default ? el("span", { class: "trigger-graph__tag" }, "default") : "",
+              el("div", { class: "trigger-graph__meta" }, p.version || "")
+            )
+          )
+        )
+      : el("p", { class: "trigger-graph__meta" }, "No pipelines linked to this operator");
+
+    panel.replaceChildren(
+      el("h3", {}, op.name, ...tags),
+      el("div", { class: "trigger-graph__meta" }, op.version ? "version " + op.version : "no version"),
+      el("p", {}, link(op.url, "Open operator →")),
+      el("h4", {}, "Pipelines (" + op.pipelines.length + ")"),
+      pipelines,
+      el("h4", {}, "Triggers"),
+      triggerList(
+        data.edges.filter((e) => e.source === opId),
+        "target"
+      ),
+      el("h4", {}, "Triggered by"),
+      triggerList(
+        data.edges.filter((e) => e.target === opId),
+        "source"
+      )
+    );
+  }
+
+  function runLayout(eles, padding) {
+    eles.layout({ ...LAYOUT, padding, fit: true, animate: true, animationDuration: 250 }).run();
+  }
+
+  // Show only the operators connected to the selected one (upstream and downstream); highlight what it triggers
+  function focus(opId) {
+    const node = cy.getElementById(opId);
+    if (node.empty()) return;
+    const connected = node.union(node.predecessors()).union(node.successors());
+    cy.elements().removeClass("highlight").addClass("hidden");
+    connected.removeClass("hidden");
+    node.union(node.successors()).addClass("highlight");
+    cy.elements().unselect();
+    node.select();
+    runLayout(connected, 50);
+    showDetails(opId);
+  }
+
+  function reset() {
+    cy.elements().removeClass("hidden highlight").unselect();
+    runLayout(cy.elements(), 30);
+  }
+
+  cy.on("tap", "node", (evt) => focus(evt.target.id()));
+  cy.on("tap", (evt) => {
+    if (evt.target === cy) reset();
+  });
+  cy.on("mouseover", "node, edge", () => (container.style.cursor = "pointer"));
+  cy.on("mouseout", "node, edge", () => (container.style.cursor = ""));
+  cy.on("tap", "edge", (evt) => {
+    const edge = data.edges.find((e) => e.id === evt.target.id());
+    if (edge) window.location.href = edge.url;
+  });
+
+  document.getElementById("trigger-graph-fit").addEventListener("click", () => cy.animate({ fit: { padding: 30 }, duration: 250 }));
+  document.getElementById("trigger-graph-reset").addEventListener("click", reset);
+  document.addEventListener("click", (evt) => {
+    const button = evt.target.closest(".trigger-graph-focus");
+    if (!button) return;
+    evt.preventDefault();
+    focus(button.dataset.operator);
+    container.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+})();
+</script>
+{% endblock %}

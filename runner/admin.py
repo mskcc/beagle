@@ -1,5 +1,4 @@
 import re
-import json
 from django.contrib import admin, messages
 from django.urls import reverse
 from django.conf import settings
@@ -10,8 +9,17 @@ from beagle.settings import RIDGEBACK_URL
 from rangefilter.filter import DateTimeRangeFilter
 from runner.tasks import terminate_job_task, add_pipeline_to_cache
 from advanced_filters.admin import AdminAdvancedFiltersMixin
-from .models import Pipeline, Run, Port, ExecutionEvents, RunStatus, PipelineName
-from operator_manager.models import OperatorRun, OperatorTrigger
+from .models import (
+    Pipeline,
+    Run,
+    Port,
+    ExecutionEvents,
+    RunStatus,
+    PipelineName,
+    TriggerRunType,
+    TriggerAggregateConditionType,
+)
+from operator_manager.models import Operator, OperatorRun, OperatorTrigger, OperatorVersion
 
 
 def action_add_pipeline_to_cache(modeladmin, request, queryset):
@@ -178,77 +186,82 @@ class OperatorRunAdmin(admin.ModelAdmin):
     def first_run(self, obj):
         run = obj.runs.first()
         if run:
-            url = reverse("admin:{}_{}_change".format(obj._meta.app_label, "run"), args=(run.pk,))
+            url = reverse("admin:runner_run_change", args=(run.pk,))
             return format_html("<a href='{url}'>{name}</a>", url=url, name=run.name)
 
 
-class OperatorTriggerAdmin(admin.ModelAdmin):
-    list_display = ("id", link_relation("from_operator"), link_relation("to_operator"), "aggregate_condition", "graph")
+def _operator_trigger_graph():
+    """Operators connected by triggers, their pipelines and the triggers between them, for the admin graph."""
+    triggers = list(OperatorTrigger.objects.select_related("from_operator", "to_operator"))
+    operator_ids = {t.from_operator_id for t in triggers} | {t.to_operator_id for t in triggers}
+    operator_ids.discard(None)
 
-    def _get_adjacent_nodes(self, operator, nodes=[], connections=[]):
-        adjacent = OperatorTrigger.objects.filter(from_operator=operator)
-        new_nodes = [
+    pipelines = {}
+    for pipeline in Pipeline.objects.filter(operator_id__in=operator_ids).order_by("-default", "name", "version"):
+        pipelines.setdefault(pipeline.operator_id, []).append(
             {
-                "key": str(node.to_operator.id),
-                "pipeline": str(node.to_operator.pipeline_set.filter(default=True).first().id)
-                if node.to_operator.pipeline_set.filter(default=True).first()
-                else "",
-                "text": node.to_operator.name,
-                "category": "Default",
+                "name": pipeline.name,
+                "version": pipeline.version,
+                "default": pipeline.default,
+                "url": reverse("admin:runner_pipeline_change", args=(pipeline.pk,)),
             }
-            for node in adjacent
-        ]
-        new_connections = [{"from": str(operator.id), "to": str(node.to_operator.id)} for node in adjacent]
-        nodes.extend(new_nodes)
-        connections.extend(new_connections)
-        adjacent_nodes = [node.to_operator for node in adjacent]
-        return adjacent_nodes, nodes, connections
+        )
 
-    def graph(self, obj):
-        """
-        {"class": "go.GraphLinksModel",
-                "copiesArrays": True,
-                "copiesArrayObjects": True,
-                "nodeDataArray": [
-                    {"key": 0, "text": "ArgosOperator_v1.1.0"},
-                    {"key": 1, "text": "ArgosQcOperator_v1.1.0"},
-                    {"key": 2, "text": "CopyOutputsOperator_v1.1.0"},
-                    {"key": 3, "text": "HelixFiltersOperator_v20.11.2"}
-                ],
-                "linkDataArray": [
-                    {"from": 0, "to": 1},
-                    {"from": 0, "to": 2},
-                    {"from": 0, "to": 3}
-                ]
-            }
-        """
-        first_operator = obj.from_operator
-        nodes = [
-            {
-                "key": str(first_operator.id),
-                "pipeline": str(first_operator.pipeline_set.filter(default=True).first().id)
-                if first_operator.pipeline_set.filter(default=True).first()
-                else "",
-                "text": first_operator.name,
-                "category": "Selected",
-            }
-        ]
-        connections = []
-        adjacent, nodes, connections = self._get_adjacent_nodes(first_operator, nodes, connections)
-        while adjacent:
-            next_adjacent = []
-            for item in adjacent:
-                new_adjacent, nodes, connections = self._get_adjacent_nodes(item, nodes, connections)
-                next_adjacent.extend(new_adjacent)
-            adjacent = next_adjacent
-        result = {
-            "class": "go.GraphLinksModel",
-            "copiesArrays": True,
-            "copiesArrayObjects": True,
-            "nodeDataArray": nodes,
-            "linkDataArray": connections,
+    nodes = [
+        {
+            "id": str(operator.id),
+            "name": operator.name,
+            "version": operator.version or "",
+            "type": OperatorVersion(operator.type).name,
+            "active": operator.active,
+            "url": reverse("admin:operator_manager_operator_change", args=(operator.pk,)),
+            "pipelines": pipelines.get(operator.id, []),
         }
-        return json.dumps(result)
+        for operator in Operator.objects.filter(id__in=operator_ids).order_by("name", "version")
+    ]
+    edges = [
+        {
+            "id": str(trigger.id),
+            "source": str(trigger.from_operator_id),
+            "target": str(trigger.to_operator_id),
+            "run_type": TriggerRunType(trigger.run_type).name,
+            "condition": (
+                TriggerAggregateConditionType(trigger.aggregate_condition).name
+                if trigger.aggregate_condition is not None
+                else None
+            ),
+            "url": reverse("admin:operator_manager_operatortrigger_change", args=(trigger.pk,)),
+        }
+        for trigger in triggers
+        if trigger.from_operator_id and trigger.to_operator_id
+    ]
+    return {"nodes": nodes, "edges": edges}
+
+
+class OperatorTriggerAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        link_relation("from_operator"),
+        link_relation("to_operator"),
+        "run_type",
+        "aggregate_condition",
+        "graph",
+    )
+    list_select_related = ("from_operator", "to_operator")
+    list_filter = ("run_type",)
+
+    @admin.display(description="Graph")
+    def graph(self, obj):
+        if not obj.from_operator_id:
+            return ""
+        return format_html(
+            '<button type="button" class="button trigger-graph-focus" data-operator="{}">Show</button>',
+            obj.from_operator_id,
+        )
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = {**(extra_context or {}), "trigger_graph": _operator_trigger_graph()}
+        return super().changelist_view(request, extra_context=extra_context)
 
 
 class PortAdmin(admin.ModelAdmin):
