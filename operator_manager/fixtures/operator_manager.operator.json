@@ -1,0 +1,431 @@
+[
+    {
+        "model": "operator_manager.operator",
+        "pk": 1,
+        "fields": {
+            "name": "ArgosOperator",
+            "type": 0,
+            "class_name": "runner.operator.argos_operator.v1_0_0.argos_operator.ArgosOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"IMPACT341\", \"IMPACT+ (341 genes plus custom content)\", \"IMPACT410\", \"IMPACT468\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 2,
+        "fields": {
+            "name": "AccessOperator",
+            "type": 0,
+            "class_name": "runner.operator.access.v1_0_0.AccessLegacyOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"IMPACT410\", \"IMPACT468\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 3,
+        "fields": {
+            "name": "AccessOperator",
+            "type": 0,
+            "class_name": "runner.operator.access.v1_0_0.AccessLegacyOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"400FAKESOMETHING\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 4,
+        "fields": {
+            "name": "CopyOutputsOperator",
+            "type": 0,
+            "class_name": "runner.operator.copy_outputs_operator.v1_2_0.copy_outputs_operator.CopyOutputsOperator",
+            "version": "v1.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 5,
+        "fields": {
+            "name": "AccessLegacySNVOperator",
+            "type": 0,
+            "class_name": "runner.operator.access.v1_0_0.snps_and_indels.AccessLegacySNVOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 7,
+        "fields": {
+            "name": "AccessLegacyMSIOperator",
+            "type": 0,
+            "class_name": "runner.operator.access.v1_0_0.msi.AccessLegacyMSIOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 6,
+        "fields": {
+            "name": "AccessLegacySVOperator",
+            "type": 0,
+            "class_name": "runner.operator.access.v1_0_0.structural_variants.AccessLegacySVOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 8,
+        "fields": {
+            "name": "AccessLegacyFastqMergeOperator",
+            "type": 0,
+            "class_name": "runner.operator.access.v1_0_0.merge_fastqs.AccessLegacyFastqMergeOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 9,
+        "fields": {
+            "name": "AccessLegacyCNVOperator",
+            "type": 0,
+            "class_name": "runner.operator.access.v1_0_0.cnv.AccessLegacyCNVOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 10,
+        "fields": {
+            "name": "AccessNucleoOperator",
+            "type": 0,
+            "class_name": "runner.operator.access.v2_0_0.nucleo.AccessNucleoOperator",
+            "version": "v2.0.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 11,
+        "fields": {
+            "name": "AccessQCOperator",
+            "type": 0,
+            "class_name": "runner.operator.access.v2_0_0.qc.AccessQCOperator",
+            "version": "v2.0.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 12,
+        "fields": {
+            "name": "UltronOperator",
+            "type": 0,
+            "class_name": "runner.operator.ultron.v1_0_0.phase1.UltronOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 14,
+        "fields": {
+            "name": "CMOCHNucleoOperator",
+            "type": 0,
+            "class_name": "runner.operator.cmo_ch.v2_0_0.nucleo.CMOCHNucleoOperator",
+            "version": "v2.0.0",
+            "status": 1,
+            "trigger": "[\"CMO-CH\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 15,
+        "fields": {
+            "name": "CMOCHNucleoOperator_2_1_0",
+            "type": 0,
+            "class_name": "runner.operator.cmo_ch.v2_1_0.nucleo.CMOCHNucleoOperator",
+            "version": "v2.1.0",
+            "status": 1,
+            "trigger": "[\"CMO-CH\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 16,
+        "fields": {
+            "name": "AccessNucleoOperator_2_1_0",
+            "type": 0,
+            "class_name": "runner.operator.access.v2_1_0.nucleo.AccessNucleoOperator",
+            "version": "v2.1.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 17,
+        "fields": {
+            "name": "CMOCHNucleoOperatorQC_2_1_0",
+            "type": 0,
+            "class_name": "runner.operator.cmo_ch.v2_1_0.qc.CMOCHNucleoOperatorQC",
+            "version": "v2.1.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 18,
+        "fields": {
+            "name": "AlignmentPairOperator",
+            "type": 0,
+            "class_name": "runner.operator.alignment_pair_operator.v1_0_0.alignment_pair_operator.AlignmentPairOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"IMPACT341\", \"IMPACT+ (341 genes plus custom content)\", \"IMPACT410\", \"IMPACT468\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 19,
+        "fields": {
+            "name": "CMOCHNucleoOperatorQcAgg_2_1_0",
+            "type": 0,
+            "class_name": "runner.operator.cmo_ch.v2_1_0.qc_agg.CMOCHNucleoOperatorQcAgg",
+            "version": "v2.1.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 20,
+        "fields": {
+            "name": "AccessManifestOperator_2_1_0",
+            "type": 0,
+            "class_name": "runner.operator.manifest.AccessManifestOperator",
+            "version": "v2.1.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 21,
+        "fields": {
+            "name": "ArgosReportOperator_v1_0_0",
+            "type": 0,
+            "class_name": "runner.operator.argos_report.v1_0_0.argos_report_operator.ArgosReportOperator",
+            "version": "v1.0.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 22,
+        "fields": {
+            "name": "ArgosOperator_v1_2_0",
+            "type": 0,
+            "class_name": "runner.operator.argos_operator.v1_2_0.argos_operator.ArgosOperator",
+            "version": "v1.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 23,
+        "fields": {
+            "name": "CMOCHChipVarOperator_v1_2_0",
+            "type": 0,
+            "class_name": "runner.operator.cmo_ch.v2_1_0.chip_var.CMOCHChipVarOperator",
+            "version": "v1.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 24,
+        "fields": {
+            "name": "ArgosBamOperator_v1_0_0",
+            "type": 0,
+            "class_name": "runner.operator.argos_bam_operator.v1_0_0.argos_bam_operator.ArgosBamOperator",
+            "version": "v1.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 25,
+        "fields": {
+            "name": "CopyOutputsOperator_v2.1.0",
+            "type": 0,
+            "class_name": "runner.operator.copy_outputs_operator.v2_1_0.copy_outputs_operator.CopyOutputsOperator",
+            "version": "v2.1.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 26,
+        "fields": {
+            "name": "CMOCHNucleoOperator_2_2_0",
+            "type": 0,
+            "class_name": "runner.operator.cmo_ch.v2_2_0.nucleo.CMOCHNucleoOperator",
+            "version": "v2.2.0",
+            "status": 1,
+            "trigger": "[\"CMO-CH\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 27,
+        "fields": {
+            "name": "CMOCHNucleoOperatorQC_2_2_0",
+            "type": 0,
+            "class_name": "runner.operator.cmo_ch.v2_2_0.qc.CMOCHNucleoOperatorQC",
+            "version": "v2.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 28,
+        "fields": {
+            "name": "CMOCHChipVarOperator_v2_2_0",
+            "type": 0,
+            "class_name": "runner.operator.cmo_ch.v2_2_0.chip_var.CMOCHChipVarOperator",
+            "version": "v2.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 29,
+        "fields": {
+            "name": "AccessNucleoOperator_2_2_0",
+            "type": 0,
+            "class_name": "runner.operator.access.v2_2_0.nucleo.AccessNucleoOperator",
+            "version": "v2.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 30,
+        "fields": {
+            "name": "AccessQCOperator_v2_2_0",
+            "type": 0,
+            "class_name": "runner.operator.access.v2_2_0.qc.AccessQCOperator",
+            "version": "v2.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 31,
+        "fields": {
+            "name": "CMOCHNucleoOperatorQcAgg_2_2_0",
+            "type": 0,
+            "class_name": "runner.operator.cmo_ch.v2_2_0.qc_agg.CMOCHNucleoOperatorQcAgg",
+            "version": "v2.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 32,
+        "fields": {
+            "name": "CopyOutputsOperator_v2.2.0",
+            "type": 0,
+            "class_name": "runner.operator.copy_outputs_operator.v2_2_0.copy_outputs_operator.CopyOutputsOperator",
+            "version": "v2.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 33,
+        "fields": {
+            "name": "CopyOutputsOperator_v2.3.0",
+            "type": 0,
+            "class_name": "runner.operator.copy_outputs_operator.v2_3_0.copy_outputs_operator.CopyOutputsOperator",
+            "version": "v2.3.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    },
+    {
+        "model": "operator_manager.operator",
+        "pk": 34,
+        "fields": {
+            "name": "ChronosOperator",
+            "type": 0,
+            "class_name": "runner.operator.chronos_operator_v2.chronos_operator.ChronosOperator",
+            "version": "0.2.0",
+            "status": 1,
+            "trigger": "[\"None\"]",
+            "active": true
+        }
+    }
+]

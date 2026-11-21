@@ -80,6 +80,8 @@ class TempoMPGenOperator(Operator):
         tempo_files = FileRepository.filter(queryset=files, q=q)
         tempo_files = FileRepository.filter(queryset=tempo_files, filter_redact=True)
 
+
+
         self.send_message(
             """
             Querying database for the following recipes:

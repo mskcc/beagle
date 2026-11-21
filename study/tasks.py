@@ -1,5 +1,6 @@
 from runner.tasks import create_jobs_from_request
-from runner.models import OperatorRun, RunStatus
+from runner.models import RunStatus
+from operator_manager.models import OperatorRun
 from study.models import JobGroupWatcher, JobGroupWatcherStatus
 
 
@@ -19,7 +20,8 @@ def check_job_group_watcher():
         waiting_operators = watcher.config.operators
         for operator_run in operator_runs:
             if operator_run.operator_finished:
-                waiting_operators.remove(operator_run.operator)
+                # study config still references beagle_etl.Operator; ids are shared with operator_manager.Operator
+                waiting_operators.remove(operator_run.operator_id)
         if waiting_operators.count() == 0:
             watcher.complete()
             kick_off_postprocessing(watcher)

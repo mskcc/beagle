@@ -5,7 +5,8 @@ from django.db import transaction
 from rest_framework.test import APITestCase
 from runner.models import Port
 from runner.tasks import complete_job, fail_job
-from runner.models import Run, RunStatus, Pipeline, OperatorRun
+from runner.models import Run, RunStatus, Pipeline
+from operator_manager.models import OperatorRun
 from runner.run.processors.file_processor import FileProcessor
 from runner.run.objects.run_object_factory import RunObjectFactory
 from beagle_etl.models import JobGroup
@@ -15,6 +16,7 @@ from file_system.models import Storage, StorageType, FileGroup, File, FileType, 
 class CWLRunObjectTest(APITestCase):
     fixtures = [
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "runner.operator_run.json",
         "runner.operator_trigger.json",
     ]

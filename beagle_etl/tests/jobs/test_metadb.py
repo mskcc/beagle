@@ -25,6 +25,7 @@ class TestSmileMessages(TestCase):
         "file_system.filetype.json",
         "file_system.storage.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "runner.pipeline.json",
     ]
 

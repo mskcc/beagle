@@ -8,7 +8,7 @@ from uuid import UUID
 from mock import patch
 from django.test import TestCase
 from runner.operator.operator_factory import OperatorFactory
-from beagle_etl.models import Operator
+from operator_manager.models import Operator
 from django.conf import settings
 from django.core.management import call_command
 import tempfile
@@ -21,6 +21,7 @@ class TestCopyOutputs(TestCase):
         "file_system.filetype.json",
         "file_system.storage.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "runner.pipeline.json",
     ]
 

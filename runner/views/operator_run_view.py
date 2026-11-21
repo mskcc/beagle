@@ -2,7 +2,8 @@ from rest_framework import mixins, status
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.response import Response
 
-from runner.models import OperatorRun, RunStatus
+from runner.models import RunStatus
+from operator_manager.models import OperatorRun
 from runner.serializers import OperatorRunSerializer, OperatorRunListSerializer
 from drf_yasg.utils import swagger_auto_schema
 

@@ -9,7 +9,8 @@ from celery import shared_task, chord
 from django.conf import settings
 from django.db.models import Count
 from runner.run.objects.run_object_factory import RunObjectFactory
-from .models import Run, RunStatus, OperatorRun, TriggerAggregateConditionType, TriggerRunType, Pipeline
+from .models import Run, RunStatus, TriggerAggregateConditionType, TriggerRunType, Pipeline
+from operator_manager.models import Operator, OperatorRun
 from notifier.events import (
     RunFinishedEvent,
     OperatorRequestEvent,
@@ -27,7 +28,6 @@ from notifier.events import (
 )
 from notifier.tasks import send_notification, notifier_start
 from runner.operator import OperatorFactory
-from beagle_etl.models import Operator
 from beagle_etl.jobs.notification_helper import _voyager_start_processing
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.helper import get_emails_to_notify, get_gene_panel, get_samples

@@ -9,7 +9,7 @@ from django.test import TestCase
 from django.conf import settings
 from beagle_etl.models import ETLConfiguration, SMILEMessage, SmileMessageStatus
 from rest_framework.test import APITestCase
-from runner.models import Operator
+from beagle_etl.models import Operator
 from notifier.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.models import File, FileMetadata, FileType, FileGroup, Storage, StorageType
 from beagle_etl.jobs.metadb_jobs import (

@@ -3,9 +3,9 @@ Test cases for Demo Operator
 """
 import os
 from django.test import TestCase
-from beagle_etl.models import Operator
+from operator_manager.models import Operator, OperatorRun, OperatorStatus, OperatorVersion
 from file_system.models import File, FileMetadata, FileGroup
-from runner.models import Run, Pipeline, OperatorRun, Port
+from runner.models import Run, Pipeline, Port
 from runner.operator.operator_factory import OperatorFactory
 from runner.operator.demo_operator.demo_operator import DemoOperator
 from runner.tasks import check_jobs_status, process_triggers
@@ -96,11 +96,13 @@ class TestDemoOperator(TestCase):
 
         # db entry for the Operator we want to test
         self.operator = Operator.objects.create(
-            slug="DemoOperator",
+            name="DemoOperator",
+            type=OperatorVersion.V1,
+            status=OperatorStatus.READY,
             class_name="runner.operator.demo_operator.demo_operator.DemoOperator",
             version="1",
             active=True,
-            recipes=[],
+            trigger=[],
         )
 
         # make a tmpdir and put a file in it

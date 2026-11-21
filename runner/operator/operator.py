@@ -3,7 +3,7 @@ from ddtrace.trace import tracer
 from django.conf import settings
 from file_system.repository.file_repository import FileRepository
 from runner.serializers import OperatorErrorSerializer
-from beagle_etl.models import Operator as OperatorModel
+from operator_manager.models import Operator as OperatorModel
 from runner.operator.operator_logger import OperatorLogger
 from runner.run.objects.run_creator_object import RunCreator
 
@@ -25,7 +25,7 @@ class Operator(object):
         **kwargs
     ):
         if not isinstance(model, OperatorModel):
-            raise Exception("Must pass an instance of beagle_etl.models.Operator")
+            raise Exception("Must pass an instance of operator_manager.models.Operator")
 
         self.model = model
         self.request_id = request_id
@@ -64,7 +64,7 @@ class Operator(object):
 
     def failed_to_create_job(self, error):
         operator_error = OperatorErrorSerializer(
-            data={"operator_name": self.model.slug, "request_id": self.request_id, "error": error}
+            data={"operator_name": self.model.name, "request_id": self.request_id, "error": error}
         )
         current_span = tracer.current_span()
         if operator_error.is_valid():
@@ -73,10 +73,10 @@ class Operator(object):
             operator_error.save()
             self.logger.info(
                 "Operator: %s failed to create a job for request_id: %s with error: %s"
-                % (self.model.slug, self.request_id, str(error))
+                % (self.model.name, self.request_id, str(error))
             )
         else:
-            self.logger.error("Invalid Operator: %s error" % self.model.slug)
+            self.logger.error("Invalid Operator: %s error" % self.model.name)
 
     def on_job_fail(self, run):
         pass

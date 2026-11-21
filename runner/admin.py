@@ -10,7 +10,8 @@ from beagle.settings import RIDGEBACK_URL
 from rangefilter.filter import DateTimeRangeFilter
 from runner.tasks import terminate_job_task, add_pipeline_to_cache
 from advanced_filters.admin import AdminAdvancedFiltersMixin
-from .models import Pipeline, Run, Port, ExecutionEvents, OperatorRun, OperatorTrigger, RunStatus, PipelineName
+from .models import Pipeline, Run, Port, ExecutionEvents, RunStatus, PipelineName
+from operator_manager.models import OperatorRun, OperatorTrigger
 
 
 def action_add_pipeline_to_cache(modeladmin, request, queryset):
@@ -192,7 +193,7 @@ class OperatorTriggerAdmin(admin.ModelAdmin):
                 "pipeline": str(node.to_operator.pipeline_set.filter(default=True).first().id)
                 if node.to_operator.pipeline_set.filter(default=True).first()
                 else "",
-                "text": node.to_operator.slug,
+                "text": node.to_operator.name,
                 "category": "Default",
             }
             for node in adjacent
@@ -228,7 +229,7 @@ class OperatorTriggerAdmin(admin.ModelAdmin):
                 "pipeline": str(first_operator.pipeline_set.filter(default=True).first().id)
                 if first_operator.pipeline_set.filter(default=True).first()
                 else "",
-                "text": first_operator.slug,
+                "text": first_operator.name,
                 "category": "Selected",
             }
         ]

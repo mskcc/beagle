@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from runner.models import Operator
+from operator_manager.models import Operator
 from runner.operator.operator_factory import OperatorFactory
 from runner.run.objects.run_object_factory import RunObjectFactory
 

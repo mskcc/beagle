@@ -1,25 +1,42 @@
 from mock import patch
 from rest_framework.test import APITestCase
 from study.tasks import check_job_group_watcher
-from beagle_etl.models import Operator
+from beagle_etl.models import Operator as EtlOperator
+from operator_manager.models import Operator, OperatorRun, OperatorStatus, OperatorVersion
 from notifier.models import JobGroup
-from runner.models import OperatorRun, RunStatus
+from runner.models import RunStatus
 from study.models import Study, JobGroupWatcher, JobGroupWatcherConfig, JobGroupWatcherStatus
 
 
 class TestStudy(APITestCase):
+    @staticmethod
+    def _create_operator(etl_operator):
+        # JobGroupWatcherConfig still references beagle_etl.Operator; operator_manager.Operator shares its ids
+        return Operator.objects.create(
+            id=etl_operator.id,
+            name=etl_operator.slug,
+            type=OperatorVersion.V1,
+            status=OperatorStatus.READY,
+            class_name=etl_operator.class_name,
+            version=etl_operator.version,
+            active=True,
+        )
+
     def setUp(self):
         self.study = Study.objects.create(study_id="test_study_id")
         self.job_group = JobGroup.objects.create()
-        self.operator_1 = Operator.objects.create(
+        self.etl_operator_1 = EtlOperator.objects.create(
             slug="OperatorClass1", class_name="operator_1.OperatorClass1", version="1.0.0", active=True, recipes=[]
         )
-        self.operator_2 = Operator.objects.create(
+        self.operator_1 = self._create_operator(self.etl_operator_1)
+        self.etl_operator_2 = EtlOperator.objects.create(
             slug="OperatorClass2", class_name="operator_2.OperatorClass2", version="1.0.0", active=True, recipes=[]
         )
-        self.operator_3 = Operator.objects.create(
+        self.operator_2 = self._create_operator(self.etl_operator_2)
+        self.etl_operator_3 = EtlOperator.objects.create(
             slug="OperatorClass3", class_name="operator_3.OperatorClass3", version="1.0.0", active=True, recipes=[]
         )
+        self.operator_3 = self._create_operator(self.etl_operator_3)
         self.operator_run_1 = OperatorRun.objects.create(
             status=RunStatus.RUNNING,
             operator=self.operator_1,
@@ -37,9 +54,9 @@ class TestStudy(APITestCase):
         self.job_group_watcher_config = JobGroupWatcherConfig.objects.create(
             name="TestWatcher",
         )
-        self.job_group_watcher_config.operators.add(self.operator_1)
-        self.job_group_watcher_config.operators.add(self.operator_2)
-        self.job_group_watcher_config.post_processors.add(self.operator_3)
+        self.job_group_watcher_config.operators.add(self.etl_operator_1)
+        self.job_group_watcher_config.operators.add(self.etl_operator_2)
+        self.job_group_watcher_config.post_processors.add(self.etl_operator_3)
         self.job_group_watcher = JobGroupWatcher.objects.create(
             study=self.study,
             job_group=self.job_group,

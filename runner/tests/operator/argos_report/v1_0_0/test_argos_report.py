@@ -9,7 +9,7 @@ from pprint import pprint
 from uuid import UUID
 from django.test import TestCase
 from runner.operator.argos_report.v1_0_0.argos_report_operator import ArgosReportOperator
-from beagle_etl.models import Operator
+from operator_manager.models import Operator
 from notifier.models import JobGroup
 from runner.models import Run, Port, Pipeline
 from file_system.models import File, FileMetadata, FileGroup, FileType
@@ -25,6 +25,7 @@ class TestArgosReportOperator(TestCase):
         "runner.operator_run.json",
         "runner.pipeline.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "file_system.filegroup.json",
         "file_system.filetype.json",
         "file_system.storage.json",

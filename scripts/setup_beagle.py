@@ -1,6 +1,7 @@
-from beagle_etl.models import SMILEMessage, SmileMessageStatus, Operator
+from beagle_etl.models import SMILEMessage, SmileMessageStatus
+from operator_manager.models import Operator, OperatorStatus, OperatorTrigger, OperatorVersion
 from file_system.models import FileGroup, Storage, StorageType, File, FileType, FileMetadata
-from runner.models import Pipeline, TriggerRunType, TriggerAggregateConditionType, OperatorTrigger, PipelineName
+from runner.models import Pipeline, TriggerRunType, TriggerAggregateConditionType, PipelineName
 from notifier.models import Notifier
 import os
 import requests
@@ -109,7 +110,14 @@ def set_pipelines(notifier, operators, pipelines):
             name=file_group, slug=slugify(file_group), storage=storage
         )
         operator, _ = Operator.objects.get_or_create(
-            slug=slug, class_name=class_name, version=version, active=True, recipes=[""], notifier=notifier
+            name=slug,
+            type=OperatorVersion.V1,
+            status=OperatorStatus.READY,
+            class_name=class_name,
+            version=version,
+            active=True,
+            trigger=[""],
+            notifier=notifier,
         )
         pipeline, _ = Pipeline.objects.get_or_create(
             name=name,
@@ -160,8 +168,8 @@ def set_operator_triggers(operator_triggers):
         )(
             single_operator_trigger
         )
-        from_operator = Operator.objects.get(slug=from_operator_slug, version=from_operator_version)
-        to_operator = Operator.objects.get(slug=to_operator_slug, version=to_operator_version)
+        from_operator = Operator.objects.get(name=from_operator_slug, version=from_operator_version)
+        to_operator = Operator.objects.get(name=to_operator_slug, version=to_operator_version)
         if run_type not in OPERATOR_TRIGGER_RUN_TYPE:
             raise Exception(
                 str(run_type)

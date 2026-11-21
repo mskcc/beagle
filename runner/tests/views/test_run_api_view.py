@@ -7,7 +7,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from beagle_etl.models import JobGroup, JobGroupNotifier, Notifier
 from file_system.models import FileGroup
-from runner.models import Run, RunStatus, Pipeline, OperatorRun, Port, PortType
+from runner.models import Run, RunStatus, Pipeline, Port, PortType
+from operator_manager.models import OperatorRun
 from runner.run.objects.run_object_factory import RunObjectFactory
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -34,6 +35,7 @@ class TestRunAPIList(APITestCase):
         "file_system.storage.json",
         "runner.pipeline.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "runner.operator_run.json",
         "runner.run.json",
         "file_system.sample.json",
@@ -88,6 +90,7 @@ class TestRunAPIView(APITestCase):
         "file_system.filetype.json",
         "file_system.storage.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "runner.pipeline.json",
     ]
 
@@ -181,6 +184,7 @@ class TestCWLJsonView(APITestCase):
         "file_system.storage.json",
         "runner.pipeline.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "runner.operator_run.json",
         "runner.run.json",
         "runner.operator_trigger.json",

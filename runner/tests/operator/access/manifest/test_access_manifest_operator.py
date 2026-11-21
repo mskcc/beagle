@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from beagle import settings
 from beagle.settings import ROOT_DIR
-from beagle_etl.models import Operator
+from operator_manager.models import Operator
 from file_system.models import File, FileMetadata
 from runner.operator.operator_factory import OperatorFactory
 
@@ -16,6 +16,7 @@ COMMON_FIXTURES = [
     "file_system/fixtures/file_system.filetype.json",
     "file_system/fixtures/file_system.storage.json",
     "beagle_etl/fixtures/beagle_etl.operator.json",
+    "operator_manager/fixtures/operator_manager.operator.json",
     "file_system/fixtures/DMP_data.json",
     "runner/fixtures/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f.samples.json",
     "runner/fixtures/28ca34e8-9d4c-4543-9fc7-981bf5f6a97f.files.json",

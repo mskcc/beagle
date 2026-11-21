@@ -21,7 +21,8 @@ from notifier.events import AddPipelineToDescriptionEvent, RunStartedEvent
 from notifier.helper import generate_sample_data_content
 from notifier.models import JobGroup, JobGroupNotifier
 from notifier.tasks import notifier_start, send_notification
-from runner.models import Operator, OperatorErrors, OperatorRun, Pipeline, Port, Run, RunStatus
+from runner.models import OperatorErrors, Pipeline, Port, Run, RunStatus
+from operator_manager.models import Operator, OperatorRun
 from runner.operator.operator_factory import OperatorFactory
 from runner.run.objects.run_creator_object import RunCreator
 from runner.operator.access.dmp_samples import find_all_clinical_access_tumor_sample_ids, find_submitted_sample_ids
@@ -779,7 +780,7 @@ class TempoMPGenViewSet(GenericAPIView):
     def post(self, request):
         normals_override = request.data.get("normals_override", [])
         tumors_override = request.data.get("tumors_override", [])
-        operator_model = Operator.objects.get(slug="tempo_mpgen_operator")
+        operator_model = Operator.objects.get(name="tempo_mpgen_operator")
         pairing_override = None
         heading = "TempoMPGen Run %s" % datetime.datetime.now().isoformat()
         job_group = JobGroup()
@@ -808,7 +809,7 @@ class ArgosPairingViewSet(GenericAPIView):
     def post(self, request):
         igo_request_id = request.data.get("igo_request_id")
         argos_slug = request.data.get("argos_slug")
-        operator_model = Operator.objects.get(slug=argos_slug)
+        operator_model = Operator.objects.get(name=argos_slug)
         operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
         # construct_argos_jobs() is sloppily separate from the Operator module
         from runner.operator.argos_operator.v2_2_1.construct_argos_pair import construct_argos_jobs
@@ -834,7 +835,7 @@ class ArgosMappingViewSet(GenericAPIView):
     def post(self, request):
         igo_request_id = request.data.get("igo_request_id")
         argos_slug = request.data.get("argos_slug")
-        operator_model = Operator.objects.get(slug=argos_slug)
+        operator_model = Operator.objects.get(name=argos_slug)
         operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
         # construct_argos_jobs() is sloppily separate from the Operator module
         from runner.operator.argos_operator.v2_2_1.construct_argos_pair import construct_argos_jobs
@@ -860,7 +861,7 @@ class ArgosDataClinicalViewSet(GenericAPIView):
     def post(self, request):
         igo_request_id = request.data.get("igo_request_id")
         argos_slug = request.data.get("argos_slug")
-        operator_model = Operator.objects.get(slug=argos_slug)
+        operator_model = Operator.objects.get(name=argos_slug)
         operator = OperatorFactory.get_by_model(operator_model, request_id=igo_request_id)
         # construct_argos_jobs() and compile_pairs() are sloppily separate from the Operator module
         from runner.operator.argos_operator.v2_2_1.bin.pair_request import compile_pairs

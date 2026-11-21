@@ -4,8 +4,9 @@ from collections import defaultdict
 import json
 from django.db.models import Max, Q
 from file_system.models import File, FileGroup, Sample, Request
-from beagle_etl.models import Operator, JobGroup, JobGroupNotifier, Job, JobStatus, ETLConfiguration
-from runner.models import OperatorRun, RunStatus, TriggerRunType, Run, Pipeline
+from beagle_etl.models import JobGroup, JobGroupNotifier, Job, JobStatus, ETLConfiguration
+from operator_manager.models import Operator, OperatorRun
+from runner.models import RunStatus, TriggerRunType, Run, Pipeline
 from file_system.repository.file_repository import FileRepository
 from collections import defaultdict, deque
 from django.core.management.base import BaseCommand
@@ -108,9 +109,10 @@ def edit_serialized_data(data, old_prefixes, new_prefix):
                 fields["name"] = f"JUNO PIPELINE: {name}"
 
         if model_name.endswith("operator"):
-            slug = fields.get("slug")
+            name_field = "name" if "name" in fields else "slug"
+            slug = fields.get(name_field)
             if isinstance(slug, str) and not slug.startswith("JUNO OPERATOR:"):
-                fields["slug"] = f"JUNO OPERATOR: {slug}"
+                fields[name_field] = f"JUNO OPERATOR: {slug}"
                 obj["pk"] = obj["pk"] + 100
 
         if model_name.endswith("operatorrun"):
@@ -243,7 +245,7 @@ class Command(BaseCommand):
         old_prefixes = options["old_prefixes"]
         new_prefix = options["new_prefix"]
         total_runs = {}
-        allowed_operators = [Operator.objects.get(slug=op) for op in operator_args]
+        allowed_operators = [Operator.objects.get(name=op) for op in operator_args]
         for op in allowed_operators:
             allowed_operator_pks = {op.pk}
 
@@ -256,8 +258,8 @@ class Command(BaseCommand):
                 operator_run__in=operator_runs,
                 status=RunStatus.COMPLETED.value,
             ).iterator()
-            out_file = f"{out_prefix}_{op.slug}.json"
-            print(f"Starting export for operator {op.slug} → {out_file}", flush=True)
+            out_file = f"{out_prefix}_{op.name}.json"
+            print(f"Starting export for operator {op.name} → {out_file}", flush=True)
 
             collect_related_objects_streaming(
                 starting_objects=runs,
@@ -267,7 +269,7 @@ class Command(BaseCommand):
                 out_file=out_file,
             )
 
-            print(f"Finished export for operator {op.slug}", flush=True)
+            print(f"Finished export for operator {op.name}", flush=True)
 
     def _export_filegroup(self, options):
         filegroup_args = options["filegroups"]

@@ -4,7 +4,7 @@ Tests for Operator class
 import os
 from django.test import TestCase
 from runner.operator.operator_factory import OperatorFactory
-from beagle_etl.models import Operator
+from operator_manager.models import Operator
 
 
 class TestOperatorFactory(TestCase):

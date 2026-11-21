@@ -4,7 +4,8 @@ from rest_framework import serializers
 from notifier.models import JobGroup, JobGroupNotifier
 from runner.exceptions import PortProcessorException
 from runner.run.processors.port_processor import PortProcessor, PortAction
-from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors, OperatorRun
+from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors
+from operator_manager.models import OperatorRun
 from file_system.models import FileGroup
 
 

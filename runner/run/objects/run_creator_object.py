@@ -2,7 +2,8 @@ import logging
 import datetime
 from django.conf import settings
 from notifier.models import JobGroup, JobGroupNotifier
-from runner.models import Pipeline, Run, RunStatus, OperatorRun
+from runner.models import Pipeline, Run, RunStatus
+from operator_manager.models import OperatorRun
 
 
 class RunCreator(object):

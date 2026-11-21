@@ -63,6 +63,8 @@ class OperatorAPITest(APITestCase):
         self.user = User.objects.create_user(username="username", password="password", email="admin@gmail.com")
         self.client.force_authenticate(user=self.user)
         self.notifier = Notifier.objects.create(notifier_type="JIRA", default=True, board="TEST")
+        # Migration 0002 copies the operators that beagle_etl data migrations create into the test DB
+        Operator.objects.all().delete()
         self.v1 = Operator.objects.create(
             name="Legacy", type=OperatorVersion.V1, class_name="LegacyOperator", trigger=["IMPACT505"], active=True
         )

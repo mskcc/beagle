@@ -3,10 +3,10 @@ Tests for Operator Trigger
 """
 from mock import patch, call
 from django.test import TestCase
-from beagle_etl.models import Operator
+from operator_manager.models import Operator, OperatorRun
 from runner.operator.operator_factory import OperatorFactory
 from runner.run.objects.run_creator_object import RunCreator
-from runner.models import OperatorRun, RunStatus, TriggerRunType, Run
+from runner.models import RunStatus, TriggerRunType, Run
 from runner.tasks import process_triggers, complete_job, fail_job, create_operator_run_from_jobs
 
 
@@ -17,6 +17,7 @@ class TestOperatorTriggers(TestCase):
         "file_system.storage.json",
         "runner.pipeline.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "runner.operator_run.json",
         "runner.run.json",
         "file_system.sample.json",

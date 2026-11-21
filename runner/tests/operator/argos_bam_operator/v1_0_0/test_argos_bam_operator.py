@@ -5,7 +5,7 @@ Tests for Argos Operator class
 import os
 from django.test import TestCase, override_settings
 from runner.operator.operator_factory import OperatorFactory
-from beagle_etl.models import Operator
+from operator_manager.models import Operator
 from django.conf import settings
 from django.core.management import call_command
 from file_system.models import File, FileMetadata, FileGroup
@@ -17,6 +17,7 @@ class TestArgosBamOperator(TestCase):
         "file_system.filetype.json",
         "file_system.storage.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "runner.pipeline.json",
     ]
 

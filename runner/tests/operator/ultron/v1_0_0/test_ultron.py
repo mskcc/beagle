@@ -4,7 +4,7 @@ Test for constructing ultron inputs
 import os
 from django.test import TestCase
 from runner.operator.ultron.v1_0_0.phase1 import UltronOperator, SampleData, BamData
-from beagle_etl.models import Operator
+from operator_manager.models import Operator
 from notifier.models import JobGroup
 from runner.models import Port
 from file_system.models import FileMetadata, FileGroup
@@ -19,6 +19,7 @@ class TestUltron(TestCase):
         "runner.operator_run.json",
         "runner.pipeline.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "file_system.filegroup.json",
         "file_system.filetype.json",
         "file_system.storage.json",

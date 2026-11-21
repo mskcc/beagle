@@ -6,7 +6,7 @@ import json
 
 from django.test import TestCase
 from runner.operator.chronos_operator_v2.chronos_operator import ChronosOperatorV2
-from beagle_etl.models import Operator
+from operator_manager.models import Operator
 from notifier.models import JobGroup
 from runner.models import Run, Port, Pipeline
 from file_system.models import File, FileMetadata, FileGroup, FileType
@@ -17,6 +17,7 @@ class TestChronosOperatorV2(TestCase):
     fixtures = [
         "runner.pipeline.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "file_system.filegroup.json",
         "file_system.filetype.json",
         "file_system.storage.json",

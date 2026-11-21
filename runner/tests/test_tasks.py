@@ -17,6 +17,7 @@ class TestRunnerTasks(TestCase):
         "file_system.storage.json",
         "runner.pipeline.json",
         "beagle_etl.operator.json",
+        "operator_manager.operator.json",
         "runner.operator_run.json",
         "runner.run.json",
         "file_system.sample.json",

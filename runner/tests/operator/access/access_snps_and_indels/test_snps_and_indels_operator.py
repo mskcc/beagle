@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from file_system.models import File
 from beagle.settings import ROOT_DIR
-from beagle_etl.models import Operator
+from operator_manager.models import Operator
 from runner.operator.operator_factory import OperatorFactory
 from runner.operator.access.v1_0_0.snps_and_indels import AccessLegacySNVOperator
 
@@ -29,6 +29,7 @@ COMMON_FIXTURES = [
     "file_system/fixtures/file_system.filetype.json",
     "file_system/fixtures/file_system.storage.json",
     "beagle_etl/fixtures/beagle_etl.operator.json",
+    "operator_manager/fixtures/operator_manager.operator.json",
 ]
 
 
@@ -49,7 +50,7 @@ class TestAccessSNVOperator(TestCase):
         self.assertEqual(operator._jobs, [])
 
         pipeline_slug = "AccessLegacySNVOperator"
-        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
+        access_legacy_snv_model = Operator.objects.get(name=pipeline_slug)
         operator = AccessLegacySNVOperator(
             access_legacy_snv_model, request_id=REQUEST_ID, run_ids=["bc23076e-f477-4578-943c-1fbf6f1fca44"]
         )
@@ -73,7 +74,7 @@ class TestAccessSNVOperator(TestCase):
         pipeline_slug = "AccessLegacySNVOperator"
         request_id = "access_legacy_test_request_imported_bams"
         test_run_id = "bc23076e-f477-4578-943c-1fbf6f1fca42"
-        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
+        access_legacy_snv_model = Operator.objects.get(name=pipeline_slug)
         operator = AccessLegacySNVOperator(access_legacy_snv_model, request_id=request_id, run_ids=[test_run_id])
         input_data = operator.get_sample_inputs()
         self.validate(input_data)
@@ -126,7 +127,7 @@ class TestAccessSNVOperator(TestCase):
         [f.delete() for f in igo_normals]
 
         pipeline_slug = "AccessLegacySNVOperator"
-        access_legacy_snv_model = Operator.objects.get(slug=pipeline_slug)
+        access_legacy_snv_model = Operator.objects.get(name=pipeline_slug)
         operator = AccessLegacySNVOperator(
             access_legacy_snv_model, request_id=REQUEST_ID, run_ids=["bc23076e-f477-4578-943c-1fbf6f1fca44"]
         )

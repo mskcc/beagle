@@ -6,7 +6,7 @@ import json
 from pprint import pprint
 from uuid import UUID
 from django.test import TestCase
-from beagle_etl.models import Operator
+from operator_manager.models import Operator
 from notifier.models import JobGroup
 from file_system.models import File, FileMetadata, FileGroup, FileType
 from file_system.repository.file_repository import FileRepository
