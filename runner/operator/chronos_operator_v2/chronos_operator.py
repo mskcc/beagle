@@ -140,6 +140,7 @@ class ChronosOperatorV2(Operator):
                 settings.REQUEST_ID_METADATA_KEY: request_id,
                 settings.RECIPE_METADATA_KEY: gene_panel,
                 settings.CMO_SAMPLE_NAME_METADATA_KEY: cmo_sample_name,
+                "target": target
             }
         )
         job_json = {
