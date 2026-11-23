@@ -13,6 +13,12 @@ from django.conf import settings
 from django.core.management import call_command
 
 
+def _order_independent(jobs):
+    # The File query below has no ORDER BY, so job order follows whatever row
+    # order Postgres returns (plan-dependent). Compare order-independently.
+    return sorted(jobs, key=lambda job: json.dumps(job, sort_keys=True))
+
+
 class TestConstructPair(TestCase):
     # load fixtures for the test case temp db
     fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
@@ -64,4 +70,4 @@ class TestConstructPair(TestCase):
         print("Running test_construct_argos_jobs1")
         print(json.dumps(argos_inputs))
         print(json.dumps(expected_inputs))
-        self.assertTrue(argos_inputs == expected_inputs)
+        self.assertTrue(_order_independent(argos_inputs) == _order_independent(expected_inputs))

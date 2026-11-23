@@ -11,6 +11,12 @@ from runner.operator.argos_operator.v1_2_0.bin.make_sample import build_sample
 from runner.operator.argos_operator.v1_2_0.construct_argos_pair import construct_argos_jobs
 
 
+def _order_independent(jobs):
+    # The File query below has no ORDER BY, so job order follows whatever row
+    # order Postgres returns (plan-dependent). Compare order-independently.
+    return sorted(jobs, key=lambda job: json.dumps(job, sort_keys=True))
+
+
 class TestConstructPair(TestCase):
     # load fixtures for the test case temp db
     fixtures = ["file_system.filegroup.json", "file_system.filetype.json", "file_system.storage.json"]
@@ -62,4 +68,4 @@ class TestConstructPair(TestCase):
             open(os.path.join(settings.TEST_FIXTURE_DIR, "99990_D_single_TN_pair.argos.input.json"))
         )
         print("Running test_construct_argos_jobs1")
-        self.assertTrue(argos_inputs == expected_inputs)
+        self.assertTrue(_order_independent(argos_inputs) == _order_independent(expected_inputs))
