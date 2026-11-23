@@ -4,7 +4,7 @@ from rest_framework import serializers
 from notifier.models import JobGroup, JobGroupNotifier
 from runner.exceptions import PortProcessorException
 from runner.run.processors.port_processor import PortProcessor, PortAction
-from runner.models import Pipeline, Run, Port, RunStatus, PortType, ExecutionEvents, OperatorErrors
+from runner.models import Pipeline, Run, Port, RunStatus, PortType, ProtocolType, ExecutionEvents, OperatorErrors
 from operator_manager.models import OperatorRun
 from file_system.models import FileGroup
 
@@ -410,3 +410,74 @@ class TerminateRunSerializer(serializers.Serializer):
         if not attrs.get("job_group_id") and not attrs.get("runs"):
             raise serializers.ValidationError("Either job_group_id or runs needs to be specified.")
         return attrs
+
+
+class SDKRunListSerializer(serializers.Serializer):
+    run_ids = serializers.ListField(child=serializers.UUIDField(), allow_empty=True, required=False)
+    operator_run = serializers.UUIDField(required=False)
+    job_groups = serializers.ListField(child=serializers.UUIDField(), allow_empty=True, required=False)
+    status = serializers.ChoiceField([status.name for status in RunStatus], required=False)
+
+
+def format_sdk_port_data(ports):
+    """Port name -> value, with every File resolved to its path and Beagle id"""
+    port_dict = {}
+    for port in ports:
+        try:
+            port_dict[port.name] = PortProcessor.process_files(port.db_value, PortAction.CONVERT_TO_SDK_FORMAT)
+        except PortProcessorException as e:
+            raise serializers.ValidationError(e)
+    return port_dict
+
+
+class SDKRunSerializer(serializers.ModelSerializer):
+    """Run representation consumed by voyager-sdk operators (e.g. when chained from another operator)"""
+
+    status = serializers.SerializerMethodField()
+    pipeline = serializers.SerializerMethodField()
+    samples = serializers.SerializerMethodField()
+    inputs = serializers.SerializerMethodField()
+    outputs = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return RunStatus(obj.status).name
+
+    def get_pipeline(self, obj):
+        return {
+            "id": str(obj.app.id),
+            "name": obj.app.name,
+            "version": obj.app.version,
+            "pipeline_type": ProtocolType(obj.app.pipeline_type).name,
+        }
+
+    def get_samples(self, obj):
+        return [sample.sample_id for sample in obj.samples.all()]
+
+    def _ports(self, obj, port_type):
+        # Iterate the prefetched port_set instead of filtering, which would query again
+        return format_sdk_port_data(p for p in obj.port_set.all() if p.port_type == port_type)
+
+    def get_inputs(self, obj):
+        return self._ports(obj, PortType.INPUT)
+
+    def get_outputs(self, obj):
+        return self._ports(obj, PortType.OUTPUT)
+
+    class Meta:
+        model = Run
+        fields = (
+            "id",
+            "name",
+            "status",
+            "pipeline",
+            "tags",
+            "samples",
+            "inputs",
+            "outputs",
+            "output_metadata",
+            "output_directory",
+            "operator_run",
+            "job_group",
+            "created_date",
+            "finished_date",
+        )

@@ -3,6 +3,7 @@ from django.urls import path, include
 from rest_framework import routers
 from runner.views.run_view import RunViewSet, UpdateJob
 from runner.views.port_view import PortViewSet
+from runner.views.sdk_run_view import SDKRunViewSet
 from runner.views.operator_run_view import OperatorRunViewSet
 from runner.views.run_api_view import (
     RunApiViewSet,
@@ -32,6 +33,7 @@ router.register("runs", RunViewSet)
 router.register("samples", RunSamplesViewSet, basename="run-samples")
 router.register("port", PortViewSet)
 router.register("api", RunApiViewSet, basename="run-api")
+router.register("sdk/runs", SDKRunViewSet, basename="sdk-runs")
 router.register("operator/latest", OperatorSamplesLatestViewSet)
 router.register("operator/all", OperatorSamplesAllViewSet, basename="operator-samples-all")
 router.register("operator-errors", OperatorErrorViewSet)

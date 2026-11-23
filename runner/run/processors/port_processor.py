@@ -19,6 +19,7 @@ class PortAction(Enum):
     SEND_AS_NOTIFICATION = 3
     CONVERT_TO_CWL_FORMAT = 4
     NEXTFLOW_TEMPLATE = 5
+    CONVERT_TO_SDK_FORMAT = 6  # CWL format plus the Beagle file id
     FIX_DB_VALUES = 99  # Temporary for fixing values in DB
 
 
@@ -72,6 +73,8 @@ class PortProcessor(object):
             return PortProcessor._convert_to_path(file_obj)
         if action == PortAction.CONVERT_TO_CWL_FORMAT:
             return PortProcessor._covert_to_cwl_format(file_obj)
+        if action == PortAction.CONVERT_TO_SDK_FORMAT:
+            return PortProcessor._covert_to_cwl_format(file_obj, include_id=True)
         if action == PortAction.REGISTER_OUTPUT_FILES:
             return PortProcessor._register_file(
                 file_obj,
@@ -131,7 +134,7 @@ class PortProcessor(object):
         return file_obj
 
     @staticmethod
-    def _covert_to_cwl_format(val):
+    def _covert_to_cwl_format(val, include_id=False):
         file_obj = copy.deepcopy(val)
         location = file_obj.pop("location", None)
         if location:
@@ -151,8 +154,11 @@ class PortProcessor(object):
             file_obj["nameext"] = path_obj.suffix
             file_obj["nameroot"] = path_obj.stem
             file_obj["path"] = path
+            if include_id:
+                file_obj["id"] = str(file_db_object.id)
         secondary_files = file_obj.pop("secondaryFiles", [])
-        secondary_files_value = PortProcessor.process_files(secondary_files, PortAction.CONVERT_TO_CWL_FORMAT)
+        action = PortAction.CONVERT_TO_SDK_FORMAT if include_id else PortAction.CONVERT_TO_CWL_FORMAT
+        secondary_files_value = PortProcessor.process_files(secondary_files, action)
         if secondary_files_value:
             file_obj["secondaryFiles"] = secondary_files_value
 
